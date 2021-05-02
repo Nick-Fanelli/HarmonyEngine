@@ -1,7 +1,5 @@
 #include "harmonypch.h"
 
-#include "Core/Log.h"
-
 using namespace HarmonyEngine;
 
 int main() {
