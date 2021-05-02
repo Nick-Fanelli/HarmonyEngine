@@ -15,4 +15,6 @@ file(GLOB_RECURSE SRC_FILES
 
 add_executable(HarmonyEngine ${SRC_FILES})
 
+target_include_directories(HarmonyEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 target_precompile_headers(HarmonyEngine PUBLIC "src/harmonypch.h")
