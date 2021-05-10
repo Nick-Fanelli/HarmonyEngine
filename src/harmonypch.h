@@ -1,9 +1,5 @@
 #pragma once
 
-#ifdef __APPLE__
-    #include <machine/endian.h>
-#endif
-
 #include <iostream>
 #include <fstream>
 #include <functional>
