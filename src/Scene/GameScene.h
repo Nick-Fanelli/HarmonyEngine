@@ -3,6 +3,7 @@
 #include "harmonypch.h"
 
 #include "Scene.h"
+#include "../Render/Shader.h"
 
 namespace HarmonyEngine {
 

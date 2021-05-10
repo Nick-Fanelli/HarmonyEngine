@@ -1,7 +1,11 @@
 {
     "cSpell.words": [
         "GLFW",
+        "Luint",
         "OPENGL",
         "glew"
-    ]
+    ],
+    "files.associations": {
+        "iosfwd": "cpp"
+    }
 }
