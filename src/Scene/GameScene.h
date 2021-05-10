@@ -5,19 +5,18 @@
 #include "Scene.h"
 #include "../Render/Shader.h"
 
-namespace HarmonyEngine {
+using namespace HarmonyEngine;
 
-    class GameScene : public Scene {
+class GameScene : public Scene {
 
-    public:
-        void OnCreate() override {
-            Log::Info("On Create!");
-        }
+public:
+    void OnCreate() override {
+        Shader shader = Shader("assets/shaders/DefaultShader.vert.glsl", "assets/shaders/DefaultShader.frag.glsl");
+        shader.Create();
+    }
 
-        void Update(float deltaTime) override {
-            
-        }
+    void Update(float deltaTime) override {
+        
+    }
 
-    };
-
-}
+};

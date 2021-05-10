@@ -9,6 +9,9 @@ namespace HarmonyEngine {
 
     class Shader {
 
+        const char* m_VertexFilePath;
+        const char* m_FragmentFilePath;
+
         GLuint m_ProgramID, m_VertexID, m_FragmentID;
 
         void AttachVertextShader(const std::string& source) {
@@ -87,9 +90,13 @@ namespace HarmonyEngine {
 
         Shader() = default;
         Shader(const Shader&) = default;
-        Shader(const char* vertexFilePath, const char* fragmentFilePath) : m_ProgramID(glCreateProgram()) {
-            std::string vertexSource = FileUtils::ReadFile(vertexFilePath);
-            std::string fragmentSource = FileUtils::ReadFile(fragmentFilePath);
+        Shader(const char* vertexFilePath, const char* fragmentFilePath) : m_VertexFilePath(vertexFilePath), m_FragmentFilePath(fragmentFilePath), m_ProgramID(glCreateProgram()) {
+            
+        }
+
+        void Create() {
+            std::string vertexSource = FileUtils::ReadFile(m_VertexFilePath);
+            std::string fragmentSource = FileUtils::ReadFile(m_FragmentFilePath);
 
             AttachVertextShader(vertexSource);
             AttachFragmentShader(fragmentSource);

@@ -13,8 +13,13 @@ file(GLOB_RECURSE SRC_FILES
         "src/**.cpp"
 )
 
+set(target ${CMAKE_CURRENT_SOURCE_DIR}/assets)
+set(link ${CMAKE_BINARY_DIR}/assets)
+
 add_executable(HarmonyEngine ${SRC_FILES})
 
-target_include_directories(HarmonyEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_custom_target(link_target ALL
+                        COMMAND ${CMAKE_COMMAND} -E create_symlink ${target} ${link})                       
 
+target_include_directories(HarmonyEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_precompile_headers(HarmonyEngine PUBLIC "src/harmonypch.h")
