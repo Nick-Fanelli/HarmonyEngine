@@ -9,6 +9,9 @@ namespace HarmonyEngine::SceneManager {
     static Scene* s_ActiveScenePtr;
 
     void SetActiveScene(Scene* scenePtr) {
+        if(scenePtr == nullptr) return;
+        
+        scenePtr->OnCreate();
         s_ActiveScenePtr = scenePtr;
     }
 

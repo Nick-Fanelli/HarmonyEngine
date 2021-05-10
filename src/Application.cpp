@@ -9,9 +9,7 @@ int main() {
 
     GameScene gameScene = GameScene();
 
-    SceneManager::SetActiveScene(&gameScene);
-
     Display::CreateDisplay("Harmony Engine");
-    Display::StartGameLoop();
+    Display::StartGameLoop(&gameScene);
 
 }

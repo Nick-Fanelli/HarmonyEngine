@@ -16,7 +16,9 @@ namespace HarmonyEngine {
         Scene(const Scene&) = default;
         Scene(const std::string& sceneName) : m_SceneName(std::move(sceneName)) {}
 
+        virtual void OnCreate() {}
         virtual void Update(float deltaTime) {}
+        virtual void OnDestroy() {}
 
     };
 

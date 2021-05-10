@@ -74,8 +74,10 @@ namespace HarmonyEngine::Display {
         Log::Success("Progam successfully exited!");
     }
 
-    void StartGameLoop() {
+    void StartGameLoop(Scene* scenePtr = nullptr) {
         Log::Info("Starting Game Loop...");
+
+        SceneManager::SetActiveScene(scenePtr);
 
         float endTime, startTime = (float) glfwGetTime();
         float deltaTime = -1.0f;
