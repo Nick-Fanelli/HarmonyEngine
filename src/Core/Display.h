@@ -1,3 +1,5 @@
+#pragma once
+
 #include "harmonypch.h"
 
 #define GLEW_STATIC
@@ -7,6 +9,9 @@
 #define GLFW_DLL
 
 #include <GLFW/glfw3.h>
+
+#include "../Scene/SceneManager.h"
+#include "../Scene/Scene.h"
 
 namespace HarmonyEngine::Display {
 
@@ -69,8 +74,10 @@ namespace HarmonyEngine::Display {
         Log::Success("Progam successfully exited!");
     }
 
-    void StartGameLoop() {
+    void StartGameLoop(Scene* scenePtr = nullptr) {
         Log::Info("Starting Game Loop...");
+
+        SceneManager::SetActiveScene(scenePtr);
 
         float endTime, startTime = (float) glfwGetTime();
         float deltaTime = -1.0f;
@@ -85,7 +92,7 @@ namespace HarmonyEngine::Display {
             glClear(GL_COLOR_BUFFER_BIT);
 
             if(deltaTime >= 0) {
-                // Update the game
+                SceneManager::Update(deltaTime);
             }
 
             glfwSwapBuffers(s_Window);
