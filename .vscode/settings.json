@@ -6,6 +6,8 @@
         "glew"
     ],
     "files.associations": {
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "ios": "cpp",
+        "string": "cpp"
     }
 }

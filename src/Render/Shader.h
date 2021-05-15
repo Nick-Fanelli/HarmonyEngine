@@ -111,6 +111,8 @@ namespace HarmonyEngine {
             glDeleteProgram(m_ProgramID);
         }
 
+        const GLuint& GetProgrmID() const { return m_ProgramID; }
+
     };
 
 }

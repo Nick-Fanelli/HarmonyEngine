@@ -2,6 +2,9 @@
 
 #include "harmonypch.h"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 namespace HarmonyEngine {
 
     namespace FileUtils {

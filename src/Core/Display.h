@@ -88,8 +88,11 @@ namespace HarmonyEngine::Display {
 
         while(!glfwWindowShouldClose(s_Window)) {
 
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LESS);
+
             glClearColor(0, 0, 0, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if(deltaTime >= 0) {
                 SceneManager::Update(deltaTime);
@@ -116,6 +119,9 @@ namespace HarmonyEngine::Display {
         CleanUp();
     
     }
+
+    static void GetWidth(int* result) { glfwGetWindowSize(s_Window, result, nullptr); }
+    static void GetHeight(int* result) { glfwGetWindowSize(s_Window, nullptr, result); }
 
     void CloseDisplay() {
 
