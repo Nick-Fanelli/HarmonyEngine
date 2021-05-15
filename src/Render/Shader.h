@@ -3,6 +3,9 @@
 #include <GL/glew.h>
 #include <GLUT/glut.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "harmonypch.h"
 
 namespace HarmonyEngine {
@@ -90,9 +93,9 @@ namespace HarmonyEngine {
 
         Shader() = default;
         Shader(const Shader&) = default;
-        Shader(const char* vertexFilePath, const char* fragmentFilePath) : m_VertexFilePath(vertexFilePath), m_FragmentFilePath(fragmentFilePath), m_ProgramID(glCreateProgram()) {
-            
-        }
+
+        Shader(const char* vertexFilePath, const char* fragmentFilePath) : 
+        m_VertexFilePath(vertexFilePath), m_FragmentFilePath(fragmentFilePath), m_ProgramID(glCreateProgram()) {}
 
         void Create() {
             std::string vertexSource = FileUtils::ReadFile(m_VertexFilePath);
@@ -112,6 +115,36 @@ namespace HarmonyEngine {
         }
 
         const GLuint& GetProgrmID() const { return m_ProgramID; }
+
+        void AddUniformVec4(const char* varName, const glm::vec4& vec4) const {
+            auto location = glGetUniformLocation(m_ProgramID, varName);
+            glUniform4f(location, vec4.x, vec4.y, vec4.z, vec4.w);
+        }
+
+        void AddUniformVec3(const char* varName, const glm::vec3& vec3) const {
+            auto location = glGetUniformLocation(m_ProgramID, varName);
+            glUniform3f(location, vec3.x, vec3.y, vec3.z);
+        }
+
+        void AddUniformMat4(const char* varName, const glm::mat4& mat4) const {
+            auto location = glGetUniformLocation(m_ProgramID, varName);
+            glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat4));
+        }
+
+        void AddUnformInt(const char* varName, int integer) const {
+            auto location = glGetUniformLocation(m_ProgramID, varName);
+            glUniform1i(location, integer);
+        }
+
+        void AddUniformIntArray(const char* varName, int size, const int* array) const {
+            auto location = glGetUniformLocation(m_ProgramID, varName);
+            glUniform1iv(location, size, array);
+        }
+
+        void AddUniformUintArray(const char* varName, int size, const uint32_t* array) const {
+            auto location = glGetUniformLocation(m_ProgramID, varName);
+            glUniform1uiv(location, size, array);
+        }
 
     };
 

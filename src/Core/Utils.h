@@ -33,4 +33,14 @@ namespace HarmonyEngine {
         }
     }
 
+    namespace OpenGLUtils {
+
+        int GetGUPMaxTextureSlots() {
+            int queryResult;
+            glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &queryResult);
+            return queryResult;
+        }
+
+    }
+
 }

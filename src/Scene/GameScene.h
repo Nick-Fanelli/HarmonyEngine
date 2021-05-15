@@ -13,13 +13,18 @@ using namespace HarmonyEngine;
 
 class GameScene : public Scene {
 
-    Shader s_Shader;
+    Shader m_Shader;
+    Quad m_Quad;
 
 public:
 
     void OnCreate() override {
-        s_Shader = Shader("assets/shaders/Shader2D.vert.glsl", "assets/shaders/Shader2D.frag.glsl");
-        s_Shader.Create();
+        m_Shader = Shader("assets/shaders/Shader2D.vert.glsl", "assets/shaders/Shader2D.frag.glsl");
+        m_Shader.Create();
+
+        Renderer2D::OnCreate(&m_Shader);
+
+        m_Quad = Quad({0, 0, 0});
 
         // int width, height;
 
@@ -40,7 +45,15 @@ public:
 
 
     void Update(float deltaTime) override {
+        Renderer2D::StartBatch();
         
+        Renderer2D::DrawQuad(m_Quad);
+
+        Renderer2D::EndBatch();
+    }
+
+    void OnDestroy() override {
+        Renderer2D::OnDestroy();
     }
 
 };
