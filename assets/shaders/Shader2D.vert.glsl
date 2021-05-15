@@ -5,7 +5,7 @@ layout(location = 1) in vec4 color;
 layout(location = 2) in vec2 textureCoord;
 layout(location = 3) in float textureID;
 
-uniform mat4 cameraViewProjectionMatrix;
+uniform mat4 uViewProjectionMatrix;
 
 out vec4 vColor;
 out vec2 vTextureCoord;
@@ -16,5 +16,5 @@ void main() {
     vTextureCoord = textureCoord;
     vTextureID = textureID;
 
-    gl_Position = vec4(position, 1.0);
+    gl_Position = uViewProjectionMatrix* vec4(position, 1.0);
 }

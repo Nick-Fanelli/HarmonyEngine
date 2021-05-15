@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "Texture.h"
+#include "Camera.h"
 
 namespace HarmonyEngine {
 
@@ -68,11 +69,13 @@ namespace HarmonyEngine {
         static const size_t MaxIndexCount = MaxQuadCount * 6;
 
         static Shader* s_Shader;
+        static OrthographicCamera* s_Camera;
+
         static RenderBatch s_Batch;
 
         static void Render() {
             s_Shader->Bind();
-            // s_Shader->AddUniformMat4("cameraViewProjectionMatrix", nullptr);
+            s_Shader->AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
             s_Shader->AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
 
             for(int i = 0; i < s_Batch.TextureIndex; i++) {
@@ -111,12 +114,15 @@ namespace HarmonyEngine {
             glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Batch.Vertices);
         }
 
-        void OnCreate(Shader* shader) {
+        void OnCreate(OrthographicCamera* camera, Shader* shader) {
             // Check to make sure that OnCreate method wasn't already called
             if(s_Batch.Vertices != nullptr) {
                 Log::Error("Vertices array was not equal to nullptr, exiting Renderer::OnCreate()");
                 return;
             }
+
+            s_Camera = camera;
+            s_Shader = shader;
 
             int maxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
@@ -125,7 +131,6 @@ namespace HarmonyEngine {
             s_Batch.VertexPtr = s_Batch.Vertices;
 
             s_Batch.Textures = new int[maxTextureCount];
-            s_Shader = shader;
 
             // Bind the VAO
             glGenVertexArrays(1, &s_Batch.VaoID);
