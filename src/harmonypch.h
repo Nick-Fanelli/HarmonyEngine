@@ -1,6 +1,6 @@
 #pragma once
 
-#define HARMONY_DEBUG_ENABLED
+#define HARMONY_DEBUG_ENABLED true
 
 #include <iostream>
 #include <fstream>

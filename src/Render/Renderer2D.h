@@ -7,8 +7,8 @@
 #include "Texture.h"
 #include "Camera.h"
 
-#ifdef HARMONY_DEBUG_ENABLED
-    // #define HARMONY_DEBUG_UNBIND
+#if HARMONY_DEBUG_ENABLED
+    #define HARMONY_DEBUG_UNBIND
 #endif
 
 namespace HarmonyEngine {
@@ -108,7 +108,7 @@ namespace HarmonyEngine {
 
 #ifdef HARMONY_DEBUG_UNBIND
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the EBO
-            
+
             // Disable al the Vertex Attrib Pointers
             glDisableVertexAttribArray(0);
             glDisableVertexAttribArray(1);

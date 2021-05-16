@@ -6,10 +6,16 @@
 
 namespace HarmonyEngine::SceneManager {
 
-    static Scene* s_ActiveScenePtr;
+    static Scene* s_ActiveScenePtr = nullptr;
 
     void SetActiveScene(Scene* scenePtr) {
         if(scenePtr == nullptr) return;
+
+        if(s_ActiveScenePtr != nullptr) {
+            auto ptr = s_ActiveScenePtr;
+            s_ActiveScenePtr = nullptr;
+            ptr->OnDestroy();
+        }
         
         scenePtr->OnCreate();
         s_ActiveScenePtr = scenePtr;
@@ -20,5 +26,10 @@ namespace HarmonyEngine::SceneManager {
     void Update(float deltaTime) {
         if(s_ActiveScenePtr != nullptr)
             s_ActiveScenePtr->Update(deltaTime);
+    }
+
+    void OnDestroy() {
+        if(s_ActiveScenePtr != nullptr)
+            s_ActiveScenePtr->OnDestroy();
     }
 }

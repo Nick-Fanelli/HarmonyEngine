@@ -67,6 +67,12 @@ namespace HarmonyEngine::Display {
 
         glViewport(0, 0, screenWidth, screenHeight);
 
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         Log::Success("Created the GLFW Display!");
 
         glfwFocusWindow(s_Window);
@@ -74,6 +80,8 @@ namespace HarmonyEngine::Display {
 
     static void CleanUp() {
         Log::Info("Cleaning up the program...");
+
+        SceneManager::OnDestroy();
 
         glfwDestroyWindow(s_Window);
         glfwTerminate();
@@ -99,12 +107,6 @@ namespace HarmonyEngine::Display {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if(deltaTime >= 0) {
-                glEnable(GL_DEPTH_TEST);
-                glDepthFunc(GL_LESS);
-
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
                 SceneManager::Update(deltaTime);
 
                 Input::Update();
