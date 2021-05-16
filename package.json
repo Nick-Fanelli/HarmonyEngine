@@ -1,0 +1,22 @@
+{
+  "name": "harmonyengine",
+  "version": "1.0.0",
+  "description": "Game engine written in C++ with OpenGL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nick-Fanelli/HarmonyEngine.git"
+  },
+  "author": "Nick Fanelli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nick-Fanelli/HarmonyEngine/issues"
+  },
+  "homepage": "https://github.com/Nick-Fanelli/HarmonyEngine#readme",
+  "dependencies": {
+    "conventional-changelog": "^3.1.24"
+  }
+}
