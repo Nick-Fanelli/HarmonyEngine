@@ -12,6 +12,7 @@
 
 #include "../Scene/SceneManager.h"
 #include "../Scene/Scene.h"
+#include "Input.h"
 
 namespace HarmonyEngine::Display {
 
@@ -53,6 +54,12 @@ namespace HarmonyEngine::Display {
         glfwMakeContextCurrent(s_Window);
         glewExperimental = true;
 
+        // Handle Input
+        glfwSetKeyCallback(s_Window, Input::KeyCallback);
+        glfwSetMouseButtonCallback(s_Window, Input::MouseButtonCallback);
+        glfwSetCursorPosCallback(s_Window, Input::MousePositionCallback);
+        glfwSetScrollCallback(s_Window, Input::MouseScrollCallback);
+
         if(glewInit() != GLEW_OK) {
             Log::Error("Could not initialize GLEW");
             return;
@@ -91,11 +98,13 @@ namespace HarmonyEngine::Display {
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
 
-            glClearColor(0, 0, 0, 1.0f);
+            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if(deltaTime >= 0) {
                 SceneManager::Update(deltaTime);
+
+                Input::Update();
             }
 
             glfwSwapBuffers(s_Window);
