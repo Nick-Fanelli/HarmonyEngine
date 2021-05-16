@@ -73,6 +73,10 @@ namespace HarmonyEngine::Display {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // glEnable(GL_CULL_FACE);
+
+        glfwSetInputMode(s_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
         Log::Success("Created the GLFW Display!");
 
         glfwFocusWindow(s_Window);
@@ -134,8 +138,10 @@ namespace HarmonyEngine::Display {
     
     }
 
-    static void GetWidth(int* result) { glfwGetWindowSize(s_Window, result, nullptr); }
-    static void GetHeight(int* result) { glfwGetWindowSize(s_Window, nullptr, result); }
+    void GetWidth(int* result) { glfwGetWindowSize(s_Window, result, nullptr); }
+    void GetHeight(int* result) { glfwGetWindowSize(s_Window, nullptr, result); }
+
+    bool IsRunning() { return s_Window != nullptr; }
 
     void CloseDisplay() {
 

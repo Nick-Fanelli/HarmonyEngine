@@ -15,7 +15,7 @@ using namespace HarmonyEngine;
 class GameScene : public Scene {
 
     Shader m_Shader;
-    OrthographicCamera m_Camera;
+    PerspectiveCamera m_Camera;
     Quad m_Quad;
 
 public:
@@ -24,44 +24,51 @@ public:
         m_Shader = Shader("assets/shaders/Shader2D.vert.glsl", "assets/shaders/Shader2D.frag.glsl");
         m_Shader.Create();
 
-        Texture texture = Texture("assets/textures/grass.jpeg");
-        texture.Create();
+        // Texture texture = Texture("assets/textures/grass.jpeg");
+        // texture.Create();
 
-        m_Camera = OrthographicCamera({0.5, 0.5, 0});
+        m_Camera = PerspectiveCamera();
 
         Renderer2D::OnCreate(&m_Camera, &m_Shader);
 
-        auto textureID = Renderer2D::AddTexture(texture);
+        // auto textureID = Renderer2D::AddTexture(texture);
 
-        // static const std::array<glm::vec4, 4> colorArray = {
-        //     glm::vec4(1, 0, 0, 1),
-        //     glm::vec4(0, 1, 0, 1),
-        //     glm::vec4(0, 0, 1, 1),
-        //     glm::vec4(1, 1, 0, 1)
-        // };
+        static const std::array<glm::vec4, 4> colorArray = {
+            glm::vec4(1, 0, 0, 1),
+            glm::vec4(0, 1, 0, 1),
+            glm::vec4(0, 0, 1, 1),
+            glm::vec4(1, 1, 0, 1)
+        };
 
-        m_Quad = Quad({0, 0, 0}, {1, 1}, glm::vec4(1.0f), textureID);
+        m_Quad = Quad({-0.5, -0.5, 0}, {1, 1}, colorArray);
     }
 
 
     void Update(float deltaTime) override {
 
         const float moveSpeed = 2.0f;
+        const float mouseSensitivity = 4.0f;
 
-        if(Input::IsKey(HARMONY_KEY_LEFT)) {
-            m_Camera.Move({-moveSpeed * deltaTime, 0, 0});
+        if(Input::IsKey(HARMONY_KEY_W)) {
+            m_Camera.Move(-moveSpeed * deltaTime * m_Camera.GetCameraFront());
         }
 
-        if(Input::IsKey(HARMONY_KEY_RIGHT)) {
-            m_Camera.Move({moveSpeed * deltaTime, 0, 0});
+        if(Input::IsKey(HARMONY_KEY_S)) {
+            m_Camera.Move(moveSpeed * deltaTime * m_Camera.GetCameraFront());
         }
 
-        if(Input::IsKey(HARMONY_KEY_UP)) {
-            m_Camera.Move({0, moveSpeed * deltaTime, 0});
+        if(Input::IsKey(HARMONY_KEY_A)) {
+            m_Camera.Move(glm::normalize(glm::cross(m_Camera.GetCameraFront(), m_Camera.GetCameraUp())) * moveSpeed * deltaTime);
         }
 
-        if(Input::IsKey(HARMONY_KEY_DOWN)) {
-            m_Camera.Move({0, -moveSpeed * deltaTime, 0});
+        if(Input::IsKey(HARMONY_KEY_D)) {
+            m_Camera.Move(glm::normalize(glm::cross(m_Camera.GetCameraFront(), m_Camera.GetCameraUp())) * -moveSpeed * deltaTime);
+        }
+
+        const glm::vec2 zero = {0, 0};
+
+        if(Input::GetDeltaMousePosition() != zero) {
+            m_Camera.Rotate(Input::GetDeltaMousePosition() * mouseSensitivity * deltaTime); 
         }
 
         Renderer2D::StartBatch();

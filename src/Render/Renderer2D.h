@@ -80,7 +80,7 @@ namespace HarmonyEngine {
         static const size_t MaxIndexCount = MaxQuadCount * 6;
 
         static Shader* s_Shader;
-        static OrthographicCamera* s_Camera;
+        static Camera* s_Camera;
 
         static RenderBatch s_Batch;
 
@@ -126,7 +126,7 @@ namespace HarmonyEngine {
             glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Batch.Vertices);
         }
 
-        void OnCreate(OrthographicCamera* camera, Shader* shader) {
+        void OnCreate(Camera* camera, Shader* shader) {
             // Check to make sure that OnCreate method wasn't already called
             if(s_Batch.Vertices != nullptr) {
                 Log::Error("Vertices array was not equal to nullptr, exiting Renderer::OnCreate()");

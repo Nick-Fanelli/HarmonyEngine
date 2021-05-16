@@ -190,6 +190,6 @@ namespace HarmonyEngine::Input {
     const glm::vec2& GetMousePosition() { return s_MousePosition; }
     const glm::vec2& GetScrollPosition() { return s_ScrollPosition; }
     const glm::vec2& GetAbsScrollPosition() { return s_AbsScrollPosition; }
-    const glm::vec2 GetDeltaMousePosition() { return s_MousePosition = s_MousePositionLast; }
+    const glm::vec2 GetDeltaMousePosition() { return s_MousePosition - s_MousePositionLast; }
 
 }

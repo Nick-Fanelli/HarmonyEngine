@@ -3,7 +3,8 @@
         "GLFW",
         "Luint",
         "OPENGL",
-        "glew"
+        "glew",
+        "harmonyengine"
     ],
     "files.associations": {
         "iosfwd": "cpp",
