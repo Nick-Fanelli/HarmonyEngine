@@ -15,7 +15,6 @@ void main() {
     if(textureIndex == 0) {
         out_Color = vColor;
     } else {
-        out_Color = texture(uTextures[textureIndex], vTextureCoord);
-        // out_Color = vColor * texture(uTextures[textureIndex], vTextureCoord);
+        out_Color = vColor * texture(uTextures[textureIndex], vTextureCoord);
     }
 }

@@ -7,6 +7,10 @@
 #include "Texture.h"
 #include "Camera.h"
 
+#ifdef HARMONY_DEBUG_ENABLED
+    // #define HARMONY_DEBUG_UNBIND
+#endif
+
 namespace HarmonyEngine {
 
     static const std::array<glm::vec4, 4> DefaultColor = {
@@ -45,6 +49,13 @@ namespace HarmonyEngine {
         V2(glm::vec3(position.x + scale.x, position.y + scale.y, position.z), colorArray[2], {1, 1}, textureID),
         V3(glm::vec3(position.x + scale.x, position.y, position.z), colorArray[3], {1, 0}, textureID)
         {} 
+
+        Quad(const glm::vec3& position, const glm::vec2& scale = { 1, 1 }, const glm::vec4& color = { 1, 1, 1, 1}, int textureID = 0) :
+        V0(position, color, {0, 0}, textureID),
+        V1(glm::vec3(position.x, position.y + scale.y, position.z), color, {0, 1}, textureID),
+        V2(glm::vec3(position.x + scale.x, position.y + scale.y, position.z), color, {1, 1}, textureID),
+        V3(glm::vec3(position.x + scale.x, position.y, position.z), color, {1, 0}, textureID)
+        {}
 
     };
 
@@ -95,6 +106,7 @@ namespace HarmonyEngine {
 
             glDrawElements(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0); // Draw the Elements
 
+#ifdef HARMONY_DEBUG_UNBIND
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the EBO
             
             // Disable al the Vertex Attrib Pointers
@@ -104,7 +116,7 @@ namespace HarmonyEngine {
             glDisableVertexAttribArray(3);
 
             glBindVertexArray(0); // Unbind the VAO
-
+#endif
         }
 
         static void UpdateBatchVertexData() {
@@ -172,8 +184,10 @@ namespace HarmonyEngine {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.EboID); // Bind the indices buffer
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
 
+#ifdef HARMONY_DEBUG_UNBIND
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind Buffer
             glBindVertexArray(0); // Unbind Vertex Array
+#endif
         }
 
         void StartBatch() {

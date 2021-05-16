@@ -1,5 +1,7 @@
 #pragma once
 
+#define HARMONY_DEBUG_ENABLED
+
 #include <iostream>
 #include <fstream>
 #include <functional>

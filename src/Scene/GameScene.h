@@ -33,14 +33,14 @@ public:
 
         auto textureID = Renderer2D::AddTexture(texture);
 
-        static const std::array<glm::vec4, 4> colorArray = {
-            glm::vec4(1, 0, 0, 1),
-            glm::vec4(0, 1, 0, 1),
-            glm::vec4(0, 0, 1, 1),
-            glm::vec4(1, 1, 0, 1)
-        };
+        // static const std::array<glm::vec4, 4> colorArray = {
+        //     glm::vec4(1, 0, 0, 1),
+        //     glm::vec4(0, 1, 0, 1),
+        //     glm::vec4(0, 0, 1, 1),
+        //     glm::vec4(1, 1, 0, 1)
+        // };
 
-        m_Quad = Quad({0, 0, 0}, {1, 1}, colorArray, textureID);
+        m_Quad = Quad({0, 0, 0}, {1, 1}, glm::vec4(1.0f), textureID);
     }
 
 

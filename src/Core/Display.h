@@ -95,13 +95,16 @@ namespace HarmonyEngine::Display {
 
         while(!glfwWindowShouldClose(s_Window)) {
 
-            glEnable(GL_DEPTH_TEST);
-            glDepthFunc(GL_LESS);
-
             glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if(deltaTime >= 0) {
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_LESS);
+
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
                 SceneManager::Update(deltaTime);
 
                 Input::Update();
