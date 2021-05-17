@@ -19,10 +19,8 @@ class GameScene : public Scene {
     PerspectiveCamera m_Camera;
     // Quad m_Quad;
 
-    GLuint m_VaoID;
-    GLuint m_VboID;
-    GLuint m_IboID;
-    int indexCount;
+    Mesh m_Mesh;
+    Mesh m_Mesh2;
 
 public:
 
@@ -84,32 +82,15 @@ public:
             6, 7, 3
         };
 
-        indexCount = sizeof(indices) / sizeof(unsigned int);
-
-        glGenVertexArrays(1, &m_VaoID);
-        glBindVertexArray(m_VaoID);
-
-        glGenBuffers(1, &m_VboID);
-        glBindBuffer(GL_ARRAY_BUFFER, m_VboID);
-
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glGenBuffers(1, &m_IboID);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboID); 
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-
-        glBindVertexArray(0);
+        m_Mesh = Mesh(vertices, sizeof(vertices), indices, sizeof(indices));
+        m_Mesh2 = Mesh(vertices, sizeof(vertices), indices, sizeof(indices));
     }
 
 
     void Update(float deltaTime) override {
 
-        const float moveSpeed = 2.0f;
-        const float mouseSensitivity = 4.0f;
+        const float moveSpeed = 3.5f;
+        const float mouseSensitivity = 4.5f;
 
         if(Input::IsKey(HARMONY_KEY_W)) {
             m_Camera.Move(-moveSpeed * deltaTime * m_Camera.GetCameraFront());
@@ -127,6 +108,14 @@ public:
             m_Camera.Move(glm::normalize(glm::cross(m_Camera.GetCameraFront(), m_Camera.GetCameraUp())) * -moveSpeed * deltaTime);
         }
 
+        if(Input::IsKey(HARMONY_KEY_SPACE)) {
+            m_Camera.Move(moveSpeed * deltaTime * m_Camera.GetCameraUp());
+        }
+
+         if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
+            m_Camera.Move(-moveSpeed * deltaTime * m_Camera.GetCameraUp());
+        }
+
         const glm::vec2 zero = {0, 0};
 
         if(Input::GetDeltaMousePosition() != zero) {
@@ -137,7 +126,8 @@ public:
         // Renderer2D::DrawQuad(m_Quad);
         // Renderer2D::EndBatch();
 
-        Renderer::Render(m_VaoID, m_IboID, indexCount);
+        Renderer::Render(m_Mesh, {1.5, 0, 0});
+        Renderer::Render(m_Mesh2, {-1.5, 0, 0});
     }
 
     void OnDestroy() override {
