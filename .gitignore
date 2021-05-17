@@ -1,2 +1,8 @@
+# Mac OS
+.DS_Store
+
+# Cpp
 build/
+
+# NPM/Auto Changelog
 node_modules/
