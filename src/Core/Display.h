@@ -73,7 +73,7 @@ namespace HarmonyEngine::Display {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // glEnable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
 
         glfwSetInputMode(s_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
