@@ -17,73 +17,43 @@ class GameScene : public Scene {
 
     Shader m_Shader;
     PerspectiveCamera m_Camera;
-    // Quad m_Quad;
-
     Mesh m_Mesh;
     Mesh m_Mesh2;
 
 public:
 
     void OnCreate() override {
-        m_Shader = Shader("assets/shaders/DefaultShader.vert.glsl", "assets/shaders/DefaultShader.frag.glsl");
+        m_Shader = Shader("assets/shaders/Shader2D.vert.glsl", "assets/shaders/Shader2D.frag.glsl");
         m_Shader.Create();
-
-        // Texture texture = Texture("assets/textures/grass.jpeg");
-        // texture.Create();
 
         m_Camera = PerspectiveCamera();
         
         Renderer::OnCreate(&m_Camera, &m_Shader);
 
-        // Renderer2D::OnCreate(&m_Camera, &m_Shader);
+        m_Mesh = Mesh(
+            {
+                Vertex({0, 0, 0}, {0, 0, 1, 1}, {0, 0}, 0),
+                Vertex({0, 1, 0}, {0, 0, 1, 1}, {0, 1}, 0),
+                Vertex({1, 1, 0}, {0, 0, 1, 1}, {1, 1}, 0),
+                Vertex({1, 0, 0}, {0, 0, 1, 1}, {1, 0}, 0)
+            },
+            {
+                0, 1, 2, 2, 3, 0,
+            }
+        );
 
-        // auto textureID = Renderer2D::AddTexture(texture);
+        m_Mesh2 = Mesh(
+            {
+                Vertex({1, 0, 0}, {1, 0, 0, 1}, {0, 0}, 0),
+                Vertex({1, 1, 0}, {1, 0, 0, 1}, {0, 1}, 0),
+                Vertex({2, 1, 0}, {1, 0, 0, 1}, {1, 1}, 0),
+                Vertex({2, 0, 0}, {1, 0, 0, 1}, {1, 0}, 0)
+            },
+            {
+                0, 1, 2, 2, 3, 0
+            }
+        );
 
-        // static const std::array<glm::vec4, 4> colorArray = {
-        //     glm::vec4(1, 0, 0, 1),
-        //     glm::vec4(0, 1, 0, 1),
-        //     glm::vec4(0, 0, 1, 1),
-        //     glm::vec4(1, 1, 0, 1)
-        // };
-
-        // m_Quad = Quad({-0.5, -0.5, 0}, {1, 1}, {1, 1, 1, 1}, textureID);
-
-        GLfloat vertices[] = {
-            // front
-            -1.0, -1.0,  1.0,
-            1.0, -1.0,  1.0,
-            1.0,  1.0,  1.0,
-            -1.0,  1.0,  1.0,
-            // back
-            -1.0, -1.0, -1.0,
-            1.0, -1.0, -1.0,
-            1.0,  1.0, -1.0,
-            -1.0,  1.0, -1.0
-        };
-
-        GLuint indices[] = {
-            // front
-            0, 1, 2,
-            2, 3, 0,
-            // right
-            1, 5, 6,
-            6, 2, 1,
-            // back
-            7, 6, 5,
-            5, 4, 7,
-            // left
-            4, 0, 3,
-            3, 7, 4,
-            // bottom
-            4, 5, 1,
-            1, 0, 4,
-            // top
-            3, 2, 6,
-            6, 7, 3
-        };
-
-        m_Mesh = Mesh(vertices, sizeof(vertices), indices, sizeof(indices));
-        m_Mesh2 = Mesh(vertices, sizeof(vertices), indices, sizeof(indices));
     }
 
 
@@ -126,12 +96,16 @@ public:
         // Renderer2D::DrawQuad(m_Quad);
         // Renderer2D::EndBatch();
 
-        Renderer::Render(m_Mesh, {1.5, 0, 0});
-        Renderer::Render(m_Mesh2, {-1.5, 0, 0});
+        Renderer::StartBatch();
+        Renderer::DrawMesh(m_Mesh);
+        Renderer::DrawMesh(m_Mesh2);
+        Renderer::EndBatch();
+
     }
 
     void OnDestroy() override {
         // Renderer2D::OnDestroy();
+        Renderer::OnDestroy();
     }
 
 };

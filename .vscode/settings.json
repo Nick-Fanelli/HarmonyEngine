@@ -9,6 +9,7 @@
     "files.associations": {
         "iosfwd": "cpp",
         "ios": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "new": "cpp"
     }
 }

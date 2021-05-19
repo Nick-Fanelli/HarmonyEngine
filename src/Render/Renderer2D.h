@@ -59,10 +59,10 @@ namespace HarmonyEngine {
 
     };
 
-    struct RenderBatch {
+    struct RenderBatch2D {
         GLuint VaoID = 0;
         GLuint VboID = 0;
-        GLuint EboID = 0;
+        GLuint IboID = 0;
 
         size_t IndexCount = 0;
         size_t TextureIndex = 1;
@@ -82,7 +82,7 @@ namespace HarmonyEngine {
         static Shader* s_Shader;
         static Camera* s_Camera;
 
-        static RenderBatch s_Batch;
+        static RenderBatch2D s_Batch;
 
         static void Render() {
             s_Shader->Bind();
@@ -102,7 +102,7 @@ namespace HarmonyEngine {
             glEnableVertexAttribArray(2);
             glEnableVertexAttribArray(3);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.EboID); // Bind the EBO
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the EBO
 
             glDrawElements(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0); // Draw the Elements
 
@@ -129,7 +129,7 @@ namespace HarmonyEngine {
         void OnCreate(Camera* camera, Shader* shader) {
             // Check to make sure that OnCreate method wasn't already called
             if(s_Batch.Vertices != nullptr) {
-                Log::Error("Vertices array was not equal to nullptr, exiting Renderer::OnCreate()");
+                Log::Error("Vertices array was not equal to nullptr, exiting Renderer2D::OnCreate()");
                 return;
             }
 
@@ -138,7 +138,7 @@ namespace HarmonyEngine {
 
             int maxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
-            s_Batch = RenderBatch();
+            s_Batch = RenderBatch2D();
             s_Batch.Vertices = new Vertex[MaxVertexCount];
             s_Batch.VertexPtr = s_Batch.Vertices;
 
@@ -180,8 +180,8 @@ namespace HarmonyEngine {
             }
 
             // Bind the indices
-            glGenBuffers(1, &s_Batch.EboID);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.EboID); // Bind the indices buffer
+            glGenBuffers(1, &s_Batch.IboID);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the indices buffer
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
 
 #ifdef HARMONY_DEBUG_UNBIND
@@ -212,13 +212,13 @@ namespace HarmonyEngine {
 
         void OnDestroy() {
             if(s_Batch.Vertices == nullptr) {
-                Log::Warn("Vertices array was already nullptr, exiting Renderer::OnDestroy()");
+                Log::Warn("Vertices array was already nullptr, exiting Renderer2D::OnDestroy()");
                 return;
             }
 
             glDeleteVertexArrays(1, &s_Batch.VaoID);
             glDeleteBuffers(1, &s_Batch.VboID);
-            glDeleteBuffers(1, &s_Batch.EboID);
+            glDeleteBuffers(1, &s_Batch.IboID);
 
             delete[] s_Batch.Vertices;
             delete[] s_Batch.Textures;
