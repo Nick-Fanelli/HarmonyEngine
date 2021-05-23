@@ -31,6 +31,7 @@ namespace HarmonyEngine {
         Vertex(const Vertex&) = default;
         Vertex(const glm::vec3& position, const glm::vec4& color, const glm::vec2& textureCoord, float textureID) 
         : Position(position), Color(color), TextureCoord(textureCoord), TextureID(textureID) {}
+        Vertex(const glm::vec3& position) : Position(position), Color({1, 1, 1, 1}) {}
 
     };
 

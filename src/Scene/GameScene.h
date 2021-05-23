@@ -15,44 +15,39 @@ using namespace HarmonyEngine;
 
 class GameScene : public Scene {
 
-    Shader m_Shader;
     PerspectiveCamera m_Camera;
     Mesh m_Mesh;
-    Mesh m_Mesh2;
 
 public:
 
     void OnCreate() override {
-        m_Shader = Shader("assets/shaders/Shader2D.vert.glsl", "assets/shaders/Shader2D.frag.glsl");
-        m_Shader.Create();
-
         m_Camera = PerspectiveCamera();
         
-        Renderer::OnCreate(&m_Camera, &m_Shader);
+        Renderer::OnCreate(&m_Camera);
 
-        m_Mesh = Mesh(
-            {
-                Vertex({0, 0, 0}, {0, 0, 1, 1}, {0, 0}, 0),
-                Vertex({0, 1, 0}, {0, 0, 1, 1}, {0, 1}, 0),
-                Vertex({1, 1, 0}, {0, 0, 1, 1}, {1, 1}, 0),
-                Vertex({1, 0, 0}, {0, 0, 1, 1}, {1, 0}, 0)
-            },
-            {
-                0, 1, 2, 2, 3, 0,
-            }
-        );
+        Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh);
 
-        m_Mesh2 = Mesh(
-            {
-                Vertex({1, 0, 0}, {1, 0, 0, 1}, {0, 0}, 0),
-                Vertex({1, 1, 0}, {1, 0, 0, 1}, {0, 1}, 0),
-                Vertex({2, 1, 0}, {1, 0, 0, 1}, {1, 1}, 0),
-                Vertex({2, 0, 0}, {1, 0, 0, 1}, {1, 0}, 0)
-            },
-            {
-                0, 1, 2, 2, 3, 0
-            }
-        );
+        // m_Mesh = Mesh(
+        //     {
+        //         Vertex({-1, -1, 1}, {1, 0, 0, 1}, {0, 0}, 0),
+        //         Vertex({1, -1, 1}, {0, 1, 0, 1}, {0, 1}, 0),
+        //         Vertex({1, 1, 1}, {0, 0, 1, 1}, {1, 1}, 0),
+        //         Vertex({-1, 1, 1}, {1, 1, 0, 1}, {1, 0}, 0),
+
+        //         Vertex({-1, -1, -1}, {1, 0, 0, 1}, {0, 0}, 0),
+        //         Vertex({1, -1, -1}, {0, 1, 0, 1}, {0, 1}, 0),
+        //         Vertex({1, 1, -1}, {0, 0, 1, 1}, {1, 1}, 0),
+        //         Vertex({-1, 1, -1}, {1, 1, 0, 1}, {1, 0}, 0)
+        //     },
+        //     {
+        //         0, 1, 2, 2, 3, 0,
+        //         1, 5, 6, 6, 2, 1, 
+        //         7, 6, 5, 5, 4, 7,
+        //         4, 0, 3, 3, 7, 4,
+        //         4, 5, 1, 1, 0, 4,
+        //         3, 2, 6, 6, 7, 3
+        //     }
+        // );
 
     }
 
@@ -98,7 +93,6 @@ public:
 
         Renderer::StartBatch();
         Renderer::DrawMesh(m_Mesh);
-        Renderer::DrawMesh(m_Mesh2);
         Renderer::EndBatch();
 
     }
