@@ -9,6 +9,25 @@
 
 namespace HarmonyEngine {
 
+    struct Vertex {
+
+        glm::vec3 Position;
+        glm::vec3 Normal;
+        glm::vec4 Color; 
+        glm::vec2 TextureCoord;
+        float TextureID;
+
+        Vertex() = default;
+        Vertex(const Vertex&) = default;
+
+        Vertex(const glm::vec3& position, const glm::vec3& normal, const glm::vec4& color, const glm::vec2& textureCoord, float textureID) 
+        : Position(position), Normal(normal), Color(color), TextureCoord(textureCoord), TextureID(textureID) {}
+
+        Vertex(const glm::vec3& position) : Position(position), Normal({0, 0, 0}), Color({1, 1, 1, 1}), TextureCoord({0, 0}), TextureID(0) {}
+
+        Vertex(const glm::vec3& position, const glm::vec3& normal) : Position(position), Normal(normal), Color({1, 1, 1, 1}), TextureCoord({0, 0}), TextureID(0) {}
+    };
+
     struct Mesh {
         std::vector<Vertex> Vertices;
         std::vector<uint32_t> Indices;
@@ -50,6 +69,7 @@ namespace HarmonyEngine {
             s_Shader.Bind();
             s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
             s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
+            s_Shader.AddUniformVec3("uLightPosition", {0, 20, 20});
 
             for(int i = 0; i < s_Batch.TextureIndex; i++) {
                 glActiveTexture(GL_TEXTURE0 + i);
@@ -63,6 +83,7 @@ namespace HarmonyEngine {
             glEnableVertexAttribArray(1);
             glEnableVertexAttribArray(2);
             glEnableVertexAttribArray(3);
+            glEnableVertexAttribArray(4);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the indices
 
@@ -76,6 +97,7 @@ namespace HarmonyEngine {
             glDisableVertexAttribArray(1);
             glDisableVertexAttribArray(2);
             glDisableVertexAttribArray(3);
+            glDisableVertexAttribArray(4);
 
             glBindVertexArray(0);
 #endif
@@ -126,9 +148,10 @@ namespace HarmonyEngine {
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * MaxVertexCount, nullptr, GL_DYNAMIC_DRAW);
 
             glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, Position));
-            glVertexAttribPointer(1, 4, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, Color));
-            glVertexAttribPointer(2, 2, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, TextureCoord));
-            glVertexAttribPointer(3, 1, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, TextureID));
+            glVertexAttribPointer(1, 3, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, Normal));
+            glVertexAttribPointer(2, 4, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, Color));
+            glVertexAttribPointer(3, 2, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, TextureCoord));
+            glVertexAttribPointer(4, 1, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, TextureID));
 
             glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind the Buffer
 
@@ -212,17 +235,15 @@ namespace HarmonyEngine {
         // Utility Functions
 
         void LoadOBJFile(const char* filepath, Mesh* mesh) {
-            std::vector<uint32_t> indices;
-
-            std::vector<Vertex> tempVertices;
+            std::vector<uint32_t> vertexIndices, uvIndices, normalIndices;
+            std::vector<glm::vec3> tempVertices;
             std::vector<glm::vec2> tempUvs;
-            std::vector<glm::vec3> tempIndices;
+            std::vector<glm::vec3> tempNormals;
 
             FILE* file = fopen(filepath, "r");
-
             if(file == NULL) {
-                Log::Error("Could not open file!");
-                return; 
+                Log::Error("Could not find and load obj file!");
+                return;
             }
 
             while(true) {
@@ -235,27 +256,45 @@ namespace HarmonyEngine {
                 if(strcmp(lineHeader, "v") == 0) {
                     glm::vec3 vertex;
                     fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-                    tempVertices.push_back(Vertex(vertex));
+                    tempVertices.push_back(vertex);
                 } else if(strcmp(lineHeader, "vt") == 0) {
                     glm::vec2 uv;
                     fscanf(file, "%f %f\n", &uv.x, &uv.y);
                     tempUvs.push_back(uv);
+                } else if(strcmp(lineHeader, "vn") == 0) {
+                    glm::vec3 normal;
+                    fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
+                    tempNormals.push_back(normal);
                 } else if(strcmp(lineHeader, "f") == 0) {
-                    std::string vertex1, vertex2, vertex3;
                     uint32_t vertexIndex[3], uvIndex[3], normalIndex[3];
-                    int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+                    int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
                     if(matches != 9) {
-                        Log::Info("Obj file format can't be read!");
+                        Log::Error("Could not load obj file format!");
                         return;
                     }
 
-                    indices.push_back(vertexIndex[0] - 1);
-                    indices.push_back(vertexIndex[1] - 1);
-                    indices.push_back(vertexIndex[2] - 1);
+                    vertexIndices.push_back(vertexIndex[0]);
+                    vertexIndices.push_back(vertexIndex[1]);
+                    vertexIndices.push_back(vertexIndex[2]);
+                    uvIndices    .push_back(uvIndex[0]);
+                    uvIndices    .push_back(uvIndex[1]);
+                    uvIndices    .push_back(uvIndex[2]);
+                    normalIndices.push_back(normalIndex[0]);
+                    normalIndices.push_back(normalIndex[1]);
+                    normalIndices.push_back(normalIndex[2]);
                 }
+            }
 
-                mesh->Vertices = tempVertices;
-                mesh->Indices = indices;
+            for(uint32_t i = 0; i < vertexIndices.size(); i++) {
+                uint32_t vertexIndex = vertexIndices[i];
+                uint32_t normalIndex = normalIndices[i];
+
+                glm::vec3 vertexPosition = tempVertices[vertexIndex - 1];
+                glm::vec3 vertexNormal = tempNormals[normalIndex - 1];
+
+                mesh->Vertices.push_back(Vertex(vertexPosition, vertexNormal));
+                mesh->Indices.push_back(i);
+                // Log::Info(&mesh->Indices);
             }
         }
     }

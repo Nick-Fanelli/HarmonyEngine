@@ -20,27 +20,27 @@ namespace HarmonyEngine {
         glm::vec4(1, 1, 1, 1)
     };
 
-    struct Vertex {
+    struct Vertex2D {
 
         glm::vec3 Position;
         glm::vec4 Color; 
         glm::vec2 TextureCoord;
         float TextureID;
 
-        Vertex() = default;
-        Vertex(const Vertex&) = default;
-        Vertex(const glm::vec3& position, const glm::vec4& color, const glm::vec2& textureCoord, float textureID) 
+        Vertex2D() = default;
+        Vertex2D(const Vertex2D&) = default;
+        Vertex2D(const glm::vec3& position, const glm::vec4& color, const glm::vec2& textureCoord, float textureID) 
         : Position(position), Color(color), TextureCoord(textureCoord), TextureID(textureID) {}
-        Vertex(const glm::vec3& position) : Position(position), Color({1, 1, 1, 1}) {}
+        Vertex2D(const glm::vec3& position) : Position(position), Color({1, 1, 1, 1}) {}
 
     };
 
     struct Quad {
 
-        Vertex V0;
-        Vertex V1;
-        Vertex V2;
-        Vertex V3;
+        Vertex2D V0;
+        Vertex2D V1;
+        Vertex2D V2;
+        Vertex2D V3;
 
         Quad() = default;
 
@@ -68,8 +68,8 @@ namespace HarmonyEngine {
         size_t IndexCount = 0;
         size_t TextureIndex = 1;
 
-        Vertex* Vertices = nullptr;
-        Vertex* VertexPtr = nullptr; 
+        Vertex2D* Vertices = nullptr;
+        Vertex2D* VertexPtr = nullptr; 
 
         int* Textures = nullptr;
     };
@@ -140,7 +140,7 @@ namespace HarmonyEngine {
             int maxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
             s_Batch = RenderBatch2D();
-            s_Batch.Vertices = new Vertex[MaxVertexCount];
+            s_Batch.Vertices = new Vertex2D[MaxVertexCount];
             s_Batch.VertexPtr = s_Batch.Vertices;
 
             s_Batch.Textures = new int[maxTextureCount];
@@ -154,12 +154,12 @@ namespace HarmonyEngine {
             glBindBuffer(GL_ARRAY_BUFFER, s_Batch.VboID);
 
             // Push Data to GPU
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * MaxVertexCount, nullptr, GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex2D) * MaxVertexCount, nullptr, GL_DYNAMIC_DRAW);
 
-            glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, Position));
-            glVertexAttribPointer(1, 4, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, Color));
-            glVertexAttribPointer(2, 2, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, TextureCoord));
-            glVertexAttribPointer(3, 1, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, TextureID));
+            glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(Vertex2D), (void*) offsetof(Vertex2D, Position));
+            glVertexAttribPointer(1, 4, GL_FLOAT, false, sizeof(Vertex2D), (void*) offsetof(Vertex2D, Color));
+            glVertexAttribPointer(2, 2, GL_FLOAT, false, sizeof(Vertex2D), (void*) offsetof(Vertex2D, TextureCoord));
+            glVertexAttribPointer(3, 1, GL_FLOAT, false, sizeof(Vertex2D), (void*) offsetof(Vertex2D, TextureID));
 
             glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind Buffer
 
