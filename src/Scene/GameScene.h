@@ -27,7 +27,7 @@ public:
 
         m_Mesh = Mesh();
 
-        Renderer::LoadOBJFile("assets/objects/monkey.obj", &m_Mesh);
+        Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh);
 
         // m_Mesh = Mesh(
         //     {

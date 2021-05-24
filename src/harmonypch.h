@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <functional>
 #include <algorithm>
 #include <regex>
