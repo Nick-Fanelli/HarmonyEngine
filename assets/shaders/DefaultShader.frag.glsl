@@ -33,6 +33,6 @@ void main() {
     if(textureID == 0) {
         out_Color = vColor * vec4((ambient + diffuse), 1.0);
     } else {
-        out_Color = vColor * texture(uTextures[textureID], vTextureCoord);
+        out_Color = vColor * vec4((ambient + diffuse), 1.0) * texture(uTextures[textureID], vTextureCoord);
     }
 }

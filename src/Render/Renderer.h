@@ -256,7 +256,6 @@ namespace HarmonyEngine {
         }
 
         // Utility Functions
-
         void LoadOBJFile(const char* filepath, Mesh* mesh) {
             std::vector<uint32_t> vertexIndices, uvIndices, normalIndices;
             std::vector<glm::vec3> tempVertices;
@@ -349,6 +348,4 @@ namespace HarmonyEngine {
             }
         }
     }
-
-
 }
