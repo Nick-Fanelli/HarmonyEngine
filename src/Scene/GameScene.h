@@ -23,10 +23,10 @@ public:
         
         Renderer::OnCreate(&m_Camera);
 
-        Texture texture = Texture("assets/textures/stallTexture.png");
-        texture.Create();
+        // Texture texture = Texture("assets/textures/stallTexture.png");
+        // texture.Create();
 
-        Renderer::AddTexture(texture);
+        // Renderer::AddTexture(texture);
 
         Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh);
 

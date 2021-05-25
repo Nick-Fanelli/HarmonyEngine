@@ -339,7 +339,7 @@ namespace HarmonyEngine {
                 }
 
                 if(!isDuplicate) {
-                    mesh->Vertices.push_back(Vertex(vertexPosition, vertexNormal, vertexUv, 1.0f));
+                    mesh->Vertices.push_back(Vertex(vertexPosition, vertexNormal, vertexUv));
                     mesh->Indices.push_back(i - duplicateOffset);
                 } else {
                     mesh->Indices.push_back(duplicatePosition);
