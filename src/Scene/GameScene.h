@@ -9,8 +9,6 @@
 #include "../Render/Camera.h"
 #include "../Render/Renderer.h"
 
-#include <glm/gtc/matrix_transform.hpp>
-
 using namespace HarmonyEngine;
 
 class GameScene : public Scene {
@@ -25,7 +23,10 @@ public:
         
         Renderer::OnCreate(&m_Camera);
 
-        m_Mesh = Mesh();
+        Texture texture = Texture("assets/textures/stallTexture.png");
+        texture.Create();
+
+        Renderer::AddTexture(texture);
 
         Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh);
 

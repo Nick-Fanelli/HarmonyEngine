@@ -25,14 +25,15 @@ namespace HarmonyEngine {
 
         Vertex(const glm::vec3& position) : Position(position), Normal({0, 0, 0}), Color({1, 1, 1, 1}), TextureCoord({0, 0}), TextureID(0) {}
 
-        Vertex(const glm::vec3& position, const glm::vec3& normal) : Position(position), Normal(normal), Color({1, 1, 1, 1}), TextureCoord({0, 0}), TextureID(0) {}
+        Vertex(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& textureCoords) : Position(position), Normal(normal), Color({1, 1, 1, 1}), TextureCoord(textureCoords), TextureID(0) {}
+        Vertex(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& textureCoords, float textureID) : Position(position), Normal(normal), Color({1, 1, 1, 1}), TextureCoord(textureCoords), TextureID(textureID) {}
 
         bool operator==(const Vertex& v) {
             return (v.Position == Position) && (v.Normal == Normal) && (v.Color == Color) && (v.TextureCoord == TextureCoord) && (v.TextureID == TextureID);
         }
 
-        bool Equals(const glm::vec3& position, const glm::vec3& normal) {
-            return (Position == position) && (Normal == normal);
+        bool Equals(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& textureCoord) {
+            return (Position == position) && (Normal == normal) && (TextureCoord == textureCoord);
         } 
     };
 
@@ -222,6 +223,20 @@ namespace HarmonyEngine {
             s_Batch.Indices = nullptr;
             s_Batch.Textures = nullptr;
         }
+
+        int AddTexture(const Texture& texture) {
+            // TODO: Check to make sure that we aren't exceeding the max texture amount
+            if(texture.GetTextureID() == -1) {
+                Log::Error("Texture : " + std::string(texture.GetFilepath()) +
+                       " has not been initialized and can not be added to the render batch!");
+                return 0;
+            }
+
+            s_Batch.Textures[s_Batch.TextureIndex] = texture.GetTextureID();
+            s_Batch.TextureIndex++;
+
+            return s_Batch.Textures[s_Batch.TextureIndex - 1];
+        }
  
         void DrawMesh(Mesh& mesh) {
             size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
@@ -309,12 +324,14 @@ namespace HarmonyEngine {
             for(uint32_t i = 0; i < vertexIndices.size(); i++) {
                 uint32_t vertexIndex = vertexIndices[i];
                 uint32_t normalIndex = normalIndices[i];
+                uint32_t uvIndex = uvIndices[i];
 
                 glm::vec3 vertexPosition = tempVertices[vertexIndex - 1];
                 glm::vec3 vertexNormal = tempNormals[normalIndex - 1];
+                glm::vec2 vertexUv = tempUvs[uvIndex - 1];
 
                 for(uint32_t i = 0; i < mesh->Vertices.size(); i++) {
-                    if(mesh->Vertices[i].Equals(vertexPosition, vertexNormal)) {
+                    if(mesh->Vertices[i].Equals(vertexPosition, vertexNormal, vertexUv)) {
                         duplicateOffset++;
                         duplicatePosition = i;
                         isDuplicate = true; 
@@ -322,8 +339,8 @@ namespace HarmonyEngine {
                     }
                 }
 
-                if(!isDuplicate){
-                    mesh->Vertices.push_back(Vertex(vertexPosition, vertexNormal));
+                if(!isDuplicate) {
+                    mesh->Vertices.push_back(Vertex(vertexPosition, vertexNormal, vertexUv, 1.0f));
                     mesh->Indices.push_back(i - duplicateOffset);
                 } else {
                     mesh->Indices.push_back(duplicatePosition);
