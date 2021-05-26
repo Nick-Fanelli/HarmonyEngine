@@ -15,42 +15,19 @@ class GameScene : public Scene {
 
     PerspectiveCamera m_Camera;
     Mesh m_Mesh;
+    Quad m_Quad;
 
 public:
 
     void OnCreate() override {
         m_Camera = PerspectiveCamera();
-        
+
+        Renderer2D::OnCreate(&m_Camera);        
         Renderer::OnCreate(&m_Camera);
 
-        // Texture texture = Texture("assets/textures/stallTexture.png");
-        // texture.Create();
-
-        // Renderer::AddTexture(texture);
+        m_Quad = Quad({7, 0, 4}, {1, 1}, {0, 0, 1, 1});
 
         Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh);
-
-        // m_Mesh = Mesh(
-        //     {
-        //         Vertex({-1, -1, 1}, {1, 0, 0, 1}, {0, 0}, 0),
-        //         Vertex({1, -1, 1}, {0, 1, 0, 1}, {0, 1}, 0),
-        //         Vertex({1, 1, 1}, {0, 0, 1, 1}, {1, 1}, 0),
-        //         Vertex({-1, 1, 1}, {1, 1, 0, 1}, {1, 0}, 0),
-
-        //         Vertex({-1, -1, -1}, {1, 0, 0, 1}, {0, 0}, 0),
-        //         Vertex({1, -1, -1}, {0, 1, 0, 1}, {0, 1}, 0),
-        //         Vertex({1, 1, -1}, {0, 0, 1, 1}, {1, 1}, 0),
-        //         Vertex({-1, 1, -1}, {1, 1, 0, 1}, {1, 0}, 0)
-        //     },
-        //     {
-        //         0, 1, 2, 2, 3, 0,
-        //         1, 5, 6, 6, 2, 1, 
-        //         7, 6, 5, 5, 4, 7,
-        //         4, 0, 3, 3, 7, 4,
-        //         4, 5, 1, 1, 0, 4,
-        //         3, 2, 6, 6, 7, 3
-        //     }
-        // );
 
     }
 
@@ -90,9 +67,9 @@ public:
             m_Camera.Rotate(Input::GetDeltaMousePosition() * mouseSensitivity * deltaTime); 
         }
 
-        // Renderer2D::StartBatch();
-        // Renderer2D::DrawQuad(m_Quad);
-        // Renderer2D::EndBatch();
+        Renderer2D::StartBatch();
+        Renderer2D::DrawQuad(m_Quad);
+        Renderer2D::EndBatch();
 
         Renderer::StartBatch();
         Renderer::DrawMesh(m_Mesh);
@@ -101,7 +78,7 @@ public:
     }
 
     void OnDestroy() override {
-        // Renderer2D::OnDestroy();
+        Renderer2D::OnDestroy();
         Renderer::OnDestroy();
     }
 

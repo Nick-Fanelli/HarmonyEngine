@@ -5,9 +5,6 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-#include <GLUT/glut.h>
-#define GLFW_DLL
-
 #include <GLFW/glfw3.h>
 
 #include "../Scene/SceneManager.h"

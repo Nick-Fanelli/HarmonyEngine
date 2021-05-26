@@ -80,15 +80,15 @@ namespace HarmonyEngine {
         static const size_t MaxVertexCount = MaxQuadCount * 4;
         static const size_t MaxIndexCount = MaxQuadCount * 6;
 
-        static Shader* s_Shader;
+        static Shader s_Shader;
         static Camera* s_Camera;
 
         static RenderBatch2D s_Batch;
 
         static void Render() {
-            s_Shader->Bind();
-            s_Shader->AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
-            s_Shader->AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
+            s_Shader.Bind();
+            s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
+            s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
 
             for(int i = 0; i < s_Batch.TextureIndex; i++) {
                 glActiveTexture(GL_TEXTURE0 + i);
@@ -117,6 +117,8 @@ namespace HarmonyEngine {
             glDisableVertexAttribArray(3);
 
             glBindVertexArray(0); // Unbind the VAO
+
+            s_Shader.Unbind(); // Unbind the Shader
 #endif
         }
 
@@ -127,7 +129,7 @@ namespace HarmonyEngine {
             glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Batch.Vertices);
         }
 
-        void OnCreate(Camera* camera, Shader* shader) {
+        void OnCreate(Camera* camera) {
             // Check to make sure that OnCreate method wasn't already called
             if(s_Batch.Vertices != nullptr) {
                 Log::Error("Vertices array was not equal to nullptr, exiting Renderer2D::OnCreate()");
@@ -135,7 +137,9 @@ namespace HarmonyEngine {
             }
 
             s_Camera = camera;
-            s_Shader = shader;
+
+            s_Shader = Shader("assets/shaders/DefaultShader2D.vert.glsl", "assets/shaders/DefaultShader2D.frag.glsl");
+            s_Shader.Create();
 
             int maxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
