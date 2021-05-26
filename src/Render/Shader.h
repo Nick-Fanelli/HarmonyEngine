@@ -17,6 +17,8 @@ namespace HarmonyEngine {
 
         GLuint m_ProgramID, m_VertexID, m_FragmentID;
 
+        std::unordered_map<std::string, std::string> m_Replacements;
+
         void AttachVertextShader(const std::string& source) {
             GLint result = GL_FALSE;
             int infoLogLength;
@@ -87,6 +89,15 @@ namespace HarmonyEngine {
             glDeleteShader(m_VertexID);
             glDeleteShader(m_FragmentID);
         }
+    
+        void ApplyReplacements(std::string& vertexSource, std::string& fragmentSource) {
+            for(auto& replacement : m_Replacements) {
+                std::regex regex = std::regex("\\$" + replacement.first + "\\$");
+
+                vertexSource = std::regex_replace(vertexSource, regex, replacement.second);
+                fragmentSource = std::regex_replace(fragmentSource, regex, replacement.second);
+            }
+        }
 
     public:
         static void Unbind() { glUseProgram(0); }
@@ -97,9 +108,14 @@ namespace HarmonyEngine {
         Shader(const char* vertexFilePath, const char* fragmentFilePath) : 
         m_VertexFilePath(vertexFilePath), m_FragmentFilePath(fragmentFilePath), m_ProgramID(glCreateProgram()) {}
 
+        Shader(const char* vertexFilePath, const char* fragmentFilePath, std::unordered_map<std::string, std::string>& replacements) : 
+        m_VertexFilePath(vertexFilePath), m_FragmentFilePath(fragmentFilePath), m_ProgramID(glCreateProgram()), m_Replacements(replacements) {}
+
         void Create() {
             std::string vertexSource = FileUtils::ReadFile(m_VertexFilePath);
             std::string fragmentSource = FileUtils::ReadFile(m_FragmentFilePath);
+
+            ApplyReplacements(vertexSource, fragmentSource);
 
             AttachVertextShader(vertexSource);
             AttachFragmentShader(fragmentSource);

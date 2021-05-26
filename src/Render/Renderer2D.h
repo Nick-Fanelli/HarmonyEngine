@@ -138,10 +138,13 @@ namespace HarmonyEngine {
 
             s_Camera = camera;
 
-            s_Shader = Shader("assets/shaders/DefaultShader2D.vert.glsl", "assets/shaders/DefaultShader2D.frag.glsl");
-            s_Shader.Create();
+            auto maxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
-            int maxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
+            std::unordered_map<std::string, std::string> replacements;
+            replacements["MAX_TEXTURE_COUNT"] = std::to_string(maxTextureCount);
+
+            s_Shader = Shader("assets/shaders/DefaultShader2D.vert.glsl", "assets/shaders/DefaultShader2D.frag.glsl", replacements);
+            s_Shader.Create();
 
             s_Batch = RenderBatch2D();
             s_Batch.Vertices = new Vertex2D[MaxVertexCount];

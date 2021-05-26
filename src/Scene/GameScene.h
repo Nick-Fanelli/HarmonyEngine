@@ -28,7 +28,6 @@ public:
         m_Quad = Quad({7, 0, 4}, {1, 1}, {0, 0, 1, 1});
 
         Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh);
-
     }
 
 
