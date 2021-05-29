@@ -15,19 +15,21 @@ class GameScene : public Scene {
 
     PerspectiveCamera m_Camera;
     Mesh m_Mesh;
-    Quad m_Quad;
+    Mesh m_Mesh2;
+    // Quad m_Quad;
 
 public:
 
     void OnCreate() override {
         m_Camera = PerspectiveCamera();
 
-        Renderer2D::OnCreate(&m_Camera);        
+        // Renderer2D::OnCreate(&m_Camera);        
         Renderer::OnCreate(&m_Camera);
 
-        m_Quad = Quad({7, 0, 4}, {1, 1}, {0, 0, 1, 1});
+        // m_Quad = Quad({7, 0, 4}, {1, 1}, {0, 0, 1, 1});
 
         Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh);
+        Renderer::LoadOBJFile("assets/objects/monkey.obj", &m_Mesh2);
     }
 
 
@@ -66,18 +68,19 @@ public:
             m_Camera.Rotate(Input::GetDeltaMousePosition() * mouseSensitivity * deltaTime); 
         }
 
-        Renderer2D::StartBatch();
-        Renderer2D::DrawQuad(m_Quad);
-        Renderer2D::EndBatch();
+        // Renderer2D::StartBatch();
+        // Renderer2D::DrawQuad(m_Quad);
+        // Renderer2D::EndBatch();
 
         Renderer::StartBatch();
         Renderer::DrawMesh(m_Mesh);
+        Renderer::DrawMesh(m_Mesh2);
         Renderer::EndBatch();
 
     }
 
     void OnDestroy() override {
-        Renderer2D::OnDestroy();
+        // Renderer2D::OnDestroy();
         Renderer::OnDestroy();
     }
 

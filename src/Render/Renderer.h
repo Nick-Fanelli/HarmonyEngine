@@ -51,6 +51,7 @@ namespace HarmonyEngine {
         GLuint VaoID = 0;
         GLuint VboID = 0;
         GLuint IboID = 0;
+        GLuint OboID = 0;
 
         size_t IndexCount = 0;
         size_t TextureIndex = 1;
@@ -61,11 +62,15 @@ namespace HarmonyEngine {
         uint32_t* Indices = nullptr;
         uint32_t* IndexPtr = nullptr;
 
+        glm::vec3* Offsets = nullptr;
+        glm::vec3* OffsetPtr = nullptr;
+
         int* Textures = nullptr;
     };
 
     namespace Renderer {
 
+        static const size_t MaxObjectCount = 500; // 500
         static const size_t MaxVertexCount = 80000; // 80,000
         static const size_t MaxIndexCount = 120000; // 120,000
 
@@ -73,55 +78,6 @@ namespace HarmonyEngine {
         static Camera* s_Camera;
 
         static RenderBatch s_Batch;
-
-        static void Render() {
-            s_Shader.Bind();
-            s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
-            s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
-            s_Shader.AddUniformVec3("uLightPosition", {0, 20, -20});
-
-            for(int i = 0; i < s_Batch.TextureIndex; i++) {
-                glActiveTexture(GL_TEXTURE0 + i);
-                glBindTexture(GL_TEXTURE_2D, s_Batch.Textures[i]);
-            }
-
-            glBindVertexArray(s_Batch.VaoID); // Bind the VAO
-
-            // Enable all the Vertex Attrib Pointers
-            glEnableVertexAttribArray(0);
-            glEnableVertexAttribArray(1);
-            glEnableVertexAttribArray(2);
-            glEnableVertexAttribArray(3);
-            glEnableVertexAttribArray(4);
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the indices
-
-            glDrawElements(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0); // Draw the elements
-
-#ifdef HARMONY_DEBUG_UNBIND
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the Ibo
-
-            // Disable all the Vertex Attrib Pointers
-            glDisableVertexAttribArray(0);
-            glDisableVertexAttribArray(1);
-            glDisableVertexAttribArray(2);
-            glDisableVertexAttribArray(3);
-            glDisableVertexAttribArray(4);
-
-            glBindVertexArray(0);
-#endif
-        }
-
-        static void UpdateBatchData() {
-            size_t vertexSize = (s_Batch.VertexPtr - s_Batch.Vertices) * sizeof(Vertex);
-            size_t indexSize = s_Batch.IndexCount * sizeof(uint32_t);
-
-            glBindBuffer(GL_ARRAY_BUFFER, s_Batch.VboID);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, vertexSize, s_Batch.Vertices);
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID);
-            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indexSize, s_Batch.Indices);
-        }
 
         void OnCreate(Camera* camera) {
             if(s_Batch.Vertices != nullptr) {
@@ -146,6 +102,9 @@ namespace HarmonyEngine {
 
             s_Batch.Indices = new uint32_t[MaxIndexCount];
             s_Batch.IndexPtr = s_Batch.Indices;
+
+            s_Batch.Offsets = new glm::vec3[MaxObjectCount];
+            s_Batch.OffsetPtr = s_Batch.Offsets;
 
             s_Batch.Textures = new int[maxTextureCount];
 
@@ -173,9 +132,74 @@ namespace HarmonyEngine {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * MaxIndexCount, nullptr, GL_DYNAMIC_DRAW);
 
+            glGenBuffers(1, &s_Batch.OboID);
+            glBindBuffer(GL_ARRAY_BUFFER, s_Batch.OboID);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * MaxObjectCount, nullptr, GL_DYNAMIC_DRAW);
+
+            glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
+            glVertexAttribDivisor(5, 1);
+
 #ifdef HARMONY_DEBUG_UNBIND
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind Index Buffer
             glBindVertexArray(0); // Unbind Vertex Array
+#endif
+        }
+
+        static void UpdateBatchData() {
+            size_t vertexSize = (s_Batch.VertexPtr - s_Batch.Vertices) * sizeof(Vertex);
+            size_t offsetSize = (s_Batch.OffsetPtr - s_Batch.Offsets) * sizeof(glm::vec3);
+            size_t indexSize = s_Batch.IndexCount * sizeof(uint32_t);
+
+            glBindBuffer(GL_ARRAY_BUFFER, s_Batch.VboID);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertexSize, s_Batch.Vertices);
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID);
+            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indexSize, s_Batch.Indices);
+
+            glBindBuffer(GL_ARRAY_BUFFER, s_Batch.OboID);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, offsetSize, s_Batch.Offsets);
+        }
+
+        static void Render() {
+            s_Shader.Bind();
+            s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
+            s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
+            s_Shader.AddUniformVec3("uLightPosition", {0, 20, -20});
+
+            for(int i = 0; i < s_Batch.TextureIndex; i++) {
+                glActiveTexture(GL_TEXTURE0 + i);
+                glBindTexture(GL_TEXTURE_2D, s_Batch.Textures[i]);
+            }
+
+            glBindVertexArray(s_Batch.VaoID); // Bind the VAO
+
+            // Enable all the Vertex Attrib Pointers
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
+            glEnableVertexAttribArray(2);
+            glEnableVertexAttribArray(3);
+            glEnableVertexAttribArray(4);
+            glEnableVertexAttribArray(5);
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the indices
+            glBindBuffer(GL_ARRAY_BUFFER, s_Batch.OboID);
+
+            glDrawElementsInstanced(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0, s_Batch.OffsetPtr - s_Batch.Offsets); // Draw the elements
+
+#ifdef HARMONY_DEBUG_UNBIND
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the Ibo
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+            // Disable all the Vertex Attrib Pointers
+            glDisableVertexAttribArray(0);
+            glDisableVertexAttribArray(1);
+            glDisableVertexAttribArray(2);
+            glDisableVertexAttribArray(3);
+            glDisableVertexAttribArray(4);
+            glDisableVertexAttribArray(5);
+
+            glBindVertexArray(0);
 #endif
         }
 
@@ -184,6 +208,7 @@ namespace HarmonyEngine {
             
             s_Batch.VertexPtr = s_Batch.Vertices;
             s_Batch.IndexPtr = s_Batch.Indices;
+            s_Batch.OffsetPtr = s_Batch.Offsets;
         }
 
         void EndBatch() {
@@ -191,21 +216,30 @@ namespace HarmonyEngine {
             Renderer::Render();
         }
 
-        static void AllocateVertices(size_t amount) {
-            size_t vertexCount = s_Batch.VertexPtr - s_Batch.Vertices;
+        static void AllocateVertices(uint32_t amount) {
+            uint32_t vertexCount = s_Batch.VertexPtr - s_Batch.Vertices;
 
-            if(vertexCount + amount >= MaxVertexCount) {
+            if(vertexCount + amount > MaxVertexCount) {
                 Renderer::EndBatch();
                 Renderer::StartBatch();
             }
         }
 
-        static void AllocateIndices(size_t amount) {
-            if(s_Batch.IndexCount + amount >= MaxIndexCount) {
+        static void AllocateIndices(uint32_t amount) {
+            if(s_Batch.IndexCount + amount > MaxIndexCount) {
                 Renderer::EndBatch();
                 Renderer::StartBatch();
-            } else {
-                s_Batch.IndexCount += amount;
+            }
+
+            s_Batch.IndexCount += amount;
+        }
+
+        static void AllocateObject() {
+            uint32_t offsetCount = s_Batch.OffsetPtr - s_Batch.Offsets;
+
+            if(offsetCount + 1 > MaxObjectCount) {
+                Renderer::EndBatch();
+                Renderer::StartBatch();
             }
         }
 
@@ -218,14 +252,17 @@ namespace HarmonyEngine {
             glDeleteVertexArrays(1, &s_Batch.VaoID);
             glDeleteBuffers(1, &s_Batch.VboID);
             glDeleteBuffers(1, &s_Batch.IboID);
+            glDeleteBuffers(1, &s_Batch.OboID);
 
             delete[] s_Batch.Vertices;
             delete[] s_Batch.Indices;
             delete[] s_Batch.Textures;
+            delete[] s_Batch.Offsets;
 
             s_Batch.Vertices = nullptr;
             s_Batch.Indices = nullptr;
             s_Batch.Textures = nullptr;
+            s_Batch.Offsets = nullptr;
         }
 
         int AddTexture(const Texture& texture) {
@@ -247,6 +284,7 @@ namespace HarmonyEngine {
 
             AllocateVertices(mesh.Vertices.size());
             AllocateIndices(mesh.Indices.size());
+            AllocateObject();
 
             for(auto& vertex : mesh.Vertices) {
                 *s_Batch.VertexPtr = vertex;
@@ -257,6 +295,9 @@ namespace HarmonyEngine {
                 *s_Batch.IndexPtr = index + indexOffset;
                 s_Batch.IndexPtr++;
             }
+
+            *s_Batch.OffsetPtr = glm::vec3(0, 0, 0);
+            s_Batch.OffsetPtr++;
         }
 
         // Utility Functions
