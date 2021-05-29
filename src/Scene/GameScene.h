@@ -8,28 +8,33 @@
 #include "../Render/Renderer2D.h"
 #include "../Render/Camera.h"
 #include "../Render/Renderer.h"
+#include "../Scene/Entity.h"
+#include "../Scene/Component.h"
 
 using namespace HarmonyEngine;
 
 class GameScene : public Scene {
 
     PerspectiveCamera m_Camera;
+    Entity m_Entity = Entity(this);
     Mesh m_Mesh;
-    Mesh m_Mesh2;
-    // Quad m_Quad;
 
 public:
 
     void OnCreate() override {
         m_Camera = PerspectiveCamera();
-
-        // Renderer2D::OnCreate(&m_Camera);        
+        
         Renderer::OnCreate(&m_Camera);
+        Renderer2D::OnCreate(&m_Camera);
+        
+        Texture texture{"assets/textures/stallTexture.png"};
+        texture.Create(); 
 
-        // m_Quad = Quad({7, 0, 4}, {1, 1}, {0, 0, 1, 1});
+        auto textureID = Renderer::AddTexture(texture);
+        Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh, textureID);
 
-        Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh);
-        Renderer::LoadOBJFile("assets/objects/monkey.obj", &m_Mesh2);
+        m_Entity.AddComponent<Transform>(glm::vec3(0, 0, 0));
+        m_Entity.AddComponent<MeshRenderer>(&m_Mesh);
     }
 
 
@@ -68,20 +73,22 @@ public:
             m_Camera.Rotate(Input::GetDeltaMousePosition() * mouseSensitivity * deltaTime); 
         }
 
-        // Renderer2D::StartBatch();
-        // Renderer2D::DrawQuad(m_Quad);
-        // Renderer2D::EndBatch();
-
         Renderer::StartBatch();
-        Renderer::DrawMesh(m_Mesh);
-        Renderer::DrawMesh(m_Mesh2);
+
+        auto meshRendererGroup = m_Registry.group<MeshRenderer>(entt::get<Transform>);
+        for(auto& entity : meshRendererGroup) {
+            auto[meshRenderer, transform] = meshRendererGroup.get<MeshRenderer, Transform>(entity);
+            Renderer::DrawMesh(*meshRenderer.MeshPtr, transform.Position);
+        }
+
         Renderer::EndBatch();
 
     }
 
     void OnDestroy() override {
-        // Renderer2D::OnDestroy();
         Renderer::OnDestroy();
+        Renderer2D::OnDestroy();
+        m_Registry.clear<>();
     }
 
 };

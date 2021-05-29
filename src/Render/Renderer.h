@@ -32,8 +32,8 @@ namespace HarmonyEngine {
             return (v.Position == Position) && (v.Normal == Normal) && (v.Color == Color) && (v.TextureCoord == TextureCoord) && (v.TextureID == TextureID);
         }
 
-        bool Equals(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& textureCoord) {
-            return (Position == position) && (Normal == normal) && (TextureCoord == textureCoord);
+        bool Equals(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& textureCoord, float textureID) {
+            return (Position == position) && (Normal == normal) && (TextureCoord == textureCoord) && (TextureID == textureID);
         } 
     };
 
@@ -279,7 +279,7 @@ namespace HarmonyEngine {
             return s_Batch.Textures[s_Batch.TextureIndex - 1];
         }
  
-        void DrawMesh(Mesh& mesh) {
+        void DrawMesh(Mesh& mesh, const glm::vec3 positionOffset = {0, 0, 0}) {
             size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
 
             AllocateVertices(mesh.Vertices.size());
@@ -296,12 +296,12 @@ namespace HarmonyEngine {
                 s_Batch.IndexPtr++;
             }
 
-            *s_Batch.OffsetPtr = glm::vec3(0, 0, 0);
+            *s_Batch.OffsetPtr = positionOffset;
             s_Batch.OffsetPtr++;
         }
 
         // Utility Functions
-        void LoadOBJFile(const char* filepath, Mesh* mesh) {
+        void LoadOBJFile(const char* filepath, Mesh* mesh, float textureID = 0) {
             std::vector<uint32_t> vertexIndices, uvIndices, normalIndices;
             std::vector<glm::vec3> tempVertices;
             std::vector<glm::vec2> tempUvs;
@@ -352,14 +352,6 @@ namespace HarmonyEngine {
                 }
             }
 
-            // vertices.push_back(Vertex({1, 1, 1}, {1, 1, 1}));
-            // Vertex vertex = Vertex({1, 1, 1}, {1, 1, 1});
-
-            // for(auto& v : vertices) {
-            //     if(v == vertex) 
-            //         Log::Info("Hey");
-            // }
-
             uint32_t duplicateOffset = 0;
 
             bool isDuplicate = false;
@@ -375,7 +367,7 @@ namespace HarmonyEngine {
                 glm::vec2 vertexUv = tempUvs[uvIndex - 1];
 
                 for(uint32_t i = 0; i < mesh->Vertices.size(); i++) {
-                    if(mesh->Vertices[i].Equals(vertexPosition, vertexNormal, vertexUv)) {
+                    if(mesh->Vertices[i].Equals(vertexPosition, vertexNormal, vertexUv, textureID)) {
                         duplicateOffset++;
                         duplicatePosition = i;
                         isDuplicate = true; 
@@ -384,7 +376,7 @@ namespace HarmonyEngine {
                 }
 
                 if(!isDuplicate) {
-                    mesh->Vertices.push_back(Vertex(vertexPosition, vertexNormal, vertexUv));
+                    mesh->Vertices.push_back(Vertex(vertexPosition, vertexNormal, vertexUv, textureID));
                     mesh->Indices.push_back(i - duplicateOffset);
                 } else {
                     mesh->Indices.push_back(duplicatePosition);
