@@ -8,16 +8,19 @@
 #include "../Render/Renderer2D.h"
 #include "../Render/Camera.h"
 #include "../Render/Renderer.h"
-#include "../Scene/Entity.h"
-#include "../Scene/Component.h"
+#include "Entity.h"
+#include "Component.h"
+#include "Terrain.h"
 
 using namespace HarmonyEngine;
 
 class GameScene : public Scene {
 
     PerspectiveCamera m_Camera;
-    Entity m_Entity = Entity(this);
-    Mesh m_Mesh;
+    // Entity m_Entity = Entity(this);
+    // Mesh m_Mesh;
+
+    Terrain m_Terrain;
 
 public:
 
@@ -27,14 +30,14 @@ public:
         Renderer::OnCreate(&m_Camera);
         Renderer2D::OnCreate(&m_Camera);
         
-        Texture texture{"assets/textures/stallTexture.png"};
-        texture.Create(); 
+        // Texture texture{"assets/textures/stallTexture.png"};
+        // texture.Create(); 
 
-        auto textureID = Renderer::AddTexture(texture);
-        Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh, textureID);
+        // auto textureID = Renderer::AddTexture(texture);
+        // Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh, textureID);
 
-        m_Entity.AddComponent<Transform>(glm::vec3(0, 0, 0));
-        m_Entity.AddComponent<MeshRenderer>(&m_Mesh);
+        // m_Entity.AddComponent<Transform>(glm::vec3(0, 0, 0));
+        // m_Entity.AddComponent<MeshRenderer>(&m_Mesh);
     }
 
 
@@ -74,6 +77,8 @@ public:
         }
 
         Renderer::StartBatch();
+
+        Renderer::DrawMesh(m_Terrain.GetMesh());
 
         auto meshRendererGroup = m_Registry.group<MeshRenderer>(entt::get<Transform>);
         for(auto& entity : meshRendererGroup) {
