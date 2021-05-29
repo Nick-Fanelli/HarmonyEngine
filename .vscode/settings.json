@@ -3,6 +3,7 @@
         "GLFW",
         "Luint",
         "OPENGL",
+        "entt",
         "glew",
         "harmonyengine"
     ],
