@@ -29,11 +29,13 @@ public:
         
         Renderer::OnCreate(&m_Camera);
         Renderer2D::OnCreate(&m_Camera);
-        
-        // Texture texture{"assets/textures/stallTexture.png"};
+
+        // Texture texture{"assets/textures/grass.jpeg"};
         // texture.Create(); 
 
         // auto textureID = Renderer::AddTexture(texture);
+        m_Terrain = Terrain(128, 0.0f);
+
         // Renderer::LoadOBJFile("assets/objects/stall.obj", &m_Mesh, textureID);
 
         // m_Entity.AddComponent<Transform>(glm::vec3(0, 0, 0));
