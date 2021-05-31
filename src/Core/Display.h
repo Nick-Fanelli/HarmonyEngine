@@ -32,9 +32,7 @@ namespace HarmonyEngine {
 
         static bool IsRunning() { return s_Window != nullptr; }
 
-        static void CloseDisplay() {
-
-        }
+        static void CloseDisplay();
     };
 
 }

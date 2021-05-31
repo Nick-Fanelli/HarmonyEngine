@@ -154,34 +154,12 @@ namespace HarmonyEngine {
     
     public:
 
-        static void Update() {
-            memcpy(&s_KeysLast, &s_Keys, sizeof(s_KeysLast));
-            memcpy(&s_MouseButtonsLast, &s_MouseButtons, sizeof(s_MouseButtonsLast));
+        static void Update();
 
-            memcpy(&s_MousePositionLast, &s_MousePosition, sizeof(s_MousePositionLast));
-
-            constexpr glm::vec2 zero = { 0, 0 };
-            s_ScrollPosition = zero;
-        }
-
-        static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-            if(key <= NUM_KEYS)
-                s_Keys[key] = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
-        }
-
-        static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-            if(button <= NUM_MOUSE_BUTTONS)
-                s_MouseButtons[button] = action == GLFW_PRESS;
-        }
-
-        static void MousePositionCallback(GLFWwindow* window, double xPos, double yPos) {
-            s_MousePosition = { xPos, yPos };
-        }
-
-        static void MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
-            s_ScrollPosition = { xOffset, yOffset };
-            s_AbsScrollPosition += glm::vec2(xOffset, yOffset);
-        }
+        static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+        static void MousePositionCallback(GLFWwindow* window, double xPos, double yPos);
+        static void MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 
         static bool IsKey(int keycode) { return s_Keys[keycode]; }
         static bool IsKeyUp(int keycode) { return !s_Keys[keycode] && s_KeysLast[keycode]; }

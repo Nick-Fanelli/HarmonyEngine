@@ -78,6 +78,8 @@
         "unordered_map": "cpp",
         "unordered_set": "cpp",
         "utility": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "numeric": "cpp",
+        "random": "cpp"
     }
 }

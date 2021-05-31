@@ -10,6 +10,51 @@ int Display::s_DisplayWidth = 1280;
 int Display::s_DisplayHeight = 720;
 int Display::s_CurrentFps = -1;
 
+void Display::StartGameLoop(Scene* scenePtr) {
+    Log::Info("Starting Game Loop...");
+
+    SceneManager::SetActiveScene(scenePtr);
+
+    float endTime, startTime = (float) glfwGetTime();
+    float deltaTime = -1.0f;
+
+    double lastTime = glfwGetTime();
+    double currentTime;
+    int frameCount = 0;
+
+    while(!glfwWindowShouldClose(s_Window)) {
+
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if(deltaTime >= 0) {
+            SceneManager::Update(deltaTime);
+
+            Input::Update();
+        }
+
+        glfwSwapBuffers(s_Window);
+        glfwPollEvents();
+
+        currentTime = glfwGetTime();
+        frameCount++;
+
+        if(currentTime - lastTime >= 1.0f) {
+            s_CurrentFps = 1000 / frameCount;
+            frameCount = 0;
+            lastTime = glfwGetTime();
+        }
+
+        endTime = (float) glfwGetTime();
+        deltaTime = endTime - startTime;
+        startTime = endTime;
+
+    }
+
+    CleanUp();
+
+}
+
 void Display::CreateDisplay(const char* title) {
         
     Log::Info("Creating the display...");
@@ -80,47 +125,6 @@ void Display::CleanUp() {
     Log::Success("Progam successfully exited!");
 }
 
-void Display::StartGameLoop(Scene* scenePtr) {
-    Log::Info("Starting Game Loop...");
-
-    SceneManager::SetActiveScene(scenePtr);
-
-    float endTime, startTime = (float) glfwGetTime();
-    float deltaTime = -1.0f;
-
-    double lastTime = glfwGetTime();
-    double currentTime;
-    int frameCount = 0;
-
-    while(!glfwWindowShouldClose(s_Window)) {
-
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        if(deltaTime >= 0) {
-            SceneManager::Update(deltaTime);
-
-            Input::Update();
-        }
-
-        glfwSwapBuffers(s_Window);
-        glfwPollEvents();
-
-        currentTime = glfwGetTime();
-        frameCount++;
-
-        if(currentTime - lastTime >= 1.0f) {
-            s_CurrentFps = 1000 / frameCount;
-            frameCount = 0;
-            lastTime = glfwGetTime();
-        }
-
-        endTime = (float) glfwGetTime();
-        deltaTime = endTime - startTime;
-        startTime = endTime;
-
-    }
-
-    CleanUp();
-
+void Display::CloseDisplay() {
+    
 }
