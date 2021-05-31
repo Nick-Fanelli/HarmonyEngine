@@ -4,32 +4,18 @@
 
 #include "Scene.h"
 
-namespace HarmonyEngine::SceneManager {
+namespace HarmonyEngine {
 
-    static Scene* s_ActiveScenePtr = nullptr;
+    class SceneManager {
 
-    void SetActiveScene(Scene* scenePtr) {
-        if(scenePtr == nullptr) return;
+        static Scene* s_ActiveScenePtr;
 
-        if(s_ActiveScenePtr != nullptr) {
-            auto ptr = s_ActiveScenePtr;
-            s_ActiveScenePtr = nullptr;
-            ptr->OnDestroy();
-        }
-        
-        scenePtr->OnCreate();
-        s_ActiveScenePtr = scenePtr;
-    }
+    public:
 
-    const Scene* GetActiveScenePtr() { return s_ActiveScenePtr; }
+        static void SetActiveScene(Scene* scenePtr);
+        static void Update(float deltaTime);
+        static void OnDestroy();
 
-    void Update(float deltaTime) {
-        if(s_ActiveScenePtr != nullptr)
-            s_ActiveScenePtr->Update(deltaTime);
-    }
-
-    void OnDestroy() {
-        if(s_ActiveScenePtr != nullptr)
-            s_ActiveScenePtr->OnDestroy();
-    }
+        static const Scene* GetActiveScenePtr() { return s_ActiveScenePtr; }
+    };
 }

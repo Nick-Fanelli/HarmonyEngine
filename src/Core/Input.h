@@ -133,63 +133,69 @@
 #define HARMONY_KEY_RIGHT_SUPER        347
 #define HARMONY_KEY_MENU               348
 
-namespace HarmonyEngine::Input {
+namespace HarmonyEngine {
 
-    static const size_t NUM_KEYS = 348; // Amount of keys that GLFW can handle
-    static const size_t NUM_MOUSE_BUTTONS = 9; // Amount of mouse buttons that GLFW can handle
+    class Input {
 
-    static bool s_Keys[NUM_KEYS] = { false };
-    static bool s_KeysLast[NUM_KEYS] = { false };
+        static const size_t NUM_KEYS = 348; // Amount of keys that GLFW can handle
+        static const size_t NUM_MOUSE_BUTTONS = 9; // Amount of mouse buttons that GLFW can handle
 
-    static bool s_MouseButtons[NUM_MOUSE_BUTTONS] = { false };
-    static bool s_MouseButtonsLast[NUM_MOUSE_BUTTONS] = { false };
+        static bool s_Keys[NUM_KEYS];
+        static bool s_KeysLast[NUM_KEYS];
 
-    static glm::vec2 s_MousePosition = glm::vec2();
-    static glm::vec2 s_MousePositionLast = glm::vec2();
+        static bool s_MouseButtons[NUM_MOUSE_BUTTONS];
+        static bool s_MouseButtonsLast[NUM_MOUSE_BUTTONS];
 
-    static glm::vec2 s_AbsScrollPosition = glm::vec2();
-    static glm::vec2 s_ScrollPosition = glm::vec2();
+        static glm::vec2 s_MousePosition;
+        static glm::vec2 s_MousePositionLast;
 
-    void Update() {
-        memcpy(&s_KeysLast, &s_Keys, sizeof(s_KeysLast));
-        memcpy(&s_MouseButtonsLast, &s_MouseButtons, sizeof(s_MouseButtonsLast));
+        static glm::vec2 s_AbsScrollPosition;
+        static glm::vec2 s_ScrollPosition;
+    
+    public:
 
-        memcpy(&s_MousePositionLast, &s_MousePosition, sizeof(s_MousePositionLast));
+        static void Update() {
+            memcpy(&s_KeysLast, &s_Keys, sizeof(s_KeysLast));
+            memcpy(&s_MouseButtonsLast, &s_MouseButtons, sizeof(s_MouseButtonsLast));
 
-        constexpr glm::vec2 zero = { 0, 0 };
-        s_ScrollPosition = zero;
-    }
+            memcpy(&s_MousePositionLast, &s_MousePosition, sizeof(s_MousePositionLast));
 
-    void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-        if(key <= NUM_KEYS)
-            s_Keys[key] = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
-    }
+            constexpr glm::vec2 zero = { 0, 0 };
+            s_ScrollPosition = zero;
+        }
 
-    void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-        if(button <= NUM_MOUSE_BUTTONS)
-            s_MouseButtons[button] = action == GLFW_PRESS;
-    }
+        static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+            if(key <= NUM_KEYS)
+                s_Keys[key] = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
+        }
 
-    void MousePositionCallback(GLFWwindow* window, double xPos, double yPos) {
-        s_MousePosition = { xPos, yPos };
-    }
+        static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+            if(button <= NUM_MOUSE_BUTTONS)
+                s_MouseButtons[button] = action == GLFW_PRESS;
+        }
 
-    void MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
-        s_ScrollPosition = { xOffset, yOffset };
-        s_AbsScrollPosition += glm::vec2(xOffset, yOffset);
-    }
+        static void MousePositionCallback(GLFWwindow* window, double xPos, double yPos) {
+            s_MousePosition = { xPos, yPos };
+        }
 
-    bool IsKey(int keycode) { return s_Keys[keycode]; }
-    bool IsKeyUp(int keycode) { return !s_Keys[keycode] && s_KeysLast[keycode]; }
-    bool IsKeyDown(int keycode) { return s_Keys[keycode] && !s_KeysLast[keycode]; }
+        static void MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
+            s_ScrollPosition = { xOffset, yOffset };
+            s_AbsScrollPosition += glm::vec2(xOffset, yOffset);
+        }
 
-    bool IsMouseButton(int button) { return s_MouseButtons[button]; }
-    bool IsMouseButtonUp(int button) { return !s_MouseButtons[button] && s_MouseButtonsLast[button]; }
-    bool IsMouseButtonDown(int button) { return s_MouseButtons[button] && !s_MouseButtonsLast[button]; }
+        static bool IsKey(int keycode) { return s_Keys[keycode]; }
+        static bool IsKeyUp(int keycode) { return !s_Keys[keycode] && s_KeysLast[keycode]; }
+        static bool IsKeyDown(int keycode) { return s_Keys[keycode] && !s_KeysLast[keycode]; }
 
-    const glm::vec2& GetMousePosition() { return s_MousePosition; }
-    const glm::vec2& GetScrollPosition() { return s_ScrollPosition; }
-    const glm::vec2& GetAbsScrollPosition() { return s_AbsScrollPosition; }
-    const glm::vec2 GetDeltaMousePosition() { return s_MousePosition - s_MousePositionLast; }
+        static bool IsMouseButton(int button) { return s_MouseButtons[button]; }
+        static bool IsMouseButtonUp(int button) { return !s_MouseButtons[button] && s_MouseButtonsLast[button]; }
+        static bool IsMouseButtonDown(int button) { return s_MouseButtons[button] && !s_MouseButtonsLast[button]; }
+
+        static const glm::vec2& GetMousePosition() { return s_MousePosition; }
+        static const glm::vec2& GetScrollPosition() { return s_ScrollPosition; }
+        static const glm::vec2& GetAbsScrollPosition() { return s_AbsScrollPosition; }
+        static const glm::vec2 GetDeltaMousePosition() { return s_MousePosition - s_MousePositionLast; }
+
+    };
 
 }

@@ -11,6 +11,7 @@
 #include "Entity.h"
 #include "Component.h"
 #include "Terrain.h"
+#include "../Core/Input.h"
 
 using namespace HarmonyEngine;
 
