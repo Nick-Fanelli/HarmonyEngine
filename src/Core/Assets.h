@@ -4,7 +4,7 @@
 
 #include <list>
 
-#include "../Render/Renderer.h"
+#include "../Render/Mesh.h"
 #include "../Render/Texture.h"
 
 namespace HarmonyEngine {

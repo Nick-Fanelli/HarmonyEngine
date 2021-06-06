@@ -188,12 +188,12 @@ void Renderer2D::OnDestroy() {
     s_Batch.Textures = nullptr;
 }
 
-void Renderer2D::DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, int textureID) {
+void Renderer2D::DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, AssetHandle<Texture>& texture) {
     AllocateTexture();
     AllocateVertices(4);
 
     float textureIndex = s_Batch.TextureIndex;
-    s_Batch.Textures[s_Batch.TextureIndex] = textureID;
+    s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
     s_Batch.TextureIndex++;
 
     s_Batch.VertexPtr->Position = position;
