@@ -19,6 +19,8 @@ using namespace HarmonyEngine;
 class GameScene : public Scene {
 
     PerspectiveCamera m_Camera;
+    AssetHandle<Texture> m_Texture;
+    AssetHandle<Mesh> m_Mesh;
 
 public:
 
@@ -27,12 +29,11 @@ public:
         
         Renderer2D::OnCreate(&m_Camera);
 
-        auto& texture = AssetManager::QueueTexture("assets/textures/grass.jpeg");
-        auto& texture2 = AssetManager::QueueTexture("assets/textures/realistic-grass.jpeg");
+        m_Texture = AssetManager::QueueTexture("assets/textures/stallTexture.png");
+        m_Mesh = AssetManager::QueueMesh("assets/objects/stall.obj");
 
         AssetManager::CreateAll();
     }
-
 
     void Update(float deltaTime) override {
 

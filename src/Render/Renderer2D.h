@@ -6,7 +6,6 @@
 
 #include "Texture.h"
 #include "Camera.h"
-#include "../Core/Assets.h"
 
 #if HARMONY_DEBUG_ENABLED
     #define HARMONY_DEBUG_UNBIND

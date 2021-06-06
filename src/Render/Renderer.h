@@ -38,13 +38,16 @@ namespace HarmonyEngine {
     };
 
     struct Mesh {
+        const char* Filepath;
         std::vector<Vertex> Vertices;
         std::vector<uint32_t> Indices;
 
         Mesh() = default;
 
+        Mesh(const char* filepath) : Filepath(filepath) {}
+
         Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices) :
-        Vertices(vertices), Indices(indices) {}
+        Filepath(""), Vertices(vertices), Indices(indices) {}
     };
 
     struct RenderBatch {
