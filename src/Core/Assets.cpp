@@ -2,19 +2,19 @@
 
 using namespace HarmonyEngine;
 
-static std::vector<Texture> s_Textures;
-
-// ====================================================================================
+// ==========================================================================================
 // Asset Manager
-// ====================================================================================
-Asset<Texture> AssetManager::LoadTexture(const char* filepath) {
-    auto& texture = s_Textures.emplace_back(filepath);
-    texture.Create();
+// ==========================================================================================
+std::list<Asset<Texture>> AssetManager::s_TextureRegistry;
 
-    return Asset<Texture>(&texture);
+void AssetManager::CreateAll() {
+    // TODO: Multithread
+    for(auto& texture : s_TextureRegistry)
+        texture->Create();
 }
 
-void AssetManager::Flush() {
-    for(auto& texture : s_Textures) { texture.Delete(); }
-    s_Textures.clear();
+void AssetManager::DestroyAll() {
+    for(auto& texture : s_TextureRegistry)
+        texture->Delete();
+    s_TextureRegistry.clear();
 }

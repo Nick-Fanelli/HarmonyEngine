@@ -19,7 +19,6 @@ using namespace HarmonyEngine;
 class GameScene : public Scene {
 
     PerspectiveCamera m_Camera;
-    Asset<Texture> m_Texture;
 
 public:
 
@@ -28,7 +27,10 @@ public:
         
         Renderer2D::OnCreate(&m_Camera);
 
-        m_Texture = AssetManager::LoadTexture("assets/textures/stallTexture.png");
+        auto& texture = AssetManager::QueueTexture("assets/textures/grass.jpeg");
+        auto& texture2 = AssetManager::QueueTexture("assets/textures/realistic-grass.jpeg");
+
+        AssetManager::CreateAll();
     }
 
 
@@ -71,8 +73,6 @@ public:
         RendererStats2D::Start();
         Renderer2D::StartBatch();
 
-        Renderer2D::DrawQuad({0, 0, 0}, {1, 1}, {1, 1, 1, 1}, );
-
         Renderer2D::EndBatch();
         RendererStats2D::End();
 
@@ -81,7 +81,7 @@ public:
     void OnDestroy() override {
         Renderer2D::OnDestroy();
         m_Registry.clear<>();
-        AssetManager::Flush();
+        AssetManager::DestroyAll();
     }
 
 };

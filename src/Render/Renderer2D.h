@@ -109,7 +109,7 @@ namespace HarmonyEngine {
         static void StartBatch();
         static void EndBatch();
 
-        static void DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, Asset<Texture>& texture);
+        static void DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, int textureID);
     };
 
 }

@@ -2,37 +2,45 @@
 
 #include "harmonypch.h"
 
+#include <list>
+
 #include "../Render/Texture.h"
 
 namespace HarmonyEngine {
 
-    // ====================================================================================
+    // ==========================================================================================
     // Asset 
-    // ====================================================================================
+    // ==========================================================================================
     template<typename T>
     class Asset {
 
-        T* m_AssetPtr;
+        T m_Data;
+
+    public:
+        template<typename... Args>
+        Asset(Args&&... args) {
+            m_Data = T(std::forward<Args>(args)...);
+        }
+
+        T* operator->() {return &m_Data; }
+    };
+
+    // ==========================================================================================
+    // Asset Manager
+    // ==========================================================================================
+    class AssetManager {
+
+        static std::list<Asset<Texture>> s_TextureRegistry;
 
     public:
 
-        Asset() = default;
-        Asset(T* assetPtr) : m_AssetPtr(assetPtr) {}
+        static Asset<Texture>& QueueTexture(const char* filepath) {
+            return s_TextureRegistry.emplace_back(filepath);
+        }
 
-        T* Get() { return m_AssetPtr; }
-    };
-
-    // ====================================================================================
-    // Asset Manager
-    // ====================================================================================
-    struct AssetManager {
-
-        static Asset<Texture> LoadTexture(const char* filepath);
-
-        static void Flush();
-
-        // Asset<Shader> LoadShader(std::string& vertexFilepath, std::string& fragmentFilepath);
-        // Asset<Shader> LoadShader(std::string& vertexFilepath, std::string& fragmentFilepath, std::unordered_map<std::string, std::string>& replacements);
+        static void CreateAll();
+        static void DestroyAll();
 
     };
+
 }
