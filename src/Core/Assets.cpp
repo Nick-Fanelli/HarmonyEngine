@@ -8,7 +8,7 @@ using namespace HarmonyEngine;
 std::list<Asset<Texture>> AssetManager::s_TextureRegistry;
 
 void AssetManager::CreateAll() {
-    // TODO: Multithread
+    // Keep all texture loading on one thread for OpenGL
     for(auto& texture : s_TextureRegistry)
         texture->Create();
 }
