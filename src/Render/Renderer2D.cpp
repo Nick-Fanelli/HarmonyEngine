@@ -89,17 +89,9 @@ void Renderer2D::OnCreate(Camera* camera) {
 
 void Renderer2D::Render() {
 
-    // int textures[s_Batch.TextureIndex];
-
-    // for(int i = 1; i < s_Batch.TextureIndex; i++) {
-    //     textures[i] = s_Batch.Textures[i]->Get()->GetTextureID();
-    // }
-
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
-
-    // Log::Info(s_Batch.TextureIndex);
 
     for(int i = 1; i < s_Batch.TextureIndex; i++) {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -192,9 +184,20 @@ void Renderer2D::DrawQuad(const glm::vec3 position, const glm::vec2 scale, const
     AllocateTexture();
     AllocateVertices(4);
 
-    float textureIndex = s_Batch.TextureIndex;
-    s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
-    s_Batch.TextureIndex++;
+    float textureIndex = 0.0f;
+
+    for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
+        if(s_Batch.Textures[i] == texture->GetTextureID()) {
+            textureIndex = (float) i;
+            break;
+        }
+    }
+
+    if(textureIndex == 0.0f) {
+        textureIndex = (float) s_Batch.TextureIndex;
+        s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
+        s_Batch.TextureIndex++;
+    }
 
     s_Batch.VertexPtr->Position = position;
     s_Batch.VertexPtr->Color = color;
