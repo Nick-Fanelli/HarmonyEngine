@@ -71,7 +71,7 @@ public:
         RendererStats2D::Start();
         Renderer2D::StartBatch();
 
-        
+        Renderer2D::DrawQuad({0, 0, 0}, {1, 1}, {1, 1, 1, 1}, );
 
         Renderer2D::EndBatch();
         RendererStats2D::End();

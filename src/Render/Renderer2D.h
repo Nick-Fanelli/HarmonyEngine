@@ -6,6 +6,7 @@
 
 #include "Texture.h"
 #include "Camera.h"
+#include "../Core/Assets.h"
 
 #if HARMONY_DEBUG_ENABLED
     #define HARMONY_DEBUG_UNBIND
@@ -108,7 +109,7 @@ namespace HarmonyEngine {
         static void StartBatch();
         static void EndBatch();
 
-        static void DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, Texture& texture);
+        static void DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, Asset<Texture>& texture);
     };
 
 }

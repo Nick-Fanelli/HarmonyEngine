@@ -181,7 +181,7 @@ void Renderer2D::OnDestroy() {
     s_Batch.Textures = nullptr;
 }
 
-void Renderer2D::DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, Texture& texture) {
+void Renderer2D::DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, Asset<Texture>& texture) {
     AllocateTexture();
     AllocateVertices(4);
 
