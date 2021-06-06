@@ -53,3 +53,7 @@ void Texture::Create() {
 
     Unbind();
 }
+
+void Texture::Delete() {
+    glDeleteTextures(1, &m_TextureID);
+}

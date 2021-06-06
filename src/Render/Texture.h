@@ -23,6 +23,7 @@ namespace HarmonyEngine {
         Texture(const char* filepath) : m_Filepath(filepath) {}
 
         void Create();
+        void Delete();
 
         void Create(const char* filepath) {
             m_Filepath = filepath;
