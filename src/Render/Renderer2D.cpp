@@ -8,64 +8,15 @@ static const size_t MaxQuadCount = 20000;
 static const size_t MaxVertexCount = MaxQuadCount * 4;
 static const size_t MaxIndexCount = MaxQuadCount * 6;
 
+static uint32_t s_MaxTextureCount;
+
 static RenderBatch2D s_Batch;
 static Shader s_Shader;
 
 Camera* Renderer2D::s_Camera = nullptr;
 
-void Renderer2D::Render() {
-    s_Shader.Bind();
-    s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
-    s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
-
-    for(int i = 0; i < s_Batch.TextureIndex; i++) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, s_Batch.Textures[i]);
-    }
-
-    glBindVertexArray(s_Batch.VaoID); // Bind the VAO
-
-    // Enable all the Vertex Attrib Pointers
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the EBO
-
-    glDrawElements(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0); // Draw the Elements
-
-#ifdef HARMONY_DEBUG_UNBIND
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the EBO
-
-    // Disable al the Vertex Attrib Pointers
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-    glDisableVertexAttribArray(3);
-
-    glBindVertexArray(0); // Unbind the VAO
-
-    s_Shader.Unbind(); // Unbind the Shader
-#endif
-}
-
-void Renderer2D::UpdateBatchVertexData() {
-    GLsizeiptr size = (uint8_t*) s_Batch.VertexPtr - (uint8_t*) s_Batch.Vertices;
-
-    glBindBuffer(GL_ARRAY_BUFFER, s_Batch.VboID);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Batch.Vertices);
-}
-
-void Renderer2D::AllocateVertices(int amount) {
-    uint32_t vertexCount = s_Batch.VertexPtr - s_Batch.Vertices;
-
-    // If there isn't enough space, start a new render batch!
-    if(vertexCount + amount >= MaxVertexCount) {
-        Renderer2D::EndBatch(); // End the current batch
-        Renderer2D::StartBatch(); // Start a new batch
-    }
-}
+size_t RendererStats2D::BatchCount = 0;
+size_t RendererStats2D::CurrentBatchCount = 0;
 
 void Renderer2D::OnCreate(Camera* camera) {
     // Check to make sure that OnCreate method wasn't already called
@@ -76,10 +27,10 @@ void Renderer2D::OnCreate(Camera* camera) {
 
     s_Camera = camera;
 
-    auto maxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
+    s_MaxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
     std::unordered_map<std::string, std::string> replacements;
-    replacements["MAX_TEXTURE_COUNT"] = std::to_string(maxTextureCount);
+    replacements["MAX_TEXTURE_COUNT"] = std::to_string(s_MaxTextureCount);
 
     s_Shader = Shader("assets/shaders/DefaultShader2D.vert.glsl", "assets/shaders/DefaultShader2D.frag.glsl", replacements);
     s_Shader.Create();
@@ -88,7 +39,7 @@ void Renderer2D::OnCreate(Camera* camera) {
     s_Batch.Vertices = new Vertex2D[MaxVertexCount];
     s_Batch.VertexPtr = s_Batch.Vertices;
 
-    s_Batch.Textures = new int[maxTextureCount];
+    s_Batch.Textures = new int[s_MaxTextureCount];
 
     // Bind the VAO
     glGenVertexArrays(1, &s_Batch.VaoID);
@@ -136,9 +87,76 @@ void Renderer2D::OnCreate(Camera* camera) {
 #endif
 }
 
+void Renderer2D::Render() {
+    s_Shader.Bind();
+    s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
+    s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
+
+    // Log::Info(s_Batch.TextureIndex);
+
+    for(int i = 1; i < s_Batch.TextureIndex; i++) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, s_Batch.Textures[i]);
+    }
+
+    glBindVertexArray(s_Batch.VaoID); // Bind the VAO
+
+    // Enable all the Vertex Attrib Pointers
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the EBO
+
+    glDrawElements(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0); // Draw the Elements
+
+#ifdef HARMONY_DEBUG_UNBIND
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the EBO
+
+    // Disable al the Vertex Attrib Pointers
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+
+    glBindVertexArray(0); // Unbind the VAO
+
+    s_Shader.Unbind(); // Unbind the Shader
+#endif
+}
+
+void Renderer2D::UpdateBatchVertexData() {
+    GLsizeiptr size = (uint8_t*) s_Batch.VertexPtr - (uint8_t*) s_Batch.Vertices;
+
+    glBindBuffer(GL_ARRAY_BUFFER, s_Batch.VboID);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Batch.Vertices);
+}
+
+static void AllocateVertices(int amount) {
+    uint32_t vertexCount = s_Batch.VertexPtr - s_Batch.Vertices;
+
+    // If there isn't enough space, start a new render batch!
+    if(vertexCount + amount >= MaxVertexCount) {
+        Renderer2D::EndBatch(); // End the current batch
+        Renderer2D::StartBatch(); // Start a new batch
+    }
+}
+
+static void AllocateTexture() {
+    if(s_Batch.TextureIndex >= s_MaxTextureCount) {
+        Renderer2D::EndBatch();
+        Renderer2D::StartBatch();
+    }
+}
+
 void Renderer2D::StartBatch() {
     s_Batch.IndexCount = 0;
+    s_Batch.TextureIndex = 1;
+
     s_Batch.VertexPtr = s_Batch.Vertices;
+
+    RendererStats2D::CurrentBatchCount++;
 }
 
 void Renderer2D::EndBatch() {
@@ -163,34 +181,38 @@ void Renderer2D::OnDestroy() {
     s_Batch.Textures = nullptr;
 }
 
-int Renderer2D::AddTexture(const Texture& texture) {
-    // TODO: Check to make sure that we aren't exceeding the max texture amount
-    if(texture.GetTextureID() == -1) {
-        Log::Error("Texture : " + std::string(texture.GetFilepath()) +
-                " has not been initialized and can not be added to the render batch!");
-        return 0;
-    }
+void Renderer2D::DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, Texture& texture) {
+    AllocateTexture();
+    AllocateVertices(4);
 
+    float textureIndex = s_Batch.TextureIndex;
     s_Batch.Textures[s_Batch.TextureIndex] = texture.GetTextureID();
     s_Batch.TextureIndex++;
 
-    return s_Batch.Textures[s_Batch.TextureIndex - 1];
-}
-
-void Renderer2D::DrawQuad(Quad& quad) {
-    Renderer2D::AllocateVertices(4);
-
-    *s_Batch.VertexPtr = quad.V0;
+    s_Batch.VertexPtr->Position = position;
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {0, 0};
+    s_Batch.VertexPtr->TextureID = textureIndex;
     s_Batch.VertexPtr++;
 
-    *s_Batch.VertexPtr = quad.V1;
+    s_Batch.VertexPtr->Position = glm::vec3(position.x, position.y + scale.y, position.z);
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {0, 1};
+    s_Batch.VertexPtr->TextureID = textureIndex;
     s_Batch.VertexPtr++;
 
-    *s_Batch.VertexPtr = quad.V2;
+    s_Batch.VertexPtr->Position = glm::vec3(position.x + scale.x, position.y + scale.y, position.z);
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {1, 1};
+    s_Batch.VertexPtr->TextureID = textureIndex;
     s_Batch.VertexPtr++;
 
-    *s_Batch.VertexPtr = quad.V3;
+    s_Batch.VertexPtr->Position = glm::vec3(position.x + scale.x, position.y, position.z);
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {1, 0};
+    s_Batch.VertexPtr->TextureID = textureIndex;
     s_Batch.VertexPtr++;
 
     s_Batch.IndexCount += 6; // Six indices per quad
 }
+

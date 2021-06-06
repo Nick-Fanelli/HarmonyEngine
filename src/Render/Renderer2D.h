@@ -74,6 +74,25 @@ namespace HarmonyEngine {
         int* Textures = nullptr;
     };
 
+    struct RendererStats2D {
+
+        friend class Renderer2D;
+
+        static size_t BatchCount;
+
+        static void Start() {
+            CurrentBatchCount = 0;
+        }
+
+        static void End() {
+            BatchCount = CurrentBatchCount;
+        }
+
+    private:
+        static size_t CurrentBatchCount;
+
+    };
+
     class Renderer2D {
 
         static Camera* s_Camera;
@@ -81,7 +100,6 @@ namespace HarmonyEngine {
         static void Render();
         static void UpdateBatchVertexData();
 
-        static void AllocateVertices(int amount);
     public:
 
         static void OnCreate(Camera* camera);
@@ -90,8 +108,7 @@ namespace HarmonyEngine {
         static void StartBatch();
         static void EndBatch();
 
-        static int AddTexture(const Texture& texture);
-        static void DrawQuad(Quad& quad);
+        static void DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, Texture& texture);
     };
 
 }

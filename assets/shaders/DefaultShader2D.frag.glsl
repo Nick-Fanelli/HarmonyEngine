@@ -1,4 +1,4 @@
-#version 410 core
+#version 400 core
 
 in vec4 vColor;
 in vec2 vTextureCoord;
@@ -15,7 +15,7 @@ void main() {
     if(textureID == 0) {
         out_Color = vColor;
     } else {
-        out_Color * texture(uTextures[textureID], vTextureCoord);
+        out_Color = vColor * texture(uTextures[textureID], vTextureCoord);
     }
 
 }
