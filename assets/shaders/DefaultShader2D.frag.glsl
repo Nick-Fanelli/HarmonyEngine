@@ -1,4 +1,4 @@
-#version 400 core
+#version 410 core
 
 in vec4 vColor;
 in vec2 vTextureCoord;
@@ -10,12 +10,6 @@ out vec4 out_Color;
 
 void main() {
 
-    int textureID = int(vTextureID);
-
-    if(textureID == 0) {
-        out_Color = vColor;
-    } else {
-        out_Color = vColor * texture(uTextures[textureID], vTextureCoord);
-    }
+    out_Color = vColor * texture(uTextures[int(vTextureID)], vTextureCoord);
 
 }

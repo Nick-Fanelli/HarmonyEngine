@@ -6,9 +6,6 @@
 
 namespace HarmonyEngine {
 
-    static const int MIN_FILTER = GL_LINEAR;
-    static const int MAG_FILTER = GL_LINEAR;
-
     class Texture {
 
         GLuint m_TextureID = -1;
@@ -16,10 +13,11 @@ namespace HarmonyEngine {
         const char* m_Filepath = nullptr;
         int m_Width, m_Height;
 
+        bool m_Created = false;
+
     public:
 
         Texture() = default;
-        Texture(const Texture&) = default;
         Texture(const char* filepath) : m_Filepath(filepath) {}
 
         void Create();
@@ -29,10 +27,6 @@ namespace HarmonyEngine {
             m_Filepath = filepath;
 
             Texture::Create();
-        }
-
-        static void Unbind() {
-            glBindTexture(GL_TEXTURE_2D, 0);
         }
 
         void Bind() {

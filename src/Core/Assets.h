@@ -47,11 +47,7 @@ namespace HarmonyEngine {
         AssetHandle(const AssetHandle& other) { m_Asset = other.m_Asset; } 
         AssetHandle(Asset<T>* assetPtr) : m_Asset(assetPtr) {}
 
-        T* operator->() {
-            static auto* data = m_Asset->GetPtr();
-            return data;
-        }
-
+        T* operator->() { return m_Asset->GetPtr(); }
     };
 
     // ==========================================================================================

@@ -13,6 +13,8 @@ static uint32_t s_MaxTextureCount;
 static RenderBatch2D s_Batch;
 static Shader s_Shader;
 
+static GLuint s_WhiteTexture;
+
 Camera* Renderer2D::s_Camera = nullptr;
 
 size_t RendererStats2D::BatchCount = 0;
@@ -40,6 +42,18 @@ void Renderer2D::OnCreate(Camera* camera) {
     s_Batch.VertexPtr = s_Batch.Vertices;
 
     s_Batch.Textures = new int[s_MaxTextureCount];
+
+    // Create the white texture
+    // glGenTextures(1, &s_WhiteTexture);
+    // glBindTexture(GL_TEXTURE_2D, s_WhiteTexture);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    // uint32_t color = 0xffffffff;
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_INT, &color);
+
+    s_Batch.Textures[0] = s_WhiteTexture;
 
     // Bind the VAO
     glGenVertexArrays(1, &s_Batch.VaoID);
@@ -93,9 +107,10 @@ void Renderer2D::Render() {
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
 
-    for(int i = 1; i < s_Batch.TextureIndex; i++) {
+    for(int i = 0; i < s_Batch.TextureIndex; i++) {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, s_Batch.Textures[i]);
+        Log::Info(glGetError());
     }
 
     glBindVertexArray(s_Batch.VaoID); // Bind the VAO
@@ -172,6 +187,8 @@ void Renderer2D::OnDestroy() {
     glDeleteVertexArrays(1, &s_Batch.VaoID);
     glDeleteBuffers(1, &s_Batch.VboID);
     glDeleteBuffers(1, &s_Batch.IboID);
+
+    glDeleteTextures(1, &s_WhiteTexture);
 
     delete[] s_Batch.Vertices;
     delete[] s_Batch.Textures;
