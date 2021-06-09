@@ -4,9 +4,9 @@
 
 #include <glm/glm.hpp>
 
-#include "Renderer2D.h"
 #include "Camera.h"
 #include "Mesh.h"
+#include "Texture.h"
 
 namespace HarmonyEngine {
 

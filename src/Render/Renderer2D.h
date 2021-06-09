@@ -8,10 +8,6 @@
 #include "Camera.h"
 #include "../Core/Assets.h"
 
-#if HARMONY_DEBUG_ENABLED
-    #define HARMONY_DEBUG_UNBIND
-#endif
-
 namespace HarmonyEngine {
 
     static const std::array<glm::vec4, 4> DefaultColor = {

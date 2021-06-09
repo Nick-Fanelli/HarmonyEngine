@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef NDEBUG
-    #define HARMONY_DEBUG_ENABLED true
+    #define HARMONY_DEBUG_ENABLED
 #endif
 
 #include <iostream>

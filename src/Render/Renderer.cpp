@@ -73,7 +73,7 @@ void Renderer::OnCreate(Camera* camera) {
     glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
     glVertexAttribDivisor(5, 1);
 
-#ifdef HARMONY_DEBUG_UNBIND
+#ifdef HARMONY_DEBUG_ENABLED
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind Index Buffer
     glBindVertexArray(0); // Unbind Vertex Array
@@ -121,7 +121,7 @@ void Renderer::Render() {
 
     glDrawElementsInstanced(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0, s_Batch.OffsetPtr - s_Batch.Offsets); // Draw the elements
 
-#ifdef HARMONY_DEBUG_UNBIND
+#ifdef HARMONY_DEBUG_ENABLED
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the Ibo
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
