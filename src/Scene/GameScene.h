@@ -19,8 +19,7 @@ using namespace HarmonyEngine;
 class GameScene : public Scene {
 
     PerspectiveCamera m_Camera;
-    AssetHandle<Texture> m_Texture;
-    AssetHandle<Texture> m_Texture2;
+    AssetHandle<Texture> m_Textures[32];
     // AssetHandle<Mesh> m_Mesh;
 
 public:
@@ -29,8 +28,10 @@ public:
         m_Camera = PerspectiveCamera();
         
         Renderer2D::OnCreate(&m_Camera);
-        m_Texture = AssetManager::QueueTexture("assets/textures/grass.jpeg");
-        m_Texture2 = AssetManager::QueueTexture("assets/textures/grass.jpeg");
+
+        for(int i = 0; i < 32; i++) {
+            m_Textures[i] = AssetManager::QueueTexture("assets/textures/grass.jpeg");
+        }
 
         // for(int i = 0; i < 32; i++) {
             // m_Textures[i] = AssetManager::QueueTexture("assets/textures/grass.jpeg");
@@ -82,7 +83,8 @@ public:
         RendererStats2D::Start();
         Renderer2D::StartBatch();
 
-        Renderer2D::DrawQuad({0, 0, 0}, {1, 1}, {1, 1, 1, 1}, m_Texture2);
+        for(int i = 0; i < 32; i++)
+            Renderer2D::DrawQuad({0, i, 0}, {1, 1}, {1, 1, 1, 1}, m_Textures[i]);
 
         Renderer2D::EndBatch();
         RendererStats2D::End();

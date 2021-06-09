@@ -72,7 +72,7 @@ namespace HarmonyEngine {
         Vertex2D* Vertices = nullptr;
         Vertex2D* VertexPtr = nullptr; 
 
-        int* Textures = nullptr;
+        uint32_t* Textures = nullptr;
     };
 
     struct RendererStats2D {

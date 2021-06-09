@@ -52,6 +52,8 @@ void Texture::Create() {
 
         stbi_image_free(data);
     }
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::Delete() {
