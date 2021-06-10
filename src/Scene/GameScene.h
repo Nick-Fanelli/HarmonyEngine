@@ -18,8 +18,10 @@ using namespace HarmonyEngine;
 
 class GameScene : public Scene {
 
+    static constexpr size_t s_TextureCount = 8;
+
     PerspectiveCamera m_Camera;
-    AssetHandle<Texture> m_Textures[32];
+    AssetHandle<Texture> m_Textures[s_TextureCount];
     // AssetHandle<Mesh> m_Mesh;
 
 public:
@@ -31,7 +33,7 @@ public:
 
         bool toggle = false;
 
-        for(int i = 0; i < 32; i++) {
+        for(int i = 0; i < s_TextureCount; i++) {
             m_Textures[i] = AssetManager::QueueTexture(toggle ? "assets/textures/grass.jpeg" : "assets/textures/stallTexture.png");
             toggle = !toggle;
         }
@@ -78,11 +80,13 @@ public:
         RendererStats2D::Start();
         Renderer2D::StartBatch();
 
-        for(int i = 0; i < 32; i++)
+        for(int i = 0; i < s_TextureCount; i++)
             Renderer2D::DrawQuad({0, i, 0}, {1, 1}, {1, 1, 1, 1}, m_Textures[i]);
 
         Renderer2D::EndBatch();
         RendererStats2D::End();
+
+        Log::Info(RendererStats2D::BatchCount);
 
     }
 
