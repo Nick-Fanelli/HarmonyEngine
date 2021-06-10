@@ -45,11 +45,11 @@ public:
         constexpr float mouseSensitivity = 4.5f;
 
         if(Input::IsKey(HARMONY_KEY_W)) {
-            m_Camera.Move(glm::vec3(0.0f, 0.0f, -moveSpeed * deltaTime) * m_Camera.GetCameraFront());
+            m_Camera.Move(glm::vec3(0.0f, 0.0f, moveSpeed * deltaTime));
         }
 
         if(Input::IsKey(HARMONY_KEY_S)) {
-            m_Camera.Move(glm::vec3(0.0f, 0.0f, moveSpeed * deltaTime) * m_Camera.GetCameraFront());
+            m_Camera.Move(glm::vec3(0.0f, 0.0f, -moveSpeed * deltaTime));
         }
 
         if(Input::IsKey(HARMONY_KEY_A)) {
