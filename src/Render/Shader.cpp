@@ -75,7 +75,7 @@ void Shader::Link() {
 
 void Shader::ApplyReplacements(std::string& vertexSource, std::string& fragmentSource) {
     for(auto& replacement : m_Replacements) {
-        std::regex regex = std::regex("\\$" + replacement.first + "\\$");
+        std::regex regex = std::regex("&" + replacement.first);
 
         vertexSource = std::regex_replace(vertexSource, regex, replacement.second);
         fragmentSource = std::regex_replace(fragmentSource, regex, replacement.second);

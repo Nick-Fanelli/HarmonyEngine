@@ -9,7 +9,7 @@ in float vTextureID;
 uniform vec3 uLightPosition;
 
 // The &KEYWORD means that something will be replaced at runtime!
-uniform sampler2D[$MAX_TEXTURE_COUNT$] uTextures;
+uniform sampler2D[&MAX_TEXTURE_COUNT] uTextures;
 
 out vec4 out_Color;
 
