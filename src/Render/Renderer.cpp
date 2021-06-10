@@ -11,7 +11,13 @@ static const size_t MaxIndexCount = 120000; // 120,000
 static RenderBatch s_Batch;
 static Shader s_Shader;
 
+static uint32_t s_MaxTextureCount;
+
+static GLuint s_WhiteTexture;
+
 Camera* Renderer::s_Camera = nullptr;
+
+static int* s_TextureSlots;
 
 void Renderer::OnCreate(Camera* camera) {
     if(s_Batch.Vertices != nullptr) {
@@ -21,10 +27,10 @@ void Renderer::OnCreate(Camera* camera) {
 
     s_Camera = camera;
 
-    auto maxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
+    s_MaxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
     std::unordered_map<std::string, std::string> replacements;
-    replacements["MAX_TEXTURE_COUNT"] = std::to_string(maxTextureCount);
+    replacements["MAX_TEXTURE_COUNT"] = std::to_string(s_MaxTextureCount);
 
     s_Shader = Shader("assets/shaders/DefaultShader.vert.glsl", "assets/shaders/DefaultShader.frag.glsl", replacements);
     s_Shader.Create();
@@ -40,7 +46,24 @@ void Renderer::OnCreate(Camera* camera) {
     s_Batch.Offsets = new glm::vec3[MaxObjectCount];
     s_Batch.OffsetPtr = s_Batch.Offsets;
 
-    s_Batch.Textures = new int[maxTextureCount];
+    s_Batch.Textures = new int[s_MaxTextureCount];
+
+    glGenTextures(1, &s_WhiteTexture);
+    glBindTexture(GL_TEXTURE_2D, s_WhiteTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    uint32_t color = 0xffffffff;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_INT, &color);
+
+    s_Batch.Textures[0] = s_WhiteTexture;
+
+    s_TextureSlots = new int[s_MaxTextureCount];
+
+    for(uint32_t i = 0; i < s_MaxTextureCount; i++) {
+        s_TextureSlots[i] = i; 
+    }
 
     // Bind the VAO
     glGenVertexArrays(1, &s_Batch.VaoID);
@@ -164,6 +187,13 @@ void Renderer::AllocateObject() {
     }
 }
 
+void Renderer::AllocateTexture() {
+    if(s_Batch.TextureIndex >= s_MaxTextureCount) {
+        Renderer::EndBatch();
+        Renderer::StartBatch();
+    }
+}
+
 void Renderer::StartBatch() {
     s_Batch.IndexCount = 0;
     
@@ -188,29 +218,19 @@ void Renderer::OnDestroy() {
     glDeleteBuffers(1, &s_Batch.IboID);
     glDeleteBuffers(1, &s_Batch.OboID);
 
+    glDeleteTextures(1, &s_WhiteTexture);
+
     delete[] s_Batch.Vertices;
     delete[] s_Batch.Indices;
     delete[] s_Batch.Textures;
     delete[] s_Batch.Offsets;
 
+    delete[] s_TextureSlots;
+
     s_Batch.Vertices = nullptr;
     s_Batch.Indices = nullptr;
     s_Batch.Textures = nullptr;
     s_Batch.Offsets = nullptr;
-}
-
-int Renderer::AddTexture(const Texture& texture) {
-    // TODO: Check to make sure that we aren't exceeding the max texture amount
-    if(texture.GetTextureID() == -1) {
-        Log::Error("Texture : " + std::string(texture.GetFilepath()) +
-                " has not been initialized and can not be added to the render batch!");
-        return 0;
-    }
-
-    s_Batch.Textures[s_Batch.TextureIndex] = texture.GetTextureID();
-    s_Batch.TextureIndex++;
-
-    return s_Batch.Textures[s_Batch.TextureIndex - 1];
 }
 
 void Renderer::DrawMesh(Mesh& mesh, const glm::vec3 positionOffset) {

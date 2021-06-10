@@ -8,7 +8,7 @@ in float vTextureID;
 
 uniform vec3 uLightPosition;
 
-// The $KEYWORD$ means that something will be replaced at runtime!
+// The &KEYWORD means that something will be replaced at runtime!
 uniform sampler2D[$MAX_TEXTURE_COUNT$] uTextures;
 
 out vec4 out_Color;
@@ -25,14 +25,5 @@ void main() {
     float diff = max(dot(norm, lightDirection), 0.0);
     vec3 diffuse = diff * lightColor;
 
-    vPosition;
-    vNormal;
-
-    int textureID = int(vTextureID);
-
-    if(textureID == 0) {
-        out_Color = vColor * vec4((ambient + diffuse), 1.0);
-    } else {
-        out_Color = vColor * vec4((ambient + diffuse), 1.0) * texture(uTextures[textureID], vTextureCoord);
-    }
+    out_Color = vColor * vec4((ambient + diffuse), 1.0) * texture(uTextures[int(vTextureID)], vTextureCoord);
 }

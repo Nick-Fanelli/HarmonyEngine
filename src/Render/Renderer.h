@@ -41,6 +41,7 @@ namespace HarmonyEngine {
         static void AllocateVertices(uint32_t amount);
         static void AllocateIndices(uint32_t amount);
         static void AllocateObject();
+        static void AllocateTexture();
 
     public:
 
@@ -50,11 +51,7 @@ namespace HarmonyEngine {
         static void StartBatch();
         static void EndBatch();
 
-        // TODO: To be replaced/removed
-        static int AddTexture(const Texture& texture);
-
         // Draw Methods
- 
         static void DrawMesh(Mesh& mesh, const glm::vec3 positionOffset = {0, 0, 0});
 
         // Utility Functions

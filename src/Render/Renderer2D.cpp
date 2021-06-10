@@ -60,7 +60,7 @@ void Renderer2D::OnCreate(Camera* camera) {
     uint32_t color = 0xffffffff;
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_INT, &color);
 
-    // s_Batch.Textures[0] = s_WhiteTexture;
+    s_Batch.Textures[0] = s_WhiteTexture;
 
     // Bind the VAO
     glGenVertexArrays(1, &s_Batch.VaoID);
