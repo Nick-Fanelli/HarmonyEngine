@@ -1,8 +1,10 @@
 {
     "cSpell.words": [
         "GLFW",
+        "Lsizeiptr",
         "Luint",
         "OPENGL",
+        "Programiv",
         "entt",
         "glew",
         "harmonyengine"
