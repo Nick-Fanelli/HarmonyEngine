@@ -29,32 +29,27 @@ public:
         
         Renderer2D::OnCreate(&m_Camera);
 
+        bool toggle = false;
+
         for(int i = 0; i < 32; i++) {
-            m_Textures[i] = AssetManager::QueueTexture("assets/textures/grass.jpeg");
+            m_Textures[i] = AssetManager::QueueTexture(toggle ? "assets/textures/grass.jpeg" : "assets/textures/stallTexture.png");
+            toggle = !toggle;
         }
 
-        // for(int i = 0; i < 32; i++) {
-            // m_Textures[i] = AssetManager::QueueTexture("assets/textures/grass.jpeg");
-            // toggle = !toggle;
-        // }
-
         AssetManager::CreateAll();
-
-        // Log::Info(m_Textures[0].GetPtr());
-        // Log::Info(m_Textures[1].GetPtr());
     }
 
     void Update(float deltaTime) override {
 
-        const float moveSpeed = 3.5f;
-        const float mouseSensitivity = 4.5f;
+        constexpr float moveSpeed = 3.5f;
+        constexpr float mouseSensitivity = 4.5f;
 
         if(Input::IsKey(HARMONY_KEY_W)) {
-            m_Camera.Move(-moveSpeed * deltaTime * m_Camera.GetCameraFront());
+            m_Camera.Move(glm::vec3(0.0f, 0.0f, -moveSpeed * deltaTime) * m_Camera.GetCameraFront());
         }
 
         if(Input::IsKey(HARMONY_KEY_S)) {
-            m_Camera.Move(moveSpeed * deltaTime * m_Camera.GetCameraFront());
+            m_Camera.Move(glm::vec3(0.0f, 0.0f, moveSpeed * deltaTime) * m_Camera.GetCameraFront());
         }
 
         if(Input::IsKey(HARMONY_KEY_A)) {
