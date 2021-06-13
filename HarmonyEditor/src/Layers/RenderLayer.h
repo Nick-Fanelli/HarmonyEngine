@@ -2,14 +2,14 @@
 
 #include <Render/Camera.h>
 
+#include "../Scenes/EditorScene.h"
+
 using namespace HarmonyEngine;
 
 namespace RenderLayer {
 
-    static Camera* m_CameraPtr;
-
-    void OnCreate(Camera* camera);
-    void OnUpdate(float deltaTime);
+    void OnCreate(EditorScene* editorScene);
+    void OnUpdate();
     void OnDestroy();
 
 };

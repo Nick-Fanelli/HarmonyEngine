@@ -1,21 +1,36 @@
 #include "RenderLayer.h"
 
 #include <Render/Renderer2D.h>
+#include <Render/Renderer.h>
 
-void RenderLayer::OnCreate(Camera* camera) {
-    m_CameraPtr = camera;
+#include <Scene/Component.h>
 
-    Renderer2D::OnCreate(m_CameraPtr);
+static EditorScene* s_EditorScenePtr;
+
+void RenderLayer::OnCreate(EditorScene* editorScene) {
+    s_EditorScenePtr = editorScene;
+
+    Renderer2D::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
+    Renderer::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
 }
 
-void RenderLayer::OnUpdate(float deltaTime) {
-    Renderer2D::StartBatch();
+void RenderLayer::OnUpdate() {
+    // Renderer2D::StartBatch();
+    // Renderer2D::EndBatch();
 
-    Renderer2D::DrawQuad({0, 0, 0}, {1, 1});
+    Renderer::StartBatch();
 
-    Renderer2D::EndBatch();
+    // Mesh Renderer
+    auto meshRendererGroup = s_EditorScenePtr->GetRegistry().group<MeshRenderer>(entt::get<Transform>);
+    for(auto& entity : meshRendererGroup) {
+        auto[renderer, transform] = meshRendererGroup.get<MeshRenderer, Transform>(entity);
+        Renderer::DrawMesh(renderer.MeshHandle, transform.Position);
+    }
+
+    Renderer::EndBatch();
 }
 
 void RenderLayer::OnDestroy() {
     Renderer2D::OnDestroy();
+    Renderer::OnDestroy();
 }

@@ -19,12 +19,12 @@ namespace HarmonyEngine {
 
     struct MeshRenderer {
 
-        Mesh* MeshPtr;
+        AssetHandle<Mesh> MeshHandle;
 
         MeshRenderer() = default;
         MeshRenderer(const MeshRenderer&) = default;
 
-        MeshRenderer(Mesh* mesh) : MeshPtr(mesh) {}
+        MeshRenderer(const AssetHandle<Mesh>& mesh) : MeshHandle(mesh) {}
 
     };
 
