@@ -1,0 +1,3 @@
+[submodule "HarmonyEngine/vendor/imgui"]
+	path = HarmonyEngine/vendor/imgui
+	url = https://github.com/Nick-Fanelli/imgui.git
