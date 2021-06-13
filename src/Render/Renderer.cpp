@@ -121,7 +121,7 @@ void Renderer::UpdateBatchData() {
 void Renderer::Render() {
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
-    s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_Batch.Textures);
+    s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
     s_Shader.AddUniformVec3("uLightPosition", {0, 20, -20});
 
     for(int i = 0; i < s_Batch.TextureIndex; i++) {
@@ -233,19 +233,19 @@ void Renderer::OnDestroy() {
     s_Batch.Offsets = nullptr;
 }
 
-void Renderer::DrawMesh(Mesh& mesh, const glm::vec3 positionOffset) {
+void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3 positionOffset) {
     size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
 
-    AllocateVertices(mesh.Vertices.size());
-    AllocateIndices(mesh.Indices.size());
+    AllocateVertices(mesh->Vertices.size());
+    AllocateIndices(mesh->Indices.size());
     AllocateObject();
 
-    for(auto& vertex : mesh.Vertices) {
+    for(auto& vertex : mesh->Vertices) {
         *s_Batch.VertexPtr = vertex;
         s_Batch.VertexPtr++;
     }
 
-    for(auto index : mesh.Indices) {
+    for(auto index : mesh->Indices) {
         *s_Batch.IndexPtr = index + indexOffset;
         s_Batch.IndexPtr++;
     }
@@ -290,8 +290,14 @@ void Renderer::LoadOBJFile(const char* filepath, Mesh* mesh, float textureID) {
             uint32_t vertexIndex[3], uvIndex[3], normalIndex[3];
             int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
             if(matches != 9) {
-                Log::Error("Could not load obj file format!");
-                return;
+                Log::Info(vertexIndex[0]);
+                int newMatches = fscanf(file, "%d//%d %d//%d %d//%d\n", &vertexIndex[0], &normalIndex[0], &vertexIndex[1], &normalIndex[1], &vertexIndex[2], &normalIndex[2]);
+                Log::Info(vertexIndex[0]);
+
+                if(newMatches != 9) {
+                    Log::Error("Could not load obj file format!");
+                    return;
+                }
             }
 
             vertexIndices.push_back(vertexIndex[0]);

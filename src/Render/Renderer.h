@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Texture.h"
+#include "../Core/Assets.h"
 
 namespace HarmonyEngine {
 
@@ -52,7 +53,7 @@ namespace HarmonyEngine {
         static void EndBatch();
 
         // Draw Methods
-        static void DrawMesh(Mesh& mesh, const glm::vec3 positionOffset = {0, 0, 0});
+        static void DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3 positionOffset = {0, 0, 0});
 
         // Utility Functions
         static void LoadOBJFile(const char* filepath, Mesh* mesh, float textureID = 0);

@@ -18,25 +18,18 @@ using namespace HarmonyEngine;
 
 class GameScene : public Scene {
 
-    static constexpr size_t s_TextureCount = 8;
-
     PerspectiveCamera m_Camera;
-    AssetHandle<Texture> m_Textures[s_TextureCount];
-    // AssetHandle<Mesh> m_Mesh;
+    AssetHandle<Mesh> m_Mesh;
 
 public:
 
     void OnCreate() override {
         m_Camera = PerspectiveCamera();
         
-        Renderer2D::OnCreate(&m_Camera);
+        // Renderer2D::OnCreate(&m_Camera);
+        Renderer::OnCreate(&m_Camera);
 
-        bool toggle = false;
-
-        for(int i = 0; i < s_TextureCount; i++) {
-            m_Textures[i] = AssetManager::QueueTexture(toggle ? "assets/textures/grass.jpeg" : "assets/textures/stallTexture.png");
-            toggle = !toggle;
-        }
+        m_Mesh = AssetManager::QueueMesh("assets/objects/low-polly-tree.obj");
 
         AssetManager::CreateAll();
     }
@@ -76,22 +69,16 @@ public:
             m_Camera.Rotate(Input::GetDeltaMousePosition() * mouseSensitivity * deltaTime); 
         }
 
+        Renderer::StartBatch();
 
-        RendererStats2D::Start();
-        Renderer2D::StartBatch();
+        Renderer::DrawMesh(m_Mesh);
 
-        for(int i = 0; i < s_TextureCount; i++)
-            Renderer2D::DrawQuad({0, i, 0}, {1, 1}, {1, 1, 1, 1}, m_Textures[i]);
-
-        Renderer2D::EndBatch();
-        RendererStats2D::End();
-
-        Log::Info(RendererStats2D::BatchCount);
-
+        Renderer::EndBatch();
     }
 
     void OnDestroy() override {
-        Renderer2D::OnDestroy();
+        Renderer::OnDestroy();
+        // Renderer2D::OnDestroy();
         m_Registry.clear<>();
         AssetManager::DestroyAll();
     }
