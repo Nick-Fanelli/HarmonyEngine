@@ -1,18 +1,20 @@
 #pragma once
 
-#include "harmonypch.h"
+#include <harmonypch.h>
 
-#include "Scene.h"
-#include "../Render/Shader.h"
-#include "../Core/Display.h"
-#include "../Render/Renderer2D.h"
-#include "../Render/Camera.h"
-#include "../Render/Renderer.h"
-#include "Entity.h"
-#include "Component.h"
-#include "Terrain.h"
-#include "../Core/Input.h"
-#include "../Core/Assets.h"
+#include <Core/Display.h>
+#include <Core/Input.h>
+#include <Core/Assets.h>
+
+#include <Scene/Scene.h>
+#include <Scene/Entity.h>
+#include <Scene/Component.h>
+#include <Scene/Terrain.h>
+
+#include <Render/Shader.h>
+#include <Render/Renderer2D.h>
+#include <Render/Camera.h>
+#include <Render/Renderer.h>
 
 using namespace HarmonyEngine;
 
@@ -29,7 +31,7 @@ public:
         // Renderer2D::OnCreate(&m_Camera);
         Renderer::OnCreate(&m_Camera);
 
-        m_Mesh = AssetManager::QueueMesh("assets/objects/low-polly-tree.obj");
+        m_Mesh = AssetManager::QueueMesh("assets/objects/stall.obj");
 
         AssetManager::CreateAll();
     }

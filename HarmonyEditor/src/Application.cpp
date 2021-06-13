@@ -1,7 +1,7 @@
 #include "harmonypch.h"
 
 #include "Core/Display.h"
-#include "Scene/GameScene.h"
+#include "Scenes/GameScene.h"
 
 using namespace HarmonyEngine;
 
