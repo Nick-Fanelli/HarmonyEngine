@@ -28,7 +28,5 @@ void main() {
     vTextureCoord;
     vTextureID;
 
-    // TODO: Fix Textures!
-    // out_Color = vColor * vec4((ambient + diffuse), 1.0) * texture(uTextures[int(vTextureID)], vTextureCoord);
-    out_Color = vColor * vec4((ambient + diffuse), 1.0);
+    out_Color = vColor * vec4((ambient + diffuse), 1.0) * texture(uTextures[int(vTextureID)], vTextureCoord);
 }

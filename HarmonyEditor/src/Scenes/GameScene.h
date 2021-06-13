@@ -21,6 +21,6 @@ using namespace HarmonyEngine;
 class GameScene : public Scene {
 public:
     void OnCreate() override;
-    void Update(float deltaTime) override;
+    void OnUpdate(float deltaTime) override;
     void OnDestroy() override;
 };

@@ -19,7 +19,7 @@ void SceneManager::SetActiveScene(Scene* scenePtr) {
 
 void SceneManager::Update(float deltaTime) {
     if(s_ActiveScenePtr != nullptr)
-        s_ActiveScenePtr->Update(deltaTime);
+        s_ActiveScenePtr->OnUpdate(deltaTime);
 }
 
 void SceneManager::OnDestroy() {

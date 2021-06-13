@@ -14,7 +14,7 @@ void GameScene::OnCreate() {
     AssetManager::CreateAll();
 }
 
-void GameScene::Update(float deltaTime) {
+void GameScene::OnUpdate(float deltaTime) {
 
     constexpr float moveSpeed = 3.5f;
     constexpr float mouseSensitivity = 4.5f;

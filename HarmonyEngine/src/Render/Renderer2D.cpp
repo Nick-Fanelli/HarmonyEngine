@@ -58,7 +58,7 @@ void Renderer2D::OnCreate(Camera* camera) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     uint32_t color = 0xffffffff;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_INT, &color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &color);
 
     s_Batch.Textures[0] = s_WhiteTexture;
 
@@ -112,7 +112,7 @@ void Renderer2D::Render() {
 
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
-    s_Shader.AddUniformIntArray("uTextures", 16, s_TextureSlots);
+    s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
 
     for(int i = 0; i < s_Batch.TextureIndex; i++) {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -205,7 +205,72 @@ void Renderer2D::OnDestroy() {
     s_Batch.Textures = nullptr;
 }
 
-void Renderer2D::DrawQuad(const glm::vec3 position, const glm::vec2 scale, const glm::vec4 color, AssetHandle<Texture>& texture) {
+void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale) {
+    AllocateVertices(4);
+
+    constexpr float textureIndex = 0.0f;
+    constexpr glm::vec4 color = {1, 1, 1, 1};
+
+    s_Batch.VertexPtr->Position = position;
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {0, 0};
+    s_Batch.VertexPtr->TextureID = textureIndex;
+    s_Batch.VertexPtr++;
+
+    s_Batch.VertexPtr->Position = glm::vec3(position.x, position.y + scale.y, position.z);
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {0, 1};
+    s_Batch.VertexPtr->TextureID = textureIndex;
+    s_Batch.VertexPtr++;
+
+    s_Batch.VertexPtr->Position = glm::vec3(position.x + scale.x, position.y + scale.y, position.z);
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {1, 1};
+    s_Batch.VertexPtr->TextureID = textureIndex;
+    s_Batch.VertexPtr++;
+
+    s_Batch.VertexPtr->Position = glm::vec3(position.x + scale.x, position.y, position.z);
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {1, 0};
+    s_Batch.VertexPtr->TextureID = textureIndex;
+    s_Batch.VertexPtr++;
+
+    s_Batch.IndexCount += 6; // Six indices per quad
+}
+
+void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, const glm::vec4& color) {
+    AllocateVertices(4);
+
+    constexpr float textureIndex = 0.0f; // White Texture
+
+    s_Batch.VertexPtr->Position = position;
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {0, 0};
+    s_Batch.VertexPtr->TextureID = textureIndex;
+    s_Batch.VertexPtr++;
+
+    s_Batch.VertexPtr->Position = glm::vec3(position.x, position.y + scale.y, position.z);
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {0, 1};
+    s_Batch.VertexPtr->TextureID = textureIndex;
+    s_Batch.VertexPtr++;
+
+    s_Batch.VertexPtr->Position = glm::vec3(position.x + scale.x, position.y + scale.y, position.z);
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {1, 1};
+    s_Batch.VertexPtr->TextureID = textureIndex;
+    s_Batch.VertexPtr++;
+
+    s_Batch.VertexPtr->Position = glm::vec3(position.x + scale.x, position.y, position.z);
+    s_Batch.VertexPtr->Color = color;
+    s_Batch.VertexPtr->TextureCoord = {1, 0};
+    s_Batch.VertexPtr->TextureID = textureIndex;
+    s_Batch.VertexPtr++;
+
+    s_Batch.IndexCount += 6; // Six indices per quad
+}
+
+void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, const glm::vec4& color, AssetHandle<Texture>& texture) {
     AllocateTexture();
     AllocateVertices(4);
 

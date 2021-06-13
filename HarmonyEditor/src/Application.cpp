@@ -1,7 +1,7 @@
 #include "harmonypch.h"
 
 #include "Core/Display.h"
-#include "Scenes/GameScene.h"
+#include "Scenes/EditorScene.h"
 
 using namespace HarmonyEngine;
 
@@ -13,9 +13,9 @@ int main() {
     Log::Info("Running Harmony Engine in RELEASE mode!");
 #endif
 
-    GameScene gameScene = GameScene();
+    EditorScene launchScene = EditorScene();
 
     Display::CreateDisplay("Harmony Engine");
-    Display::StartGameLoop(&gameScene);
+    Display::StartGameLoop(&launchScene);
 
 }
