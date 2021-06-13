@@ -29,4 +29,4 @@ target_include_directories(HarmonyEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/vend
 target_link_libraries(HarmonyEngine ImGUI)
 
 target_precompile_headers(HarmonyEngine PUBLIC "src/harmonypch.h")
-target_precompile_headers(HarmonyEngien PUBLIC "src/imguipch.h")
+target_precompile_headers(HarmonyEngine PUBLIC "src/imguipch.h")
