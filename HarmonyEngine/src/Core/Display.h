@@ -1,6 +1,7 @@
 #pragma once
 
 #include "harmonypch.h"
+#include "imguipch.h"
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -31,6 +32,16 @@ namespace HarmonyEngine {
         static void GetHeight(int* result) { glfwGetWindowSize(s_Window, nullptr, result); }
 
         static bool IsRunning() { return s_Window != nullptr; }
+
+        static void GetImGuiSize(ImVec2* outVec2) {
+            int x, y;
+            glfwGetWindowSize(s_Window, &x, &y);
+
+            outVec2->x = (float) x;
+            outVec2->y = (float) y;
+        }
+
+        static GLFWwindow* GetWindowPtr() { return s_Window; }
 
         static void CloseDisplay();
     };
