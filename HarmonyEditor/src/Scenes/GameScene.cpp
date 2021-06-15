@@ -39,7 +39,7 @@ void GameScene::OnUpdate(float deltaTime) {
         s_Camera.Move(moveSpeed * deltaTime * s_Camera.GetCameraUp());
     }
 
-        if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
+    if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
         s_Camera.Move(-moveSpeed * deltaTime * s_Camera.GetCameraUp());
     }
 

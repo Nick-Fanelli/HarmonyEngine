@@ -1,5 +1,7 @@
 #include "ImGuiLayer.h"
 
+#include <glm/glm.hpp>
+
 #include <Core/Display.h>
 
 void ImGuiLayer::OnCreate() {
@@ -48,9 +50,7 @@ static void EndFrame() {
 }
 
 void ImGuiLayer::OnUpdate() {
-    StartFrame();
-
-    EndFrame();
+    
 }
 
 void ImGuiLayer::OnDestroy() {

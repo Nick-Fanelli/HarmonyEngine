@@ -6,6 +6,8 @@
 
 #include <Render/Camera.h>
 
+#include "EditorCamera.h"
+
 using namespace HarmonyEngine;
 
 class EditorScene : public Scene {
@@ -16,7 +18,7 @@ public:
     void OnDestroy() override; 
 
 private:
-    PerspectiveCamera m_Camera;
+    EditorCamera m_Camera;
 
 public:
     Camera* GetGenericCameraPtr() { return &m_Camera; }

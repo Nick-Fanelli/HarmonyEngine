@@ -9,13 +9,13 @@
 
 #include "../Layers/RenderLayer.h"
 #include "../Layers/ImGuiLayer.h"
+#include "../Scenes/EditorCamera.h"
 
-static PerspectiveCamera s_Camera;
 static Entity s_Entity;
 
 void EditorScene::OnCreate() {
     
-    m_Camera = PerspectiveCamera();
+    m_Camera = EditorCamera();
 
     RenderLayer::OnCreate(this);
     ImGuiLayer::OnCreate();
@@ -30,6 +30,8 @@ void EditorScene::OnCreate() {
 }
 
 void EditorScene::OnUpdate(float deltaTime) {
+    m_Camera.OnUpdate(deltaTime);
+
     ImGuiLayer::OnUpdate();
     RenderLayer::OnUpdate();
 }

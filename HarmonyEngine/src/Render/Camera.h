@@ -55,6 +55,7 @@ namespace HarmonyEngine {
         float pitch = 0.0f;
         float fov = 70.0f;
 
+    protected:
         void CalculateProjectionViewMatrix();
         void RecalculateViewMatrix();
 

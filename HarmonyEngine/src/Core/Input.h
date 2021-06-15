@@ -133,6 +133,20 @@
 #define HARMONY_KEY_RIGHT_SUPER        347
 #define HARMONY_KEY_MENU               348
 
+// Mouse Buttons also from glfw3.h
+#define HARMONY_MOUSE_BUTTON_1         0
+#define HARMONY_MOUSE_BUTTON_2         1
+#define HARMONY_MOUSE_BUTTON_3         2
+#define HARMONY_MOUSE_BUTTON_4         3
+#define HARMONY_MOUSE_BUTTON_5         4
+#define HARMONY_MOUSE_BUTTON_6         5
+#define HARMONY_MOUSE_BUTTON_7         6
+#define HARMONY_MOUSE_BUTTON_8         7
+#define HARMONY_MOUSE_BUTTON_LAST      HARMONY_MOUSE_BUTTON_8
+#define HARMONY_MOUSE_BUTTON_LEFT      HARMONY_MOUSE_BUTTON_1
+#define HARMONY_MOUSE_BUTTON_RIGHT     HARMONY_MOUSE_BUTTON_2
+#define HARMONY_MOUSE_BUTTON_MIDDLE    HARMONY_MOUSE_BUTTON_3
+
 namespace HarmonyEngine {
 
     class Input {
