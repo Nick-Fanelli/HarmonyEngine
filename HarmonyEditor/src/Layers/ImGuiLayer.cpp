@@ -8,6 +8,7 @@
 #include "../Theme.h"
 
 static EditorScene* s_EditorScenePtr;
+static const char* s_SaveFilename = "window-layout.ini";
 
 static void ApplySelectedTheme(ImGuiStyle& style) {
 
@@ -86,6 +87,8 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+
+    io.IniFilename = s_SaveFilename;
 
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -200,5 +203,5 @@ void ImGuiLayer::OnUpdate() {
 }
 
 void ImGuiLayer::OnDestroy() {
-
+    ImGui::SaveIniSettingsToDisk(s_SaveFilename);
 }
