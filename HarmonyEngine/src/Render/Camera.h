@@ -16,12 +16,12 @@ namespace HarmonyEngine {
 
         glm::mat4 m_Projection;
         glm::mat4 m_View;
-        glm::mat4 m_ProjectionViewMatrix;
 
     public:
         const glm::mat4& GetProjctionMatrix() const { return m_Projection; }
         const glm::mat4& GetViewMatrix() const { return m_View; }
-        const glm::mat4& GetProjectViewMatrix() const { return m_ProjectionViewMatrix; }
+
+        glm::mat4 GetProjectViewMatrix() { return m_Projection * m_View; }
 
         const glm::vec3& GetPosition() const { return m_Position; }
 
@@ -33,7 +33,6 @@ namespace HarmonyEngine {
         float m_Rotation = 0;
 
         void RecalculateViewMatrix();
-        void CalculateProjectionViewMatrix();
         
     public:
 
@@ -44,6 +43,7 @@ namespace HarmonyEngine {
         void SetRotation(float rotation);
 
         const float GetRotation() const { return m_Rotation; }
+
     };
 
     class PerspectiveCamera : public Camera {
@@ -56,7 +56,6 @@ namespace HarmonyEngine {
         float fov = 70.0f;
 
     protected:
-        void CalculateProjectionViewMatrix();
         void RecalculateViewMatrix();
 
     public:

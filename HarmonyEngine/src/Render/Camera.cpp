@@ -24,11 +24,6 @@ void OrthographicCamera::RecalculateViewMatrix() {
                             glm::rotate(glm::mat4(1.0f), glm::radians(m_Rotation), glm::vec3(0, 0, 1));
 
     m_View = glm::inverse(transform);
-    CalculateProjectionViewMatrix();
-}
-
-void OrthographicCamera::CalculateProjectionViewMatrix() {
-    m_ProjectionViewMatrix = m_Projection * m_View;
 }
 
 void OrthographicCamera::Move(const glm::vec3& deltaPosition) {
@@ -55,18 +50,12 @@ PerspectiveCamera::PerspectiveCamera() {
     RecalculateViewMatrix();
 }
 
-void PerspectiveCamera::CalculateProjectionViewMatrix() {
-    m_ProjectionViewMatrix = m_Projection * m_View;
-}
-
 void PerspectiveCamera::RecalculateViewMatrix() {
     m_View = glm::lookAt(m_Position, m_Position - cameraFront, cameraUp);
-    CalculateProjectionViewMatrix();
 }
 
 void PerspectiveCamera::Move(const glm::vec3& deltaPosition) {
     m_Position += deltaPosition;
-    RecalculateViewMatrix();
 }
 
 void PerspectiveCamera::Rotate(float yawOffset, float pitchOffset) {

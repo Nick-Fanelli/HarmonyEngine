@@ -10,8 +10,6 @@
 void EditorCamera::UpdateProjection() {
     m_AspectRatio = m_ViewportWidth / m_ViewportHeight;
     m_Projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
-
-    CalculateProjectionViewMatrix();
 }
 
 void EditorCamera::UpdateView() {
@@ -20,8 +18,6 @@ void EditorCamera::UpdateView() {
     glm::quat orientation = GetOrientation();
     m_View = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
     m_View = glm::inverse(m_View);
-
-    CalculateProjectionViewMatrix();
 }
 
 std::pair<float, float> EditorCamera::PanSpeed() const {
