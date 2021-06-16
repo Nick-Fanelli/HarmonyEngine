@@ -1,7 +1,5 @@
 #include "EditorScene.h"
 
-#include <Core/Assets.h>
-
 #include <Render/Renderer2D.h>
 
 #include <Scene/Entity.h>
@@ -28,6 +26,8 @@ void EditorScene::OnCreate() {
     s_Entity.AddComponent<EntityTag>("Stall");
     s_Entity.AddComponent<Transform>();
     s_Entity.AddComponent<MeshRenderer>(mesh);
+
+    m_Texture = AssetManager::QueueTexture("assets/textures/grass.jpeg");
 
     AssetManager::CreateAll();
 }

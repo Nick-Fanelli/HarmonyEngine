@@ -2,6 +2,8 @@
 
 #include <harmonypch.h>
 
+#include <Core/Assets.h>
+
 #include <Scene/Scene.h>
 
 #include <Render/Camera.h>
@@ -19,8 +21,10 @@ public:
 
 private:
     EditorCamera m_Camera;
+    AssetHandle<Texture> m_Texture;
 
 public:
     Camera* GetGenericCameraPtr() { return &m_Camera; }
+    AssetHandle<Texture>& GetTexture() { return m_Texture; }
 
 };

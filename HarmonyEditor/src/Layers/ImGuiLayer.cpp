@@ -189,6 +189,21 @@ static void ShowHierarchy() {
     ImGui::End();
 }
 
+static void ShowGameViewport() {
+    ImGui::Begin("Test Widnow");
+
+    {
+        ImGui::BeginChild("GameRender");
+
+        ImVec2 wsize = ImGui::GetWindowSize();
+        ImGui::Image((void*)(intptr_t) s_EditorScenePtr->GetTexture()->GetTextureID(), wsize, ImVec2(0, 1), ImVec2(1, 0));
+
+        ImGui::EndChild();
+    }
+
+    ImGui::End();
+}
+
 static bool s_ShowDemoWindow = true;
 
 void ImGuiLayer::OnUpdate() {
@@ -196,6 +211,7 @@ void ImGuiLayer::OnUpdate() {
 
     DrawDockspace();
     ShowHierarchy();
+    ShowGameViewport();
 
     ImGui::ShowDemoWindow(&s_ShowDemoWindow);
 
