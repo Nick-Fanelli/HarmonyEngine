@@ -105,6 +105,47 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
     ImGui_ImplOpenGL3_Init(glslVersion);
 }
 
+static void DrawDockspace() {
+
+    static bool dockingEnabled = true;
+    static constexpr bool optFullscreen = true;
+    static constexpr ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
+
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+    if(optFullscreen) {
+        ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+        ImGui::SetNextWindowPos(viewport->Pos);
+        ImGui::SetNextWindowSize(viewport->Size);
+        ImGui::SetNextWindowViewport(viewport->ID);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+        windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+    }
+
+    if(dockspaceFlags & ImGuiDockNodeFlags_PassthruCentralNode)
+        windowFlags |= ImGuiWindowFlags_NoBackground;
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::Begin("Dockspace", &dockingEnabled, windowFlags);
+    ImGui::PopStyleVar();
+
+    if(optFullscreen)
+        ImGui::PopStyleVar(2);
+
+    // Draw Dockspace
+    static ImGuiIO& io = ImGui::GetIO();
+    if(io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
+        ImGuiID dockspaceID = ImGui::GetID("Dockspace");
+        ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
+    }
+
+    ImGui::End();
+}
 
 static void StartFrame() {
     ImGui_ImplOpenGL3_NewFrame();
@@ -145,14 +186,15 @@ static void ShowHierarchy() {
     ImGui::End();
 }
 
-// static bool s_ShowDemoWindow = true;
+static bool s_ShowDemoWindow = true;
 
 void ImGuiLayer::OnUpdate() {
     StartFrame();
 
+    DrawDockspace();
     ShowHierarchy();
 
-    // ImGui::ShowDemoWindow(&s_ShowDemoWindow);
+    ImGui::ShowDemoWindow(&s_ShowDemoWindow);
 
     EndFrame();
 }
