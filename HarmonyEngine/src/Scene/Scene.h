@@ -9,7 +9,7 @@ namespace HarmonyEngine {
     class Scene {
         
     protected:
-        const std::string m_SceneName;
+        std::string m_SceneName;
         entt::registry m_Registry;
 
     public:

@@ -6,6 +6,16 @@
 
 namespace HarmonyEngine {
 
+    struct EntityTag {
+
+        std::string Name;
+
+        EntityTag() = default;
+        EntityTag(const EntityTag&) = default;
+
+        EntityTag(const std::string& name) : Name(name) {}
+    };
+
     struct Transform {
 
         glm::vec3 Position;

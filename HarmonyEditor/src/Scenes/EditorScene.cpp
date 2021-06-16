@@ -14,15 +14,18 @@
 static Entity s_Entity;
 
 void EditorScene::OnCreate() {
+
+    this->m_SceneName = "Editor Scene";
     
     m_Camera = EditorCamera();
 
     RenderLayer::OnCreate(this);
-    ImGuiLayer::OnCreate();
+    ImGuiLayer::OnCreate(this);
 
     auto mesh = AssetManager::QueueMesh("assets/objects/stall.obj");
 
     s_Entity = Entity(this);
+    s_Entity.AddComponent<EntityTag>("Stall");
     s_Entity.AddComponent<Transform>();
     s_Entity.AddComponent<MeshRenderer>(mesh);
 
@@ -30,10 +33,10 @@ void EditorScene::OnCreate() {
 }
 
 void EditorScene::OnUpdate(float deltaTime) {
-    m_Camera.OnUpdate(deltaTime);
+    // m_Camera.OnUpdate(deltaTime);
 
-    ImGuiLayer::OnUpdate();
     RenderLayer::OnUpdate();
+    ImGuiLayer::OnUpdate();
 }
 
 void EditorScene::OnDestroy() {
