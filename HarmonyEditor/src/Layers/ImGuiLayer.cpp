@@ -190,13 +190,17 @@ static void ShowHierarchy() {
 }
 
 static void ShowGameViewport() {
-    ImGui::Begin("Test Widnow");
+    ImGui::Begin("Scene Editor");
 
     {
         ImGui::BeginChild("GameRender");
 
         ImVec2 wsize = ImGui::GetWindowSize();
-        ImGui::Image((void*)(intptr_t) s_EditorScenePtr->GetTexture()->GetTextureID(), wsize, ImVec2(0, 1), ImVec2(1, 0));
+
+        static constexpr float aspectRatio = 1920.0f / 1080.0f;
+        wsize.y = (float) wsize.x / aspectRatio;
+
+        ImGui::Image((void*)(intptr_t) *s_EditorScenePtr->GetRenderTexture(), wsize, ImVec2(0, 1), ImVec2(1, 0));
 
         ImGui::EndChild();
     }

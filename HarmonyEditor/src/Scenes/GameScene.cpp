@@ -7,7 +7,7 @@ void GameScene::OnCreate() {
     s_Camera = PerspectiveCamera();
     
     // Renderer2D::OnCreate(&m_Camera);
-    Renderer::OnCreate(&s_Camera);
+    // Renderer::OnCreate(&s_Camera);
 
     s_Mesh = AssetManager::QueueMesh("assets/objects/stall.obj");
 
@@ -57,7 +57,7 @@ void GameScene::OnUpdate(float deltaTime) {
 }
 
 void GameScene::OnDestroy() {
-    Renderer::OnDestroy();
+    // Renderer::OnDestroy();
     // Renderer2D::OnDestroy();
     m_Registry.clear<>();
     AssetManager::DestroyAll();

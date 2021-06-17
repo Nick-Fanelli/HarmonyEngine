@@ -14,12 +14,14 @@ static Shader s_Shader;
 static uint32_t s_MaxTextureCount;
 
 static GLuint s_WhiteTexture;
+static GLuint s_Framebuffer;
+static GLuint s_Renderbuffer;
 
 Camera* Renderer::s_Camera = nullptr;
 
 static int* s_TextureSlots;
 
-void Renderer::OnCreate(Camera* camera) {
+void Renderer::OnCreate(Camera* camera, GLuint* textureID) {
     if(s_Batch.Vertices != nullptr) {
         Log::Error("Vertices array was not equal to nullptr, exiting Renderer::OnCreate()");
         return;
@@ -65,6 +67,26 @@ void Renderer::OnCreate(Camera* camera) {
         s_TextureSlots[i] = i; 
     }
 
+    glGenFramebuffers(1, &s_Framebuffer);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, s_Framebuffer);
+
+    glGenTextures(1, textureID);
+    glBindTexture(GL_TEXTURE_2D, *textureID);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1920, 1080, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *textureID, 0);
+
+    glGenRenderbuffers(1, &s_Renderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, s_Renderbuffer);
+
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1920, 1080);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, s_Renderbuffer);
+
     // Bind the VAO
     glGenVertexArrays(1, &s_Batch.VaoID);
     glBindVertexArray(s_Batch.VaoID);
@@ -96,6 +118,8 @@ void Renderer::OnCreate(Camera* camera) {
     glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
     glVertexAttribDivisor(5, 1);
 
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // Unbind Framebuffer
+
 #ifdef HARMONY_DEBUG_ENABLED
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind Index Buffer
@@ -119,6 +143,21 @@ void Renderer::UpdateBatchData() {
 }
 
 void Renderer::Render() {
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, s_Framebuffer);
+    glViewport(0, 0, 1920, 1080);
+
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable(GL_CULL_FACE);
+
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
@@ -143,6 +182,8 @@ void Renderer::Render() {
     glBindBuffer(GL_ARRAY_BUFFER, s_Batch.OboID);
 
     glDrawElementsInstanced(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0, s_Batch.OffsetPtr - s_Batch.Offsets); // Draw the elements
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 #ifdef HARMONY_DEBUG_ENABLED
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the Ibo
@@ -217,6 +258,8 @@ void Renderer::OnDestroy() {
     glDeleteBuffers(1, &s_Batch.VboID);
     glDeleteBuffers(1, &s_Batch.IboID);
     glDeleteBuffers(1, &s_Batch.OboID);
+    
+    glDeleteFramebuffers(1, &s_Framebuffer);
 
     glDeleteTextures(1, &s_WhiteTexture);
 

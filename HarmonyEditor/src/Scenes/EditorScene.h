@@ -21,10 +21,10 @@ public:
 
 private:
     EditorCamera m_Camera;
-    AssetHandle<Texture> m_Texture;
+    GLuint m_RenderTexture;
 
 public:
     Camera* GetGenericCameraPtr() { return &m_Camera; }
-    AssetHandle<Texture>& GetTexture() { return m_Texture; }
+    GLuint* GetRenderTexture() { return &m_RenderTexture; }
 
 };

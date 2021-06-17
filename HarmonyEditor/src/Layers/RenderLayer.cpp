@@ -11,7 +11,7 @@ void RenderLayer::OnCreate(EditorScene* editorScene) {
     s_EditorScenePtr = editorScene;
 
     Renderer2D::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
-    Renderer::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
+    Renderer::OnCreate(s_EditorScenePtr->GetGenericCameraPtr(), s_EditorScenePtr->GetRenderTexture());
 }
 
 void RenderLayer::OnUpdate() {

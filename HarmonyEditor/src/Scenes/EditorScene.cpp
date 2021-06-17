@@ -27,13 +27,11 @@ void EditorScene::OnCreate() {
     s_Entity.AddComponent<Transform>();
     s_Entity.AddComponent<MeshRenderer>(mesh);
 
-    m_Texture = AssetManager::QueueTexture("assets/textures/grass.jpeg");
-
     AssetManager::CreateAll();
 }
 
 void EditorScene::OnUpdate(float deltaTime) {
-    // m_Camera.OnUpdate(deltaTime);
+    m_Camera.OnUpdate(deltaTime);
 
     RenderLayer::OnUpdate();
     ImGuiLayer::OnUpdate();

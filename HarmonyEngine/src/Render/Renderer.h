@@ -46,7 +46,7 @@ namespace HarmonyEngine {
 
     public:
 
-        static void OnCreate(Camera* camera);
+        static void OnCreate(Camera* camera, GLuint* textureID);
         static void OnDestroy();
 
         static void StartBatch();
@@ -57,5 +57,6 @@ namespace HarmonyEngine {
 
         // Utility Functions
         static void LoadOBJFile(const char* filepath, Mesh* mesh, float textureID = 0);
+
     };
 }
