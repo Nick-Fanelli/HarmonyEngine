@@ -53,7 +53,8 @@ namespace HarmonyEngine {
         static void EndBatch();
 
         // Draw Methods
-        static void DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3 positionOffset = {0, 0, 0});
+        static void DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3& positionOffset = {0, 0, 0});
+        static void DrawMesh(AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture, const glm::vec3& positionOffset = {0, 0, 0});
 
         // Utility Functions
         static void LoadOBJFile(const char* filepath, Mesh* mesh, float textureID = 0);

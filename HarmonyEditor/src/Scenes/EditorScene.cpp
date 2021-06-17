@@ -21,11 +21,12 @@ void EditorScene::OnCreate() {
     ImGuiLayer::OnCreate(this);
 
     auto mesh = AssetManager::QueueMesh("assets/objects/stall.obj");
+    auto texture = AssetManager::QueueTexture("assets/textures/stallTexture.png");
 
     s_Entity = Entity(this);
     s_Entity.AddComponent<EntityTag>("Stall");
     s_Entity.AddComponent<Transform>();
-    s_Entity.AddComponent<MeshRenderer>(mesh);
+    s_Entity.AddComponent<MeshRenderer>(mesh, texture);
 
     AssetManager::CreateAll();
 }

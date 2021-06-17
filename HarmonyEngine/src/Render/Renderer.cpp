@@ -276,7 +276,7 @@ void Renderer::OnDestroy() {
     s_Batch.Offsets = nullptr;
 }
 
-void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3 positionOffset) {
+void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3& positionOffset) {
     size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
 
     AllocateVertices(mesh->Vertices.size());
@@ -285,6 +285,52 @@ void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3 positionOffset)
 
     for(auto& vertex : mesh->Vertices) {
         *s_Batch.VertexPtr = vertex;
+        s_Batch.VertexPtr++;
+    }
+
+    for(auto index : mesh->Indices) {
+        *s_Batch.IndexPtr = index + indexOffset;
+        s_Batch.IndexPtr++;
+    }
+
+    *s_Batch.OffsetPtr = positionOffset;
+    s_Batch.OffsetPtr++;
+}
+
+void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture, const glm::vec3& positionOffset) {
+    if(texture->GetTextureID() == 0) {
+        DrawMesh(mesh, positionOffset);
+        return;
+    }
+
+    size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
+
+    AllocateVertices(mesh->Vertices.size());
+    AllocateIndices(mesh->Indices.size());
+    AllocateObject();
+    AllocateTexture();
+
+    float textureIndex = 0.0f;
+
+    for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
+        if(s_Batch.Textures[i] == texture->GetTextureID()) {
+            textureIndex = (float) i;
+            break;
+        }
+    }
+
+    if(textureIndex == 0.0f) {
+        textureIndex = (float) s_Batch.TextureIndex;
+        s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
+        s_Batch.TextureIndex++;
+    }
+
+    for(auto& vertex : mesh->Vertices) {
+        // Assign new vertex with the textureID
+        Vertex v = Vertex(vertex);
+        v.TextureID = textureIndex;
+
+        *s_Batch.VertexPtr = v;
         s_Batch.VertexPtr++;
     }
 

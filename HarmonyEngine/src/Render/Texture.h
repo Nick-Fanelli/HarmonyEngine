@@ -8,7 +8,7 @@ namespace HarmonyEngine {
 
     class Texture {
 
-        GLuint m_TextureID = -1;
+        GLuint m_TextureID = 0;
 
         const char* m_Filepath = nullptr;
         int m_Width, m_Height;
@@ -30,7 +30,7 @@ namespace HarmonyEngine {
         }
 
         void Bind() {
-            if(m_TextureID == -1) {
+            if(m_TextureID == 0) {
                   Log::Warn("Texture ID of image '" + std::string(m_Filepath) + "' holds a textureID pointer of -1!\n"
                       "\tThis may result in the texture not binding or an OpenGL error!!\n"
                       "\tThe textureID pointer should hold the memory location of the texture!");

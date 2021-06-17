@@ -30,11 +30,13 @@ namespace HarmonyEngine {
     struct MeshRenderer {
 
         AssetHandle<Mesh> MeshHandle;
+        AssetHandle<Texture> TextureHandle;
 
         MeshRenderer() = default;
         MeshRenderer(const MeshRenderer&) = default;
 
         MeshRenderer(const AssetHandle<Mesh>& mesh) : MeshHandle(mesh) {}
+        MeshRenderer(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture) : MeshHandle(mesh), TextureHandle(texture) {}
 
     };
 

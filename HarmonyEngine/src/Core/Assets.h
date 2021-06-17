@@ -43,11 +43,12 @@ namespace HarmonyEngine {
 
     public:
 
-        AssetHandle() = default;
+        AssetHandle() : m_Asset(nullptr) {}
         AssetHandle(const AssetHandle& other) { m_Asset = other.m_Asset; } 
         AssetHandle(Asset<T>* assetPtr) : m_Asset(assetPtr) {}
 
         T* operator->() { return m_Asset->GetPtr(); }
+        bool IsAssigned() { return m_Asset != nullptr; }
     };
 
     // ==========================================================================================
