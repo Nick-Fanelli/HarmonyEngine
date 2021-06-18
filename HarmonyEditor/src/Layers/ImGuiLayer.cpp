@@ -197,7 +197,7 @@ static void ShowGameViewport() {
 
         ImVec2 wsize = ImGui::GetWindowSize();
 
-        static constexpr float aspectRatio = 1920.0f / 1080.0f;
+        static const float aspectRatio = Display::GetAspectRatio(); 
         wsize.y = (float) wsize.x / aspectRatio;
 
         ImGui::Image((void*)(intptr_t) *s_EditorScenePtr->GetRenderTexture(), wsize, ImVec2(0, 1), ImVec2(1, 0));
