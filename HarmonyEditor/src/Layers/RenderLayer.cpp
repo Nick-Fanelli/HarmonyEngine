@@ -11,9 +11,12 @@ static Framebuffer s_Framebuffer;
 
 void RenderLayer::OnCreate(EditorScene* editorScene) {
     s_EditorScenePtr = editorScene;
+    s_Framebuffer.OnCreate();
+
+    s_EditorScenePtr->SetRenderTexture(s_Framebuffer.GetTexturePtr());
 
     Renderer2D::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
-    Renderer::OnCreate(s_EditorScenePtr->GetGenericCameraPtr(), s_EditorScenePtr->GetRenderTexture());
+    Renderer::OnCreate(s_EditorScenePtr->GetGenericCameraPtr(), &s_Framebuffer);
 }
 
 void RenderLayer::OnUpdate() {

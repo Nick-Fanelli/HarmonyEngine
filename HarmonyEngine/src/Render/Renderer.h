@@ -7,6 +7,8 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Texture.h"
+#include "Framebuffer.h"
+
 #include "../Core/Assets.h"
 
 namespace HarmonyEngine {
@@ -46,7 +48,7 @@ namespace HarmonyEngine {
 
     public:
 
-        static void OnCreate(Camera* camera, GLuint* textureID);
+        static void OnCreate(Camera* camera, Framebuffer* framebuffer);
         static void OnDestroy();
 
         static void StartBatch();

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "harmonypch.h"
 
 namespace HarmonyEngine {
@@ -21,6 +23,9 @@ namespace HarmonyEngine {
 
         void Bind();
         void Unbind();
+
+        const GLuint GetTextureID() const { return m_TextureID; }
+        GLuint* GetTexturePtr() { return &m_TextureID; }
 
     };
 

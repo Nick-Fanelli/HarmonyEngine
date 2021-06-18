@@ -14,20 +14,21 @@ static Shader s_Shader;
 static uint32_t s_MaxTextureCount;
 
 static GLuint s_WhiteTexture;
-static GLuint s_Framebuffer;
-static GLuint s_Renderbuffer;
+
+static Framebuffer* s_Framebuffer;
 
 Camera* Renderer::s_Camera = nullptr;
 
 static int* s_TextureSlots;
 
-void Renderer::OnCreate(Camera* camera, GLuint* textureID) {
+void Renderer::OnCreate(Camera* camera, Framebuffer* framebuffer) {
     if(s_Batch.Vertices != nullptr) {
         Log::Error("Vertices array was not equal to nullptr, exiting Renderer::OnCreate()");
         return;
     }
 
     s_Camera = camera;
+    s_Framebuffer = framebuffer;
 
     s_MaxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
@@ -66,26 +67,6 @@ void Renderer::OnCreate(Camera* camera, GLuint* textureID) {
     for(uint32_t i = 0; i < s_MaxTextureCount; i++) {
         s_TextureSlots[i] = i; 
     }
-
-    glGenFramebuffers(1, &s_Framebuffer);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, s_Framebuffer);
-
-    glGenTextures(1, textureID);
-    glBindTexture(GL_TEXTURE_2D, *textureID);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Display::GetAspectWidth(), Display::GetAspectHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *textureID, 0);
-
-    glGenRenderbuffers(1, &s_Renderbuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, s_Renderbuffer);
-
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, Display::GetAspectWidth(), Display::GetAspectHeight());
-
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, s_Renderbuffer);
 
     // Bind the VAO
     glGenVertexArrays(1, &s_Batch.VaoID);
@@ -144,10 +125,7 @@ void Renderer::UpdateBatchData() {
 
 void Renderer::Render() {
 
-    static const glm::vec2& displayAspect = Display::GetRawDisplayAspect();
-
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, s_Framebuffer);
-    glViewport(0, 0, displayAspect.x, displayAspect.y);
+    s_Framebuffer->Bind();
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -185,7 +163,7 @@ void Renderer::Render() {
 
     glDrawElementsInstanced(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0, s_Batch.OffsetPtr - s_Batch.Offsets); // Draw the elements
 
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    s_Framebuffer->Unbind();
 
 #ifdef HARMONY_DEBUG_ENABLED
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the Ibo
@@ -261,8 +239,6 @@ void Renderer::OnDestroy() {
     glDeleteBuffers(1, &s_Batch.IboID);
     glDeleteBuffers(1, &s_Batch.OboID);
     
-    glDeleteFramebuffers(1, &s_Framebuffer);
-
     glDeleteTextures(1, &s_WhiteTexture);
 
     delete[] s_Batch.Vertices;

@@ -21,10 +21,12 @@ public:
 
 private:
     EditorCamera m_Camera;
-    GLuint m_RenderTexture;
+    GLuint* m_RenderTexture = nullptr;
 
 public:
     Camera* GetGenericCameraPtr() { return &m_Camera; }
-    GLuint* GetRenderTexture() { return &m_RenderTexture; }
+    const GLuint* GetRenderTexture() const { return m_RenderTexture; }
+
+    void SetRenderTexture(GLuint* texture) { m_RenderTexture = texture; }
 
 };
