@@ -30,9 +30,9 @@ git clone https://github.com/Nick-Fanelli/HarmonyEngine --recursive
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     ```
 
-* Install GLFW, CMake, GLEW, and GLM
+* Install GLFW, CMake and GLEW
     ```shell
-    brew install cmake glfw glew glm
+    brew install cmake glfw glew
     ```
 **3. Building the Project**
 
