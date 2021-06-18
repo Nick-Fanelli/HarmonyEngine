@@ -2,10 +2,12 @@
 
 #include <Render/Renderer2D.h>
 #include <Render/Renderer.h>
+#include <Render/Framebuffer.h>
 
 #include <Scene/Component.h>
 
 static EditorScene* s_EditorScenePtr;
+static Framebuffer s_Framebuffer;
 
 void RenderLayer::OnCreate(EditorScene* editorScene) {
     s_EditorScenePtr = editorScene;
