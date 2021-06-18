@@ -4,3 +4,6 @@
 [submodule "HarmonyEngine/vendor/glm"]
 	path = HarmonyEngine/vendor/glm
 	url = https://github.com/Nick-Fanelli/glm.git
+[submodule "HarmonyEngine/vendor/glfw"]
+	path = HarmonyEngine/vendor/glfw
+	url = https://github.com/Nick-Fanelli/glfw.git
