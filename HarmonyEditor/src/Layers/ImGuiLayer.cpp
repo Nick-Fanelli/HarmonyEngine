@@ -96,6 +96,12 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
+    ImFontConfig config = ImFontConfig();
+    config.OversampleH = 3;
+    config.OversampleV = 3;
+
+    io.Fonts->AddFontFromFileTTF("assets/fonts/segoe-ui.ttf", 17.0f, &config);
+
     ImGuiStyle& style = ImGui::GetStyle();
     if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
         style.WindowRounding = 0.0f;
@@ -177,10 +183,13 @@ static void ShowHierarchy() {
     ImGui::Begin("Hierarchy");
 
     ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Once);
-
     if(ImGui::TreeNode(s_EditorScenePtr->GetSceneName().c_str())) {
         s_EditorScenePtr->GetRegistry().view<EntityTag>().each([&](auto& tag) {
-            if(ImGui::TreeNode(tag.Name.c_str())) {
+            if(ImGui::TreeNodeEx(tag.Name.c_str(), 
+                ImGuiTreeNodeFlags_DefaultOpen |
+                ImGuiTreeNodeFlags_FramePadding |
+                ImGuiTreeNodeFlags_OpenOnArrow |
+                ImGuiTreeNodeFlags_SpanAvailWidth)) {
                 ImGui::TreePop();
             }
         });

@@ -15,4 +15,4 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 add_subdirectory(HarmonyEngine)
-add_subdirectory(HarmonyEditor) 
+add_subdirectory(HarmonyEditor)
