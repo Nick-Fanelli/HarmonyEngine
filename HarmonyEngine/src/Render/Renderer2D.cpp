@@ -109,7 +109,6 @@ void Renderer2D::OnCreate(Camera* camera) {
 }
 
 void Renderer2D::Render() {
-
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);

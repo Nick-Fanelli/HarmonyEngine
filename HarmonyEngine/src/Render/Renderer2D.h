@@ -6,6 +6,7 @@
 
 #include "Texture.h"
 #include "Camera.h"
+#include "Framebuffer.h"
 #include "../Core/Assets.h"
 
 namespace HarmonyEngine {

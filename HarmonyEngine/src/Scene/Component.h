@@ -40,4 +40,15 @@ namespace HarmonyEngine {
 
     };
 
+    struct QuadRenderer {
+
+        glm::vec2 Scale;
+        glm::vec4 Color;
+
+        QuadRenderer() = default;
+        QuadRenderer(const QuadRenderer&) = default;
+
+        QuadRenderer(const glm::vec2& scale, const glm::vec4& color) : Scale(scale), Color(color) {}
+    };
+
 }

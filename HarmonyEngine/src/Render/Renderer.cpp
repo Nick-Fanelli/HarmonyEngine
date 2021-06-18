@@ -15,20 +15,17 @@ static uint32_t s_MaxTextureCount;
 
 static GLuint s_WhiteTexture;
 
-static Framebuffer* s_Framebuffer;
-
 Camera* Renderer::s_Camera = nullptr;
 
 static int* s_TextureSlots;
 
-void Renderer::OnCreate(Camera* camera, Framebuffer* framebuffer) {
+void Renderer::OnCreate(Camera* camera) {
     if(s_Batch.Vertices != nullptr) {
         Log::Error("Vertices array was not equal to nullptr, exiting Renderer::OnCreate()");
         return;
     }
 
     s_Camera = camera;
-    s_Framebuffer = framebuffer;
 
     s_MaxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
@@ -125,19 +122,6 @@ void Renderer::UpdateBatchData() {
 
 void Renderer::Render() {
 
-    s_Framebuffer->Bind();
-
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glEnable(GL_CULL_FACE);
-
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
@@ -162,8 +146,6 @@ void Renderer::Render() {
     glBindBuffer(GL_ARRAY_BUFFER, s_Batch.OboID);
 
     glDrawElementsInstanced(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0, s_Batch.OffsetPtr - s_Batch.Offsets); // Draw the elements
-
-    s_Framebuffer->Unbind();
 
 #ifdef HARMONY_DEBUG_ENABLED
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the Ibo

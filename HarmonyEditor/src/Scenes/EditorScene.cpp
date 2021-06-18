@@ -10,6 +10,7 @@
 #include "../Scenes/EditorCamera.h"
 
 static Entity s_Entity;
+static Entity s_QuadEntity;
 
 void EditorScene::OnCreate() {
 
@@ -27,6 +28,11 @@ void EditorScene::OnCreate() {
     s_Entity.AddComponent<EntityTag>("Stall");
     s_Entity.AddComponent<Transform>();
     s_Entity.AddComponent<MeshRenderer>(mesh, texture);
+
+    s_QuadEntity = Entity(this);
+    s_QuadEntity.AddComponent<EntityTag>("Quad");
+    s_QuadEntity.AddComponent<Transform>(glm::vec3{5, 10, 0});
+    s_QuadEntity.AddComponent<QuadRenderer>(glm::vec2{5, 5}, glm::vec4{1, 0, 0, 1});
 
     AssetManager::CreateAll();
 }

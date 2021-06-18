@@ -48,7 +48,7 @@ namespace HarmonyEngine {
 
     public:
 
-        static void OnCreate(Camera* camera, Framebuffer* framebuffer);
+        static void OnCreate(Camera* camera);
         static void OnDestroy();
 
         static void StartBatch();

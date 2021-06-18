@@ -1,5 +1,6 @@
 #include "RenderLayer.h"
 
+#include <Render/MasterRenderer.h>
 #include <Render/Renderer2D.h>
 #include <Render/Renderer.h>
 #include <Render/Framebuffer.h>
@@ -7,21 +8,30 @@
 #include <Scene/Component.h>
 
 static EditorScene* s_EditorScenePtr;
-static Framebuffer s_Framebuffer;
 
 void RenderLayer::OnCreate(EditorScene* editorScene) {
     s_EditorScenePtr = editorScene;
-    s_Framebuffer.OnCreate();
 
-    s_EditorScenePtr->SetRenderTexture(s_Framebuffer.GetTexturePtr());
+    MasterRenderer::SetUseFramebuffer(true);
+
+    s_EditorScenePtr->SetRenderTexture(MasterRenderer::GetFramebuffer()->GetTexturePtr());
 
     Renderer2D::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
-    Renderer::OnCreate(s_EditorScenePtr->GetGenericCameraPtr(), &s_Framebuffer);
+    Renderer::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
 }
 
 void RenderLayer::OnUpdate() {
-    // Renderer2D::StartBatch();
-    // Renderer2D::EndBatch();
+    MasterRenderer::Begin();
+
+    Renderer2D::StartBatch();
+
+    auto quadRendererGroup = s_EditorScenePtr->GetRegistry().group<QuadRenderer>(entt::get<Transform>);
+    for(auto& entity : quadRendererGroup) {
+        auto[renderer, transform] = quadRendererGroup.get<QuadRenderer, Transform>(entity);
+        Renderer2D::DrawQuad(transform.Position, renderer.Scale, renderer.Color);
+    }
+
+    Renderer2D::EndBatch();
 
     Renderer::StartBatch();
 
@@ -36,6 +46,8 @@ void RenderLayer::OnUpdate() {
     }
 
     Renderer::EndBatch();
+
+    MasterRenderer::End();
 }
 
 void RenderLayer::OnDestroy() {
