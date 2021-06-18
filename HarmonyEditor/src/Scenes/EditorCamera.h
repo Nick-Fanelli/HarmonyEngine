@@ -9,8 +9,7 @@ using namespace HarmonyEngine;
 class EditorCamera : public PerspectiveCamera {
 
 public:
-    EditorCamera() = default;
-    EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
+    EditorCamera();
 
     void OnUpdate(float deltaTime);
 
