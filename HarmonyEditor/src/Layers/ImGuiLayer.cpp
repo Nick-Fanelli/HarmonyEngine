@@ -10,6 +10,8 @@
 static EditorScene* s_EditorScenePtr;
 static const char* s_SaveFilename = "window-layout.ini";
 
+bool ImGuiLayer::GetIsEditorSelected() { return s_IsEditorSelected; }
+
 static void ApplySelectedTheme(ImGuiStyle& style) {
 
     Theme::ThemeData themeData = Theme::GetTheme(Theme::s_ThemeType[Theme::s_SelectedTheme]);
@@ -189,8 +191,9 @@ static void ShowHierarchy() {
     ImGui::End();
 }
 
-static void ShowGameViewport() {
+void ImGuiLayer::ShowGameViewport() {
     ImGui::Begin("Scene Editor");
+    s_IsEditorSelected = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
 
     {
         ImGui::BeginChild("GameRender");

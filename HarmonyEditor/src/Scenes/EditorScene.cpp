@@ -38,7 +38,8 @@ void EditorScene::OnCreate() {
 }
 
 void EditorScene::OnUpdate(float deltaTime) {
-    m_Camera.OnUpdate(deltaTime);
+    if(ImGuiLayer::GetIsEditorSelected())
+        m_Camera.OnUpdate(deltaTime);
 
     RenderLayer::OnUpdate();
     ImGuiLayer::OnUpdate();
