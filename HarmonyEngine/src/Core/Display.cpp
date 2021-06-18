@@ -84,7 +84,6 @@ void Display::CreateDisplay(const char* title) {
     glfwGetFramebufferSize(s_Window, &screenWidth, &screenHeight);
 
     glfwMakeContextCurrent(s_Window);
-    glewExperimental = true;
 
     // Handle Input
     glfwSetKeyCallback(s_Window, Input::KeyCallback);
@@ -92,8 +91,8 @@ void Display::CreateDisplay(const char* title) {
     glfwSetCursorPosCallback(s_Window, Input::MousePositionCallback);
     glfwSetScrollCallback(s_Window, Input::MouseScrollCallback);
 
-    if(glewInit() != GLEW_OK) {
-        Log::Error("Could not initialize GLEW");
+    if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        Log::Error("Failed to initialize GLAD");
         return;
     }
 

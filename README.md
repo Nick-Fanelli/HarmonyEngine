@@ -32,7 +32,7 @@ git clone https://github.com/Nick-Fanelli/HarmonyEngine --recursive
 
 * Install GLFW, CMake and GLEW
     ```shell
-    brew install cmake glfw glew
+    brew install cmake glew
     ```
 **3. Building the Project**
 
