@@ -73,7 +73,7 @@ void Renderer::OnCreate(Camera* camera, GLuint* textureID) {
     glGenTextures(1, textureID);
     glBindTexture(GL_TEXTURE_2D, *textureID);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1920, 1080, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Display::GetAspectWidth(), Display::GetAspectHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -83,7 +83,7 @@ void Renderer::OnCreate(Camera* camera, GLuint* textureID) {
     glGenRenderbuffers(1, &s_Renderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, s_Renderbuffer);
 
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1920, 1080);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, Display::GetAspectWidth(), Display::GetAspectHeight());
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, s_Renderbuffer);
 
@@ -144,8 +144,10 @@ void Renderer::UpdateBatchData() {
 
 void Renderer::Render() {
 
+    static const glm::vec2& displayAspect = Display::GetRawDisplayAspect();
+
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, s_Framebuffer);
-    glViewport(0, 0, 1920, 1080);
+    glViewport(0, 0, displayAspect.x, displayAspect.y);
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
