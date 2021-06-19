@@ -14,6 +14,8 @@ static Entity s_QuadEntity;
 
 void EditorScene::OnCreate() {
 
+    HARMONY_PROFILE_FUNCTION();
+
     this->m_SceneName = "Editor Scene";
     
     m_Camera = EditorCamera();

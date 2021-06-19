@@ -102,7 +102,7 @@ void Renderer2D::OnCreate(Camera* camera) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the indices buffer
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
 
-#ifdef HARMONY_DEBUG_ENABLED
+#if HARMONY_DEBUG
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind Buffer
     glBindVertexArray(0); // Unbind Vertex Array
 #endif
@@ -130,7 +130,7 @@ void Renderer2D::Render() {
 
     glDrawElements(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0); // Draw the Elements
 
-#ifdef HARMONY_DEBUG_ENABLED
+#if HARMONY_DEBUG
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the EBO
 
     // Disable al the Vertex Attrib Pointers

@@ -1,7 +1,9 @@
 #pragma once
 
 #ifndef NDEBUG
-    #define HARMONY_DEBUG_ENABLED
+    #define HARMONY_DEBUG 1
+#else
+    #define HARMONY_DEBUG 0
 #endif
 
 #include <iostream>
@@ -23,5 +25,6 @@
 #include <unordered_set>
 #include <unordered_map>
 
+#include "Debug/Instrumentor.h"
 #include "Core/Log.h"
 #include "Core/Utils.h"

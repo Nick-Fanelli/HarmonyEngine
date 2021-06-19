@@ -10,10 +10,9 @@ int Display::s_DisplayWidth = 1280;
 int Display::s_DisplayHeight = 720;
 int Display::s_CurrentFps = -1;
 
-void Display::StartGameLoop(Scene* scenePtr) {
-    Log::Info("Starting Game Loop...");
+void Display::StartGameLoop() {
 
-    SceneManager::SetActiveScene(scenePtr);
+    Log::Info("Starting Game Loop...");
 
     float endTime, startTime = (float) glfwGetTime();
     float deltaTime = -1.0f;
@@ -50,8 +49,6 @@ void Display::StartGameLoop(Scene* scenePtr) {
         startTime = endTime;
 
     }
-
-    CleanUp();
 
 }
 

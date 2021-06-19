@@ -26,7 +26,7 @@ namespace HarmonyEngine {
 
         static void CreateDisplay(const char* title);
         static void CleanUp();
-        static void StartGameLoop(Scene* scenePtr = nullptr);
+        static void StartGameLoop();
         static void CloseDisplay();
 
         static void GetWidth(int* result) { glfwGetWindowSize(s_Window, result, nullptr); }
