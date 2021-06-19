@@ -5,6 +5,8 @@ using namespace HarmonyEngine;
 Scene* SceneManager::s_ActiveScenePtr = nullptr;
 
 void SceneManager::SetActiveScene(Scene* scenePtr) {
+    HARMONY_PROFILE_FUNCTION();
+
     if(scenePtr == nullptr) return;
 
     if(s_ActiveScenePtr != nullptr) {

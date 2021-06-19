@@ -54,6 +54,8 @@ void Display::StartGameLoop() {
 
 void Display::CreateDisplay(const char* title) {
         
+    HARMONY_PROFILE_FUNCTION();
+
     Log::Info("Creating the display...");
 
     if(!glfwInit()) {

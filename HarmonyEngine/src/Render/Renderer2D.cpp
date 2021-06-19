@@ -23,6 +23,8 @@ size_t RendererStats2D::CurrentBatchCount = 0;
 static int* s_TextureSlots;
 
 void Renderer2D::OnCreate(Camera* camera) {
+    HARMONY_PROFILE_FUNCTION();
+
     // Check to make sure that OnCreate method wasn't already called
     if(s_Batch.Vertices != nullptr) {
         Log::Error("Vertices array was not equal to nullptr, exiting Renderer2D::OnCreate()");
@@ -109,6 +111,8 @@ void Renderer2D::OnCreate(Camera* camera) {
 }
 
 void Renderer2D::Render() {
+    HARMONY_PROFILE_FUNCTION();
+
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
@@ -146,6 +150,8 @@ void Renderer2D::Render() {
 }
 
 void Renderer2D::UpdateBatchVertexData() {
+    HARMONY_PROFILE_FUNCTION();
+
     GLsizeiptr size = (uint8_t*) s_Batch.VertexPtr - (uint8_t*) s_Batch.Vertices;
 
     glBindBuffer(GL_ARRAY_BUFFER, s_Batch.VboID);
@@ -184,6 +190,8 @@ void Renderer2D::EndBatch() {
 }
 
 void Renderer2D::OnDestroy() {
+    HARMONY_PROFILE_FUNCTION();
+
     if(s_Batch.Vertices == nullptr) {
         Log::Warn("Vertices array was already nullptr, exiting Renderer2D::OnDestroy()");
         return;

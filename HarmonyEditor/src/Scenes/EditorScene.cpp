@@ -40,6 +40,9 @@ void EditorScene::OnCreate() {
 }
 
 void EditorScene::OnUpdate(float deltaTime) {
+
+    HARMONY_PROFILE_FUNCTION();
+
     if(ImGuiLayer::GetIsEditorSelected())
         m_Camera.OnUpdate(deltaTime);
 
@@ -48,6 +51,8 @@ void EditorScene::OnUpdate(float deltaTime) {
 }
 
 void EditorScene::OnDestroy() {
+
+    HARMONY_PROFILE_FUNCTION();
 
     RenderLayer::OnDestroy();
     ImGuiLayer::OnDestroy();

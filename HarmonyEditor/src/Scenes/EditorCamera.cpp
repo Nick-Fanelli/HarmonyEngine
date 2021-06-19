@@ -48,6 +48,8 @@ float EditorCamera::ZoomSpeed() const {
 
 void EditorCamera::OnUpdate(float deltaTime) {
 
+    HARMONY_PROFILE_FUNCTION();
+
     if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
         const glm::vec2& delta = Input::GetDeltaMousePosition() * 0.003f;
 

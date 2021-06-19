@@ -70,7 +70,7 @@ namespace HarmonyEngine {
 			json << "\"name\":\"" << result.Name << "\",";
 			json << "\"ph\":\"X\",";
 			json << "\"pid\":0,";
-			json << "\"tid\":" << result.ThreadID << ",";
+			// json << "\"tid\":" << result.ThreadID << ",";
 			json << "\"ts\":" << result.Start.count();
 			json << "}";
 

@@ -14,6 +14,8 @@ bool ImGuiLayer::GetIsEditorSelected() { return s_IsEditorSelected; }
 
 static void ApplySelectedTheme(ImGuiStyle& style) {
 
+    HARMONY_PROFILE_FUNCTION();
+
     Theme::ThemeData themeData = Theme::GetTheme(Theme::s_ThemeType[Theme::s_SelectedTheme]);
 
     style.Colors[ImGuiCol_Text] = themeData.TextColor;
@@ -82,6 +84,8 @@ static void ApplySelectedTheme(ImGuiStyle& style) {
 
 void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
 
+    HARMONY_PROFILE_FUNCTION();
+
     s_EditorScenePtr = editorScenePtr;
 
     const char* glslVersion = "#version 410 core";
@@ -117,6 +121,8 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
 }
 
 static void DrawDockspace() {
+
+    HARMONY_PROFILE_FUNCTION();
 
     static bool dockingEnabled = true;
     static constexpr bool optFullscreen = true;
@@ -159,12 +165,18 @@ static void DrawDockspace() {
 }
 
 static void StartFrame() {
+
+    HARMONY_PROFILE_FUNCTION();
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
 static void EndFrame() {
+
+    HARMONY_PROFILE_FUNCTION();
+
     static ImGuiIO& io = ImGui::GetIO();
     Display::GetImGuiSize(&io.DisplaySize);
 
@@ -180,6 +192,9 @@ static void EndFrame() {
 }
 
 static void ShowHierarchy() {
+
+    HARMONY_PROFILE_FUNCTION();
+
     ImGui::Begin("Hierarchy");
 
     ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Once);
@@ -201,6 +216,9 @@ static void ShowHierarchy() {
 }
 
 void ImGuiLayer::ShowGameViewport() {
+
+    HARMONY_PROFILE_FUNCTION();
+
     ImGui::Begin("Scene Editor");
     s_IsEditorSelected = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
 
@@ -223,6 +241,9 @@ void ImGuiLayer::ShowGameViewport() {
 static bool s_ShowDemoWindow = true;
 
 void ImGuiLayer::OnUpdate() {
+
+    HARMONY_PROFILE_FUNCTION();
+
     StartFrame();
 
     DrawDockspace();

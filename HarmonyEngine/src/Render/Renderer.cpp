@@ -20,6 +20,8 @@ Camera* Renderer::s_Camera = nullptr;
 static int* s_TextureSlots;
 
 void Renderer::OnCreate(Camera* camera) {
+    HARMONY_PROFILE_FUNCTION();
+
     if(s_Batch.Vertices != nullptr) {
         Log::Error("Vertices array was not equal to nullptr, exiting Renderer::OnCreate()");
         return;
@@ -106,6 +108,8 @@ void Renderer::OnCreate(Camera* camera) {
 }
 
 void Renderer::UpdateBatchData() {
+    HARMONY_PROFILE_FUNCTION();
+
     size_t vertexSize = (s_Batch.VertexPtr - s_Batch.Vertices) * sizeof(Vertex);
     size_t offsetSize = (s_Batch.OffsetPtr - s_Batch.Offsets) * sizeof(glm::vec3);
     size_t indexSize = s_Batch.IndexCount * sizeof(uint32_t);
@@ -121,6 +125,8 @@ void Renderer::UpdateBatchData() {
 }
 
 void Renderer::Render() {
+
+    HARMONY_PROFILE_FUNCTION();
 
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
@@ -211,6 +217,9 @@ void Renderer::EndBatch() {
 }
 
 void Renderer::OnDestroy() {
+
+    HARMONY_PROFILE_FUNCTION();
+
     if(s_Batch.Vertices == nullptr && s_Batch.Indices == nullptr) {
         Log::Warn("Vertices array was already nullptr, exiting Renderer::OnDestroy()");
         return;

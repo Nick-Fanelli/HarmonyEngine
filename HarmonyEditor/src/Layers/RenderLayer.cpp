@@ -10,6 +10,9 @@
 static EditorScene* s_EditorScenePtr;
 
 void RenderLayer::OnCreate(EditorScene* editorScene) {
+
+    HARMONY_PROFILE_FUNCTION();
+
     s_EditorScenePtr = editorScene;
 
     MasterRenderer::SetUseFramebuffer(true);
@@ -21,6 +24,9 @@ void RenderLayer::OnCreate(EditorScene* editorScene) {
 }
 
 void RenderLayer::OnUpdate() {
+
+    HARMONY_PROFILE_FUNCTION();
+
     MasterRenderer::Begin();
 
     Renderer2D::StartBatch();
@@ -51,6 +57,7 @@ void RenderLayer::OnUpdate() {
 }
 
 void RenderLayer::OnDestroy() {
+    // TODO: refactor to use the master renderer    
     Renderer2D::OnDestroy();
     Renderer::OnDestroy();
 }
