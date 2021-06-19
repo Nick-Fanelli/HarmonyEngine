@@ -3,9 +3,7 @@
 #include <harmonypch.h>
 
 #include <Core/Assets.h>
-
 #include <Scene/Scene.h>
-
 #include <Render/Camera.h>
 
 #include "EditorCamera.h"

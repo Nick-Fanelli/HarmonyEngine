@@ -4,8 +4,8 @@
 
 #include <entt/entt.hpp>
 
-#include "Scene.h"
 #include "Component.h"
+#include "Scene.h"
 
 namespace HarmonyEngine {
 
@@ -19,7 +19,6 @@ namespace HarmonyEngine {
         Entity() = default;
         Entity(const Entity&) = default;
 
-        Entity(Scene* scene) : m_ScenePtr(scene), m_EntityID(scene->CreateEntity()) {}
         Entity(Scene* scene, entt::entity entityID) : m_ScenePtr(scene), m_EntityID(entityID) {}
 
         const Scene* GetScenePtr() const { return m_ScenePtr; }

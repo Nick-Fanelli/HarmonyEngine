@@ -4,8 +4,8 @@
 
 #include <list>
 
-#include "../Render/Mesh.h"
-#include "../Render/Texture.h"
+#include "Render/Mesh.h"
+#include "Render/Texture.h"
 
 namespace HarmonyEngine {
 

@@ -1,6 +1,6 @@
 #include "Assets.h"
 
-#include "../Render/Renderer.h"
+#include "Render/Renderer.h"
 
 using namespace HarmonyEngine;
 

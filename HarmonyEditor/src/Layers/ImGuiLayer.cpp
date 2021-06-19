@@ -4,6 +4,7 @@
 
 #include <Core/Display.h>
 #include <Scene/Component.h>
+#include <Scene/Entity.h>
 
 #include "../Theme.h"
 
@@ -197,22 +198,31 @@ static void ShowHierarchy() {
 
     ImGui::Begin("Hierarchy");
 
-    ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Once);
-    if(ImGui::TreeNode(s_EditorScenePtr->GetSceneName().c_str())) {
-        s_EditorScenePtr->GetRegistry().view<EntityTag>().each([&](auto& tag) {
-            if(ImGui::TreeNodeEx(tag.Name.c_str(), 
-                ImGuiTreeNodeFlags_DefaultOpen |
-                ImGuiTreeNodeFlags_FramePadding |
-                ImGuiTreeNodeFlags_OpenOnArrow |
-                ImGuiTreeNodeFlags_SpanAvailWidth)) {
-                ImGui::TreePop();
-            }
-        });
+    s_EditorScenePtr->GetRegistry().each([&](auto entityID) {
+        Entity entity = Entity(s_EditorScenePtr, entityID);
+
         
-        ImGui::TreePop();
-    }
+
+        auto& entityTag = entity.GetComponent<EntityTag>();
+        ImGui::Text("%s", entityTag.Name.c_str());
+    });
 
     ImGui::End();
+
+    // ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Once);
+    // if(ImGui::TreeNode(s_EditorScenePtr->GetSceneName().c_str())) {
+    //     s_EditorScenePtr->GetRegistry().view<EntityTag>().each([&](auto& tag) {
+    //         if(ImGui::TreeNodeEx(tag.Name.c_str(), 
+    //             ImGuiTreeNodeFlags_DefaultOpen |
+    //             ImGuiTreeNodeFlags_FramePadding |
+    //             ImGuiTreeNodeFlags_OpenOnArrow |
+    //             ImGuiTreeNodeFlags_SpanAvailWidth)) {
+    //             ImGui::TreePop();
+    //         }
+    //     });
+        
+    //     ImGui::TreePop();
+    // }
 }
 
 void ImGuiLayer::ShowGameViewport() {

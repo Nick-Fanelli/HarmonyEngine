@@ -6,6 +6,8 @@
 
 namespace HarmonyEngine {
 
+    class Entity;
+
     class Scene {
         
     protected:
@@ -22,9 +24,8 @@ namespace HarmonyEngine {
         virtual void OnUpdate(float deltaTime) {}
         virtual void OnDestroy() { m_Registry.clear<>(); }
 
-        entt::entity CreateEntity() {
-            return m_Registry.create();
-        }
+        Entity CreateEntity(const std::string& name);
+        Entity CreateEntity(const std::string& name, const glm::vec3& position);
 
         const entt::registry& GetRegistry() const { return m_Registry; }
         entt::registry& GetRegistry() { return m_Registry; }
