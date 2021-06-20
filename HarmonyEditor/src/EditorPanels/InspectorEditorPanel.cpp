@@ -69,17 +69,30 @@ static void DrawVec3Control(const std::string& label, glm::vec3& values, float r
 
 template<typename ComponentType, typename UIFunction>
 static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction uiFunction) {
-    static constexpr ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen;
+    static constexpr ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
     if(selectedEntity.ContainsComponent<ComponentType>()) {
         auto& component = selectedEntity.GetComponent<ComponentType>();
+        ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
 
-        if(ImGui::TreeNodeEx(label, treeNodeFlags)) {
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 2, 2 });
+        float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+        ImGui::Separator();
+
+        bool open = ImGui::TreeNodeEx(label, treeNodeFlags);
+
+        ImGui::PopStyleVar();
+        ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
+
+        if(ImGui::Button("-", ImVec2{ lineHeight, lineHeight })) {
+            Log::Info("Delete Component");
+        }
+
+        if(open) {
             uiFunction(component);
             ImGui::TreePop();
         }
-
-        ImGui::Separator();
     }
 }
 

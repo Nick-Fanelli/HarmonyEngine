@@ -6,8 +6,8 @@ using namespace HarmonyEngine;
 
 GLFWwindow* Display::s_Window = nullptr;
 
-int Display::s_DisplayWidth = 1280;
-int Display::s_DisplayHeight = 720;
+int Display::s_DisplayWidth = 1600;
+int Display::s_DisplayHeight = 900;
 int Display::s_CurrentFps = -1;
 
 void Display::StartGameLoop() {
