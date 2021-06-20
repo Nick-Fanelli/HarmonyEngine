@@ -36,7 +36,7 @@ namespace HarmonyEngine {
 				// newly opened session instead.  That's better than having badly formatted
 				// profiling output.
 				// Log::Error("Instrumentor::BeginSession() when session already open.");
-				exit(-1);
+				HARMONY_ASSERT(true);
 				InternalEndSession();
 			}
 			m_OutputStream.open(filepath);
@@ -49,7 +49,7 @@ namespace HarmonyEngine {
 			else
 			{
 				// Log::Error("Instrumentor could not open results file");
-				exit(-1);
+				HARMONY_ASSERT_MESSAGE(true, "Instrumentor could not open results file!");
 			}
 		}
 
@@ -191,7 +191,6 @@ namespace HarmonyEngine {
 	}
 }
 
-#define HARMONY_PROFILE 0
 #if HARMONY_PROFILE
 	#ifndef __FUNCSIG__
 		#define __FUNCSIG__ __PRETTY_FUNCTION__

@@ -36,8 +36,7 @@ namespace HarmonyEngine {
         template<typename T>
         T& GetComponent() {
             if(!ContainsComponent<T>()) {
-                Log::Error("Entity does not contain the requested component!");
-                exit(-1);
+                HARMONY_ASSERT_MESSAGE(true, "Entity does not contain the requested component!")
             }
 
             return m_ScenePtr->GetRegistry().get<T>(m_EntityID);
@@ -46,8 +45,8 @@ namespace HarmonyEngine {
         template<typename T>
         void RemoveComponenet() {
             if(!ContainsComponent<T>()) {
-                Log::Error("Entity does not contain the requested component to be removed!");
-                exit(-1);
+                Log::Warn("Entity does not contain the requested component to be removed!\n\tStatus: Returning");
+                return;
             }
 
             m_ScenePtr->GetRegistry().remove<T>(m_EntityID);

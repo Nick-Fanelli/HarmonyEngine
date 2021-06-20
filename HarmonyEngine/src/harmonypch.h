@@ -1,10 +1,6 @@
 #pragma once
 
-#ifndef NDEBUG
-    #define HARMONY_DEBUG 1
-#else
-    #define HARMONY_DEBUG 0
-#endif
+#include "Core/Core.h"
 
 #include <iostream>
 #include <fstream>
@@ -25,6 +21,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "Debug/Instrumentor.h"
 #include "Core/Log.h"
+#include "Core/Assert.h"
+#include "Debug/Profile.h"
 #include "Core/Utils.h"
