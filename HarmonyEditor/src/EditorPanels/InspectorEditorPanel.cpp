@@ -67,6 +67,10 @@ static void DrawVec3Control(const std::string& label, glm::vec3& values, float r
     ImGui::PopID();
 }
 
+static void DrawColorControl(const std::string& label, glm::vec4& values) {
+    ImGui::ColorEdit4(label.c_str(), glm::value_ptr(values));
+}
+
 template<typename ComponentType, typename UIFunction>
 static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction uiFunction) {
 
@@ -118,12 +122,16 @@ void InspectorEditorPanel::OnUpdate() {
 
     if(selectedEntity.IsCreated()) {
 
-        DrawComponent<EntityTag>("Entity Tag", selectedEntity, [](auto& component) {
+        DrawComponent<EntityTag>("Entity Tag", selectedEntity, [](EntityTag& component) {
             ImGui::InputText("Name", &component.Name);
         });
 
-        DrawComponent<Transform>("Transform", selectedEntity, [](auto& component) {
+        DrawComponent<Transform>("Transform", selectedEntity, [](Transform& component) {
             DrawVec3Control("Position", component.Position);
+        });
+
+        DrawComponent<QuadRenderer>("Quad Renderer", selectedEntity, [](QuadRenderer& component) {
+            DrawColorControl("Color", component.Color);
         });
 
         DrawAddComponentButton(selectedEntity);
