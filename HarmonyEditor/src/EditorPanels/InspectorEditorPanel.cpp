@@ -69,6 +69,9 @@ static void DrawVec3Control(const std::string& label, glm::vec3& values, float r
 
 template<typename ComponentType, typename UIFunction>
 static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction uiFunction) {
+
+    HARMONY_PROFILE_FUNCTION();
+            
     static constexpr ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
     if(selectedEntity.ContainsComponent<ComponentType>()) {
