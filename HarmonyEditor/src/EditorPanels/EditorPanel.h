@@ -10,7 +10,7 @@ protected:
     HarmonyEngine::Scene* m_ScenePtr;
 
 public:
-    void OnCreate(HarmonyEngine::Scene* scene) { m_ScenePtr = scene; }
+    virtual void OnCreate(HarmonyEngine::Scene* scene) { m_ScenePtr = scene; }
     virtual void OnUpdate() = 0;
 
 };

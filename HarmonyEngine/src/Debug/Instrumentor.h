@@ -191,7 +191,7 @@ namespace HarmonyEngine {
 	}
 }
 
-#define HARMONY_PROFILE 1
+#define HARMONY_PROFILE 0
 #if HARMONY_PROFILE
 	#ifndef __FUNCSIG__
 		#define __FUNCSIG__ __PRETTY_FUNCTION__

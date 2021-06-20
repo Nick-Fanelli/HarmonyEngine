@@ -2,16 +2,14 @@
 
 #include <harmonypch.h>
 
-#include <Scene/Entity.h>
-
 #include "EditorPanel.h"
+#include "HierarchyEditorPanel.h"
 
 using namespace HarmonyEngine;
 
-class HierarchyEditorPanel : public EditorPanel {
+class InspectorEditorPanel : public EditorPanel {
 
 public:
     void OnUpdate() override;
-private:
-    void AddToHierarchy(Entity& entity);
+
 };

@@ -12,12 +12,11 @@ namespace HarmonyEngine {
     class Entity {
 
     private:
-        Scene* m_ScenePtr;
+        Scene* m_ScenePtr = nullptr;
         entt::entity m_EntityID;
 
     public:
         Entity() = default;
-
         Entity(Scene* scene, entt::entity entityID) : m_ScenePtr(scene), m_EntityID(entityID) {}
 
         const Scene* GetScenePtr() const { return m_ScenePtr; }
@@ -37,7 +36,8 @@ namespace HarmonyEngine {
         template<typename T>
         T& GetComponent() {
             if(!ContainsComponent<T>()) {
-                Log::Warn("Entity does not contain the requested component!");
+                Log::Error("Entity does not contain the requested component!");
+                exit(-1);
             }
 
             return m_ScenePtr->GetRegistry().get<T>(m_EntityID);
@@ -46,16 +46,20 @@ namespace HarmonyEngine {
         template<typename T>
         void RemoveComponenet() {
             if(!ContainsComponent<T>()) {
-                Log::Warn("Entity does not contain the requested component to be removed!");
+                Log::Error("Entity does not contain the requested component to be removed!");
+                exit(-1);
             }
 
             m_ScenePtr->GetRegistry().remove<T>(m_EntityID);
         }
 
+        bool IsCreated() { return m_ScenePtr != nullptr; }
+
         operator uint32_t() const { return (uint32_t) m_EntityID; }
 
         bool operator==(const Entity& other) const { return m_EntityID == other.m_EntityID && m_ScenePtr == other.m_ScenePtr; }
         bool operator!=(const Entity& other) const { return !operator==(other); }
+
     };
 
 }

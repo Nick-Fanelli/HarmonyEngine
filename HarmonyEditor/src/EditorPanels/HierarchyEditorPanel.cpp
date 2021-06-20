@@ -1,6 +1,6 @@
-#pragma GCC diagnostic ignored "-Wformat-security"
-
 #include "HierarchyEditorPanel.h"
+
+#include "../Layers/ImGuiLayer.h"
 
 #include <Scene/Component.h>
 
@@ -11,19 +11,26 @@ void HierarchyEditorPanel::OnUpdate() {
 
     m_ScenePtr->GetRegistry().each([&](auto entityID) {
         Entity entity = Entity(m_ScenePtr, entityID);
-        DrawEntityNode(entity);
+        AddToHierarchy(entity);
     });
+
+    if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered()) {
+        Entity nullEntity = Entity();
+        ImGuiLayer::SetSelectedEntity(nullEntity);
+    }
 
     ImGui::End();
 }
 
-void HierarchyEditorPanel::DrawEntityNode(Entity& entity) {
-    const char* entityName = entity.GetComponent<EntityTag>().Name.c_str();
+void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
+    auto& entityName = entity.GetComponent<EntityTag>().Name;
 
-    ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-    bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t) entity, flags, entityName);
+    ImGuiTreeNodeFlags flags = ((ImGuiLayer::GetSelectedEntity() == entity) ?   ImGuiTreeNodeFlags_Selected : 0) | 
+                                                                                ImGuiTreeNodeFlags_OpenOnArrow | 
+                                                                                ImGuiTreeNodeFlags_SpanAvailWidth;
+    bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t) entity, flags, "%s", entityName.c_str());
     if(ImGui::IsItemClicked()) {
-        m_SelectionContext = entity;
+        ImGuiLayer::SetSelectedEntity(entity);
     }
 
     if(opened) {

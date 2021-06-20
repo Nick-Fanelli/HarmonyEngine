@@ -5,84 +5,20 @@
 #include <Core/Display.h>
 
 #include "../Theme.h"
+
 #include "../EditorPanels/HierarchyEditorPanel.h"
+#include "../EditorPanels/InspectorEditorPanel.h"
 
 static EditorScene* s_EditorScenePtr;
 static const char* s_SaveFilename = "window-layout.ini";
 
 static HierarchyEditorPanel s_HierarchyEditorPanel;
+static InspectorEditorPanel s_InspectorEditorPanel;
 
 bool ImGuiLayer::GetIsEditorSelected() { return s_IsEditorSelected; }
+Entity& ImGuiLayer::GetSelectedEntity() { return s_SelectedEntity; }
 
-static void ApplySelectedTheme(ImGuiStyle& style) {
-
-    HARMONY_PROFILE_FUNCTION();
-
-    Theme::ThemeData themeData = Theme::GetTheme(Theme::s_ThemeType[Theme::s_SelectedTheme]);
-
-    style.Colors[ImGuiCol_Text] = themeData.TextColor;
-    style.Colors[ImGuiCol_TextSelectedBg] = themeData.AccentColor;
-
-    float disableColor = Theme::s_SelectedTheme == 0 ? 0.6f : 0.4f;
-    style.Colors[ImGuiCol_TextDisabled] = ImVec4(disableColor, disableColor, disableColor, 1); // Todo: Become Dynamic
-
-    style.Colors[ImGuiCol_WindowBg] = themeData.BackgroundColor;
-    style.Colors[ImGuiCol_ChildBg] = themeData.BackgroundColor;
-    style.Colors[ImGuiCol_PopupBg] = ImVec4(themeData.ChildBackgroundColor.x, themeData.ChildBackgroundColor.y, themeData.ChildBackgroundColor.z, 1);
-    style.Colors[ImGuiCol_DockingPreview] = themeData.AccentColor;
-
-    style.Colors[ImGuiCol_Separator] = themeData.SeparatorColor;
-    style.Colors[ImGuiCol_SeparatorActive] = themeData.SeparatorHoverColor;
-    style.Colors[ImGuiCol_SeparatorHovered] = themeData.SeparatorHoverColor;
-
-    style.Colors[ImGuiCol_Border] = themeData.BackgroundColor;
-    style.Colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.10f);
-
-    style.Colors[ImGuiCol_FrameBg] = themeData.ChildBackgroundColor;
-    style.Colors[ImGuiCol_FrameBgHovered] = themeData.ChildBackgroundHoverColor;
-    style.Colors[ImGuiCol_FrameBgActive] = themeData.ChildBackgroundActiveColor;
-
-    style.Colors[ImGuiCol_TitleBg] = themeData.ChildBackgroundColor;
-    style.Colors[ImGuiCol_TitleBgActive] = themeData.ChildBackgroundColor;
-    style.Colors[ImGuiCol_TitleBgCollapsed] = themeData.BackgroundColor;
-
-    style.Colors[ImGuiCol_MenuBarBg] = themeData.ChildBackgroundColor;
-
-    style.Colors[ImGuiCol_ScrollbarGrab] = themeData.BackgroundColor;
-    style.Colors[ImGuiCol_ScrollbarGrabHovered] = themeData.BackgroundColor;
-    style.Colors[ImGuiCol_ScrollbarBg] = themeData.ChildBackgroundColor;
-    style.Colors[ImGuiCol_ScrollbarGrabActive] = themeData.ChildBackgroundActiveColor;
-
-    style.Colors[ImGuiCol_CheckMark] = themeData.AccentColor;
-
-    style.Colors[ImGuiCol_SliderGrab] = themeData.BackgroundColor;
-    style.Colors[ImGuiCol_SliderGrabActive] = themeData.ChildBackgroundHoverColor;
-
-    style.Colors[ImGuiCol_Button] = themeData.ChildBackgroundColor;
-    style.Colors[ImGuiCol_ButtonHovered] = themeData.ChildBackgroundHoverColor;
-    style.Colors[ImGuiCol_ButtonActive] = themeData.ChildBackgroundActiveColor;
-
-    style.Colors[ImGuiCol_Header] = themeData.ChildBackgroundColor;
-    style.Colors[ImGuiCol_HeaderHovered] = themeData.ChildBackgroundHoverColor;
-    style.Colors[ImGuiCol_HeaderActive] = themeData.ChildBackgroundActiveColor;
-
-    style.Colors[ImGuiCol_ResizeGrip] = themeData.ChildBackgroundColor;
-    style.Colors[ImGuiCol_ResizeGripHovered] = themeData.ChildBackgroundHoverColor;
-    style.Colors[ImGuiCol_ResizeGripActive] = themeData.ChildBackgroundActiveColor;
-
-    style.Colors[ImGuiCol_PlotLines] = themeData.AccentColor;
-    style.Colors[ImGuiCol_PlotLinesHovered] = themeData.AccentHoverColor;
-    style.Colors[ImGuiCol_PlotHistogram] = themeData.AccentColor;
-    style.Colors[ImGuiCol_PlotHistogramHovered] = themeData.AccentHoverColor;
-
-    style.Colors[ImGuiCol_Tab] = ImLerp(style.Colors[ImGuiCol_Header], style.Colors[ImGuiCol_TitleBgActive], 0.90f);
-    style.Colors[ImGuiCol_TabHovered] = style.Colors[ImGuiCol_HeaderHovered];
-    style.Colors[ImGuiCol_TabActive] = themeData.ChildBackgroundActiveColor;
-    style.Colors[ImGuiCol_TabUnfocused] = ImLerp(style.Colors[ImGuiCol_Tab], style.Colors[ImGuiCol_TitleBg], 0.80f);
-    style.Colors[ImGuiCol_TabUnfocusedActive] = ImLerp(style.Colors[ImGuiCol_TabActive],
-                                                        style.Colors[ImGuiCol_TitleBg], 0.40f);
-
-}
+void ImGuiLayer::SetSelectedEntity(Entity& entity) { s_SelectedEntity = entity; }
 
 void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
 
@@ -106,7 +42,7 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
     config.OversampleH = 3;
     config.OversampleV = 3;
 
-    io.Fonts->AddFontFromFileTTF("assets/fonts/segoe-ui.ttf", 17.0f, &config);
+    io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/segoe-ui.ttf", 18.0f, &config);
 
     ImGuiStyle& style = ImGui::GetStyle();
     if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
@@ -114,14 +50,13 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 
-    ApplySelectedTheme(style);
-
     Display::GetImGuiSize(&io.DisplaySize); // Set the ImGui display size
 
     ImGui_ImplGlfw_InitForOpenGL(Display::GetWindowPtr(), true);
     ImGui_ImplOpenGL3_Init(glslVersion);
 
     s_HierarchyEditorPanel.OnCreate(s_EditorScenePtr);
+    s_InspectorEditorPanel.OnCreate(s_EditorScenePtr);
 }
 
 static void DrawDockspace() {
@@ -229,6 +164,7 @@ void ImGuiLayer::OnUpdate() {
     DrawDockspace();
 
     s_HierarchyEditorPanel.OnUpdate();
+    s_InspectorEditorPanel.OnUpdate();
 
     ShowGameViewport();
 
