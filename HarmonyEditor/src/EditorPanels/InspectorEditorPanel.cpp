@@ -86,10 +86,14 @@ static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction 
         bool open = ImGui::TreeNodeEx(label, treeNodeFlags);
 
         ImGui::PopStyleVar();
-        ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
 
-        if(ImGui::Button("-", ImVec2{ lineHeight, lineHeight })) {
-            Log::Info("Delete Component");
+        if(!std::is_same<ComponentType, EntityTag>()) {
+
+            ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
+
+            if(ImGui::Button("-", ImVec2{ lineHeight, lineHeight })) {
+                selectedEntity.RemoveComponenet<ComponentType>();
+            }
         }
 
         if(open) {
@@ -99,11 +103,16 @@ static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction 
     }
 }
 
+static void DrawAddComponentButton(Entity& entity) {
+    ImGui::Separator();
+    ImGui::Button("Add Component");
+}
+
 void InspectorEditorPanel::OnUpdate() {
 
     HARMONY_PROFILE_FUNCTION();
 
-    ImGui::Begin("Inspector");
+    ImGui::Begin("Components");
 
     auto& selectedEntity = ImGuiLayer::GetSelectedEntity();
 
@@ -116,6 +125,8 @@ void InspectorEditorPanel::OnUpdate() {
         DrawComponent<Transform>("Transform", selectedEntity, [](auto& component) {
             DrawVec3Control("Position", component.Position);
         });
+
+        DrawAddComponentButton(selectedEntity);
 
     }
 

@@ -26,6 +26,9 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
 
     HARMONY_PROFILE_FUNCTION();
 
+    if(!entity.ContainsComponent<EntityTag>())
+        return;
+
     auto& entityName = entity.GetComponent<EntityTag>().Name;
 
     ImGuiTreeNodeFlags flags = ((ImGuiLayer::GetSelectedEntity() == entity) ?   ImGuiTreeNodeFlags_Selected : 0) | 

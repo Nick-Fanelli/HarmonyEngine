@@ -15,12 +15,10 @@ void RenderLayer::OnCreate(EditorScene* editorScene) {
 
     s_EditorScenePtr = editorScene;
 
+    MasterRenderer::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
     MasterRenderer::SetUseFramebuffer(true);
 
     s_EditorScenePtr->SetRenderTexture(MasterRenderer::GetFramebuffer()->GetTexturePtr());
-
-    Renderer2D::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
-    Renderer::OnCreate(s_EditorScenePtr->GetGenericCameraPtr());
 }
 
 void RenderLayer::OnUpdate() {
@@ -57,7 +55,5 @@ void RenderLayer::OnUpdate() {
 }
 
 void RenderLayer::OnDestroy() {
-    // TODO: refactor to use the master renderer    
-    Renderer2D::OnDestroy();
-    Renderer::OnDestroy();
+    MasterRenderer::OnDestroy();
 }

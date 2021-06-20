@@ -178,6 +178,7 @@ void ImGuiLayer::ShowGameViewport() {
 
         ImVec2 wsize = ImGui::GetWindowSize();
 
+        // Todo: Not Use
         static const float aspectRatio = Display::GetAspectRatio(); 
         wsize.y = (float) wsize.x / aspectRatio;
 
