@@ -91,7 +91,7 @@ static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction 
 
         ImGui::PopStyleVar();
 
-        if(!std::is_same<ComponentType, EntityTag>()) {
+        if(!std::is_same<ComponentType, TagComponent>()) {
 
             ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
 
@@ -122,15 +122,15 @@ void InspectorEditorPanel::OnUpdate() {
 
     if(selectedEntity.IsCreated()) {
 
-        DrawComponent<EntityTag>("Entity Tag", selectedEntity, [](EntityTag& component) {
+        DrawComponent<TagComponent>("Entity Tag", selectedEntity, [](TagComponent& component) {
             ImGui::InputText("Name", &component.Name);
         });
 
-        DrawComponent<Transform>("Transform", selectedEntity, [](Transform& component) {
+        DrawComponent<TransformComponent>("Transform", selectedEntity, [](TransformComponent& component) {
             DrawVec3Control("Position", component.Position);
         });
 
-        DrawComponent<QuadRenderer>("Quad Renderer", selectedEntity, [](QuadRenderer& component) {
+        DrawComponent<QuadRendererComponent>("Quad Renderer", selectedEntity, [](QuadRendererComponent& component) {
             DrawColorControl("Color", component.Color);
         });
 

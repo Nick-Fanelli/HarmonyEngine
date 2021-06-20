@@ -27,10 +27,10 @@ void EditorScene::OnCreate() {
     auto texture = AssetManager::QueueTexture("assets/textures/stallTexture.png");
 
     s_Entity = CreateEntity("Stall");
-    s_Entity.AddComponent<MeshRenderer>(mesh, texture);
+    s_Entity.AddComponent<MeshRendererComponent>(mesh, texture);
 
     s_QuadEntity = CreateEntity("Quad", {5, 10, 0});
-    s_QuadEntity.AddComponent<QuadRenderer>(glm::vec2{5, 5}, glm::vec4{1, 0, 0, 1});
+    s_QuadEntity.AddComponent<QuadRendererComponent>(glm::vec2{5, 5}, glm::vec4{1, 0, 0, 1});
 
     AssetManager::CreateAll();
 }

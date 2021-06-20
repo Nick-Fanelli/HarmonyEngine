@@ -6,49 +6,49 @@
 
 namespace HarmonyEngine {
 
-    struct EntityTag {
+    struct TagComponent {
 
         std::string Name;
 
-        EntityTag() = default;
-        EntityTag(const EntityTag&) = default;
+        TagComponent() = default;
+        TagComponent(const TagComponent&) = default;
 
-        EntityTag(const std::string& name) : Name(name) {}
+        TagComponent(const std::string& name) : Name(name) {}
     };
 
-    struct Transform {
+    struct TransformComponent {
 
         glm::vec3 Position;
 
-        Transform() = default;
-        Transform(const Transform&) = default;
+        TransformComponent() = default;
+        TransformComponent(const TransformComponent&) = default;
 
-        Transform(const glm::vec3& position) : Position(position) {}
+        TransformComponent(const glm::vec3& position) : Position(position) {}
 
     };
 
-    struct MeshRenderer {
+    struct MeshRendererComponent {
 
         AssetHandle<Mesh> MeshHandle;
         AssetHandle<Texture> TextureHandle;
 
-        MeshRenderer() = default;
-        MeshRenderer(const MeshRenderer&) = default;
+        MeshRendererComponent() = default;
+        MeshRendererComponent(const MeshRendererComponent&) = default;
 
-        MeshRenderer(const AssetHandle<Mesh>& mesh) : MeshHandle(mesh) {}
-        MeshRenderer(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture) : MeshHandle(mesh), TextureHandle(texture) {}
+        MeshRendererComponent(const AssetHandle<Mesh>& mesh) : MeshHandle(mesh) {}
+        MeshRendererComponent(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture) : MeshHandle(mesh), TextureHandle(texture) {}
 
     };
 
-    struct QuadRenderer {
+    struct QuadRendererComponent {
 
         glm::vec2 Scale;
         glm::vec4 Color;
 
-        QuadRenderer() = default;
-        QuadRenderer(const QuadRenderer&) = default;
+        QuadRendererComponent() = default;
+        QuadRendererComponent(const QuadRendererComponent&) = default;
 
-        QuadRenderer(const glm::vec2& scale, const glm::vec4& color) : Scale(scale), Color(color) {}
+        QuadRendererComponent(const glm::vec2& scale, const glm::vec4& color) : Scale(scale), Color(color) {}
     };
 
 }
