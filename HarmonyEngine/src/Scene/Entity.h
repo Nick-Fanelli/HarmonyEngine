@@ -17,7 +17,6 @@ namespace HarmonyEngine {
 
     public:
         Entity() = default;
-        Entity(const Entity&) = default;
 
         Entity(Scene* scene, entt::entity entityID) : m_ScenePtr(scene), m_EntityID(entityID) {}
 
@@ -53,6 +52,10 @@ namespace HarmonyEngine {
             m_ScenePtr->GetRegistry().remove<T>(m_EntityID);
         }
 
+        operator uint32_t() const { return (uint32_t) m_EntityID; }
+
+        bool operator==(const Entity& other) const { return m_EntityID == other.m_EntityID && m_ScenePtr == other.m_ScenePtr; }
+        bool operator!=(const Entity& other) const { return !operator==(other); }
     };
 
 }

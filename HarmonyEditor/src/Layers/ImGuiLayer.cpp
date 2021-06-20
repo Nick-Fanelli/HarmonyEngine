@@ -3,13 +3,14 @@
 #include <glm/glm.hpp>
 
 #include <Core/Display.h>
-#include <Scene/Component.h>
-#include <Scene/Entity.h>
 
 #include "../Theme.h"
+#include "../EditorPanels/HierarchyEditorPanel.h"
 
 static EditorScene* s_EditorScenePtr;
 static const char* s_SaveFilename = "window-layout.ini";
+
+static HierarchyEditorPanel s_HierarchyEditorPanel;
 
 bool ImGuiLayer::GetIsEditorSelected() { return s_IsEditorSelected; }
 
@@ -119,6 +120,8 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
 
     ImGui_ImplGlfw_InitForOpenGL(Display::GetWindowPtr(), true);
     ImGui_ImplOpenGL3_Init(glslVersion);
+
+    s_HierarchyEditorPanel.OnCreate(s_EditorScenePtr);
 }
 
 static void DrawDockspace() {
@@ -192,39 +195,6 @@ static void EndFrame() {
     }
 }
 
-static void ShowHierarchy() {
-
-    HARMONY_PROFILE_FUNCTION();
-
-    ImGui::Begin("Hierarchy");
-
-    s_EditorScenePtr->GetRegistry().each([&](auto entityID) {
-        Entity entity = Entity(s_EditorScenePtr, entityID);
-
-        
-
-        auto& entityTag = entity.GetComponent<EntityTag>();
-        ImGui::Text("%s", entityTag.Name.c_str());
-    });
-
-    ImGui::End();
-
-    // ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Once);
-    // if(ImGui::TreeNode(s_EditorScenePtr->GetSceneName().c_str())) {
-    //     s_EditorScenePtr->GetRegistry().view<EntityTag>().each([&](auto& tag) {
-    //         if(ImGui::TreeNodeEx(tag.Name.c_str(), 
-    //             ImGuiTreeNodeFlags_DefaultOpen |
-    //             ImGuiTreeNodeFlags_FramePadding |
-    //             ImGuiTreeNodeFlags_OpenOnArrow |
-    //             ImGuiTreeNodeFlags_SpanAvailWidth)) {
-    //             ImGui::TreePop();
-    //         }
-    //     });
-        
-    //     ImGui::TreePop();
-    // }
-}
-
 void ImGuiLayer::ShowGameViewport() {
 
     HARMONY_PROFILE_FUNCTION();
@@ -257,7 +227,9 @@ void ImGuiLayer::OnUpdate() {
     StartFrame();
 
     DrawDockspace();
-    ShowHierarchy();
+
+    s_HierarchyEditorPanel.OnUpdate();
+
     ShowGameViewport();
 
     ImGui::ShowDemoWindow(&s_ShowDemoWindow);
