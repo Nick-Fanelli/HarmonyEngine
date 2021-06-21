@@ -15,13 +15,17 @@ out vec3 vNormal;
 out vec4 vColor;
 out vec2 vTextureCoord;
 out float vTextureID;
+out mat4 vModel;
 
 void main() {
+    int modelID = int(objectID);
+
     vPosition = position;
     vNormal = normal;
     vColor = color;
     vTextureCoord = textureCoord;
     vTextureID = textureID;
+    vModel = uTransformations[modelID];
 
-    gl_Position = uViewProjectionMatrix * uTransformations[int(objectID)] * vec4(position, 1.0);
+    gl_Position = uViewProjectionMatrix * uTransformations[modelID] * vec4(position, 1.0);
 }

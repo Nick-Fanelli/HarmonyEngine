@@ -5,6 +5,7 @@ in vec3 vNormal;
 in vec4 vColor;
 in vec2 vTextureCoord;
 in float vTextureID;
+in mat4 vModel;
 
 uniform vec3 uLightPosition;
 
@@ -19,7 +20,7 @@ void main() {
     vec3 lightColor = vec3(1, 1, 1);
     vec3 ambient = ambientStength * lightColor;
 
-    vec3 norm = normalize(vNormal);
+    vec3 norm = mat3(transpose(inverse(vModel))) * vNormal;
     vec3 lightDirection = normalize(uLightPosition - vPosition);
 
     float diff = max(dot(norm, lightDirection), 0.0);

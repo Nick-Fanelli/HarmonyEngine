@@ -266,12 +266,12 @@ void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, AssetHand
 
     HARMONY_PROFILE_FUNCTION();
 
-    HARMONY_ASSERT_MESSAGE(true, "NOT IMPLEMENTED");
-
     if(texture->GetTextureID() == 0.0f) {
         DrawMesh(transform, mesh);
         return;
     }
+
+    uint32_t vertexCount = s_Batch.VertexPtr - s_Batch.Vertices;
 
     AllocateVertices(mesh->Vertices.size());
     AllocateIndices(mesh->Indices.size());
@@ -293,21 +293,22 @@ void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, AssetHand
         s_Batch.TextureIndex++;
     }
 
-    Vertex* startVertex = s_Batch.VertexPtr;
+    int offsetID = s_Batch.OffsetPtr - s_Batch.Offsets;
 
     std::memcpy(s_Batch.VertexPtr, mesh->Vertices.data(), sizeof(*mesh->Vertices.begin()) * mesh->Vertices.size());
+
+    std::for_each(s_Batch.VertexPtr, s_Batch.VertexPtr + mesh->Vertices.size(), [&](Vertex& vertex) {
+        vertex.RenderID = offsetID;
+        vertex.TextureID = textureIndex;
+    });
     s_Batch.VertexPtr += mesh->Vertices.size();
 
-    // Set the vertex textures
-    for(size_t i = 0; i < mesh->Vertices.size(); i++) {
-        startVertex->TextureID = textureIndex;
-        startVertex++;
+    for(auto& index : mesh->Indices) {
+        *s_Batch.IndexPtr = index + vertexCount;
+        s_Batch.IndexPtr++;
     }
 
-    std::memcpy(s_Batch.IndexPtr, mesh->Indices.data(), sizeof(*mesh->Indices.begin()) * mesh->Indices.size());
-    s_Batch.IndexCount += mesh->Indices.size();
-
-    // *s_Batch.OffsetPtr = transform.GetTransformationMatrix();
+    *s_Batch.OffsetPtr = transform.GetTransformationMatrix();
     s_Batch.OffsetPtr++;
 }
 
