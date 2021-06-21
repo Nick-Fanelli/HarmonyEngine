@@ -2,6 +2,8 @@
 
 #include "harmonypch.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace HarmonyEngine {
 
     struct Transform {
@@ -23,6 +25,18 @@ namespace HarmonyEngine {
 
         bool operator==(const Transform& other) { return Position == other.Position && Rotation == other.Rotation && Scale == other.Scale; }
         bool operator!=(const Transform& other) { return !operator==(other); }
+
+        glm::mat4 GetTransformationMatrix() {
+            return glm::translate(glm::mat4(1.0f), Position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.z), { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { Scale.x, Scale.y, 1.0f });
+        }
+
+        void GetTransformationMatrix(glm::mat4* out) {
+            *out = glm::translate(glm::mat4(1.0f), Position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.z), { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { Scale.x, Scale.y, 1.0f });
+        }
     };
 
 }

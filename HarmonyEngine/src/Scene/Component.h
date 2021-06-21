@@ -44,11 +44,13 @@ namespace HarmonyEngine {
     struct QuadRendererComponent {
 
         glm::vec4 Color;
+        AssetHandle<Texture> TextureHandle;
 
         QuadRendererComponent() = default;
         QuadRendererComponent(const QuadRendererComponent&) = default;
 
         QuadRendererComponent(const glm::vec4& color) : Color(color) {}
+        QuadRendererComponent(const glm::vec4& color, const AssetHandle<Texture>& texture) : Color(color), TextureHandle(texture) {}
     };
 
 }
