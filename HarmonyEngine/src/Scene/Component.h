@@ -46,7 +46,8 @@ namespace HarmonyEngine {
         glm::vec4 Color;
         AssetHandle<Texture> TextureHandle;
 
-        QuadRendererComponent() = default;
+        QuadRendererComponent() : Color(1.0f) {}
+
         QuadRendererComponent(const QuadRendererComponent&) = default;
 
         QuadRendererComponent(const glm::vec4& color) : Color(color) {}

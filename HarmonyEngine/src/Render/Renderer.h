@@ -17,7 +17,6 @@ namespace HarmonyEngine {
         GLuint VaoID = 0;
         GLuint VboID = 0;
         GLuint IboID = 0;
-        GLuint OboID = 0;
 
         size_t IndexCount = 0;
         size_t TextureIndex = 1;

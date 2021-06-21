@@ -48,6 +48,7 @@ namespace HarmonyEngine {
         void AddUnformInt(const char* varName, int integer) const;
         void AddUniformIntArray(const char* varName, int size, const int* array) const;
         void AddUniformUintArray(const char* varName, int size, const uint32_t* array) const;
+        void AddUniformMat4Array(const char* varName, int size, const glm::mat4 array[]) const;
 
         const GLuint& GetProgrmID() const { return m_ProgramID; }
 

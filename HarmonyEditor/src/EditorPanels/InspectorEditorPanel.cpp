@@ -129,7 +129,7 @@ void InspectorEditorPanel::OnUpdate() {
         DrawComponent<TransformComponent>("Transform", selectedEntity, [](TransformComponent& component) {
             DrawVec3Control("Position", component.Transform.Position);
             DrawVec3Control("Rotation", component.Transform.Rotation);
-            DrawVec3Control("Scale", component.Transform.Scale);
+            DrawVec3Control("Scale", component.Transform.Scale, 1.0f);
         });
 
         DrawComponent<QuadRendererComponent>("Quad Renderer", selectedEntity, [](QuadRendererComponent& component) {

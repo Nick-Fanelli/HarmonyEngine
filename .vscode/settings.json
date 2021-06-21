@@ -88,6 +88,7 @@
         "typeindex": "cpp",
         "filesystem": "cpp",
         "clocale": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "forward_list": "cpp"
     }
 }

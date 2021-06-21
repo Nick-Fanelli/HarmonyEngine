@@ -5,12 +5,13 @@ layout(location = 1) in vec3 normal;
 layout(location = 2) in vec4 color;
 layout(location = 3) in vec2 textureCoord;
 layout(location = 4) in float textureID;
-layout(location = 5) in mat4 offset;
+layout(location = 5) in float objectID;
 
 uniform mat4 uViewProjectionMatrix;
+uniform mat4 uTransformations[&MAX_OBJECT_COUNT];
 
 out vec3 vPosition;
-out vec3 vNormal;
+out vec3 vNormal; 
 out vec4 vColor;
 out vec2 vTextureCoord;
 out float vTextureID;
@@ -22,5 +23,5 @@ void main() {
     vTextureCoord = textureCoord;
     vTextureID = textureID;
 
-    gl_Position = uViewProjectionMatrix * offset * vec4(position, 1.0);
+    gl_Position = uViewProjectionMatrix * uTransformations[int(objectID)] * vec4(position, 1.0);
 }

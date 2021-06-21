@@ -9,6 +9,7 @@ struct Vertex {
     glm::vec4 Color; 
     glm::vec2 TextureCoord;
     float TextureID;
+    float RenderID;
 
     Vertex() = default;
     Vertex(const Vertex&) = default;

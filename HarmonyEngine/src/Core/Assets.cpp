@@ -22,7 +22,7 @@ void AssetManager::CreateAll() {
 void AssetManager::DestroyAll() {
     for(auto& texture : s_TextureRegistry)
         texture->Delete();
+        
     s_TextureRegistry.clear();
-
     s_MeshRegistry.clear();
 }
