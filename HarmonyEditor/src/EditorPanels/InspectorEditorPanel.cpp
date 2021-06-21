@@ -107,9 +107,28 @@ static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction 
     }
 }
 
+template<typename ComponentType>
+static void DrawAddComponentMenuItem(const std::string& componentType, Entity& entity) {
+    if(!entity.ContainsComponent<ComponentType>()) {
+        if(ImGui::MenuItem(componentType.c_str())) {
+            entity.AddComponent<ComponentType>();
+            ImGui::CloseCurrentPopup();
+        }
+    }
+}
+
 static void DrawAddComponentButton(Entity& entity) {
     ImGui::Separator();
-    ImGui::Button("Add Component");
+    if(ImGui::Button("Add Component")) 
+        ImGui::OpenPopup("AddComponent");
+
+    if(ImGui::BeginPopup("AddComponent")) {
+        DrawAddComponentMenuItem<QuadRendererComponent>("Quad Renderer", entity);
+        DrawAddComponentMenuItem<MeshRendererComponent>("Mesh Renderer", entity);
+
+        ImGui::EndPopup();
+    }
+
 }
 
 void InspectorEditorPanel::OnUpdate() {

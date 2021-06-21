@@ -48,6 +48,8 @@ void RenderLayer::OnUpdate() {
     auto meshRendererGroup = s_EditorScenePtr->GetRegistry().group<MeshRendererComponent>(entt::get<TransformComponent>);
     for(auto& entity : meshRendererGroup) {
         auto[renderer, transform] = meshRendererGroup.get<MeshRendererComponent, TransformComponent>(entity);
+        if(!renderer.MeshHandle.IsAssigned()) 
+            continue;
         // TODO: Remove/Find better solution
         if(renderer.TextureHandle.IsAssigned())
             Renderer::DrawMesh(transform.Transform, renderer.MeshHandle, renderer.TextureHandle, renderer.Color);
