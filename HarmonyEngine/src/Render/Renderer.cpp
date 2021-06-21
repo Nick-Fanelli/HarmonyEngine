@@ -246,11 +246,12 @@ void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh) {
 
     int offsetID = s_Batch.OffsetPtr - s_Batch.Offsets;
 
-    for(auto& vertex : mesh->Vertices) {
-        *s_Batch.VertexPtr = vertex;
-        s_Batch.VertexPtr->RenderID = offsetID;
-        s_Batch.VertexPtr++;
-    }
+    std::memcpy(s_Batch.VertexPtr, mesh->Vertices.data(), sizeof(*mesh->Vertices.begin()) * mesh->Vertices.size());
+
+    std::for_each(s_Batch.VertexPtr, s_Batch.VertexPtr + mesh->Vertices.size(), [&](Vertex& vertex) {
+        vertex.RenderID = offsetID;
+    });
+    s_Batch.VertexPtr += mesh->Vertices.size();
 
     for(auto& index : mesh->Indices) {
         *s_Batch.IndexPtr = index + vertexCount;

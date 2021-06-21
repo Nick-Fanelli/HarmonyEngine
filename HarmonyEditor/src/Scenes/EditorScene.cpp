@@ -31,14 +31,6 @@ void EditorScene::OnCreate() {
     entity1.AddComponent<MeshRendererComponent>(cubeMesh);
     entity2.AddComponent<MeshRendererComponent>(stallMesh);
 
-    // s_Entity = CreateEntity("News Desk");
-    // s_Entity.AddComponent<MeshRendererComponent>(mesh);
-
-    // auto cubeMesh = AssetManager::QueueMesh("assets/objects/cube.obj");
-
-    // Entity entity = CreateEntity("Light Visualizer", Transform({0, 20, 20}));
-    // // entity.AddComponent<MeshRendererComponent>(cubeMesh);
-
     AssetManager::CreateAll();
 }
 
