@@ -9,7 +9,11 @@
 
 namespace HarmonyEngine {
 
+    class Scene;
+
     class Entity {
+
+        friend class Scene;
 
     private:
         Scene* m_ScenePtr = nullptr;

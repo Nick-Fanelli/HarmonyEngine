@@ -29,6 +29,8 @@ namespace HarmonyEngine {
         Entity CreateEntity(const std::string& name);
         Entity CreateEntity(const std::string& name, const Transform& transform);
 
+        void DeleteEntity(Entity& entity);
+
         const entt::registry& GetRegistry() const { return m_Registry; }
         entt::registry& GetRegistry() { return m_Registry; }
 

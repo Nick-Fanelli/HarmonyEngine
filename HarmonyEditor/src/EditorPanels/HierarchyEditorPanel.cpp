@@ -1,13 +1,26 @@
 #include "HierarchyEditorPanel.h"
 
-#include "../Layers/ImGuiLayer.h"
+#include <imgui/misc/cpp/imgui_stdlib.h>
 
 #include <Scene/Component.h>
+
+#include "../Layers/ImGuiLayer.h"
 
 void HierarchyEditorPanel::OnUpdate() {
     HARMONY_PROFILE_FUNCTION();
 
     ImGui::Begin("Hierarchy");
+
+    if(ImGui::Button("New Entity")) {
+        m_ScenePtr->CreateEntity("New Entity");
+    }
+
+    ImGui::SameLine();
+    if(ImGui::Button("Delete Entity")) {
+        Entity nullEntity = Entity();
+        m_ScenePtr->DeleteEntity(ImGuiLayer::GetSelectedEntity());
+        ImGuiLayer::SetSelectedEntity(nullEntity);
+    }
 
     m_ScenePtr->GetRegistry().each([&](auto entityID) {
         Entity entity = Entity(m_ScenePtr, entityID);

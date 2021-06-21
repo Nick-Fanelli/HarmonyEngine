@@ -17,3 +17,9 @@ Entity Scene::CreateEntity(const std::string& name, const Transform& transform) 
     entity.AddComponent<TransformComponent>(transform);
     return entity;
 }
+
+void Scene::DeleteEntity(Entity& entity) {
+    m_Registry.destroy(entity.GetEntityID());
+
+    entity.m_ScenePtr = nullptr;
+}
