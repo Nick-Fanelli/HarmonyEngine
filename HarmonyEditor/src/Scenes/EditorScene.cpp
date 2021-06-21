@@ -10,7 +10,6 @@
 #include "../Scenes/EditorCamera.h"
 
 static Entity s_Entity;
-static Entity s_QuadEntity;
 
 void EditorScene::OnCreate() {
 
@@ -23,16 +22,10 @@ void EditorScene::OnCreate() {
     RenderLayer::OnCreate(this);
     ImGuiLayer::OnCreate(this);
 
-    auto mesh = AssetManager::QueueMesh("assets/objects/stall.obj");
-    auto texture = AssetManager::QueueTexture("assets/textures/stallTexture.png");
+    auto mesh = AssetManager::QueueMesh("assets/objects/tv-studio.obj");
 
-    auto quadTexture = AssetManager::QueueTexture("assets/textures/grass.jpeg");
-
-    s_Entity = CreateEntity("Stall");
-    s_Entity.AddComponent<MeshRendererComponent>(mesh, texture);
-
-    s_QuadEntity = CreateEntity("Quad", Transform({5, 10, 0}));
-    s_QuadEntity.AddComponent<QuadRendererComponent>(glm::vec4{1, 1, 1, 1}, quadTexture);
+    s_Entity = CreateEntity("News Desk");
+    s_Entity.AddComponent<MeshRendererComponent>(mesh);
 
     AssetManager::CreateAll();
 }

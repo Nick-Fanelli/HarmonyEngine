@@ -25,6 +25,9 @@ public:
     Camera* GetGenericCameraPtr() { return &m_Camera; }
     const GLuint* GetRenderTexture() const { return m_RenderTexture; }
 
+    const EditorCamera& GetEditorCamera() const { return m_Camera; }
+    EditorCamera& GetEditorCamera() { return m_Camera; }
+
     void SetRenderTexture(GLuint* texture) { m_RenderTexture = texture; }
 
 };

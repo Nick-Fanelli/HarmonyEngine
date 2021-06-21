@@ -276,72 +276,52 @@ void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh) {
     s_Batch.OffsetPtr++;
 }
 
-// void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3& positionOffset) {
-//     size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
+void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture) {
 
-//     AllocateVertices(mesh->Vertices.size());
-//     AllocateIndices(mesh->Indices.size());
-//     AllocateObject();
+    HARMONY_PROFILE_FUNCTION();
 
-//     for(auto& vertex : mesh->Vertices) {
-//         *s_Batch.VertexPtr = vertex;
-//         s_Batch.VertexPtr++;
-//     }
+    if(texture->GetTextureID() == 0.0f) {
+        DrawMesh(transform, mesh);
+        return;
+    }
 
-//     for(auto index : mesh->Indices) {
-//         *s_Batch.IndexPtr = index + indexOffset;
-//         s_Batch.IndexPtr++;
-//     }
+    AllocateVertices(mesh->Vertices.size());
+    AllocateIndices(mesh->Indices.size());
+    AllocateObject();
+    AllocateTexture();
 
-//     *s_Batch.OffsetPtr = positionOffset;
-//     s_Batch.OffsetPtr++;
-// }
+    float textureIndex = 0.0f;
 
-// void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture, const glm::vec3& positionOffset) {
-//     if(texture->GetTextureID() == 0) {
-//         DrawMesh(mesh, positionOffset);
-//         return;
-//     }
+    for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
+        if(s_Batch.Textures[i] == texture->GetTextureID()) {
+            textureIndex = (float) i;
+            break;
+        }
+    }
 
-//     size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
+    if(textureIndex == 0.0f) {
+        textureIndex = (float) s_Batch.TextureIndex;
+        s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
+        s_Batch.TextureIndex++;
+    }
 
-//     AllocateVertices(mesh->Vertices.size());
-//     AllocateIndices(mesh->Indices.size());
-//     AllocateObject();
-//     AllocateTexture();
+    Vertex* startVertex = s_Batch.VertexPtr;
 
-//     float textureIndex = 0.0f;
+    std::memcpy(s_Batch.VertexPtr, mesh->Vertices.data(), sizeof(*mesh->Vertices.begin()) * mesh->Vertices.size());
+    s_Batch.VertexPtr += mesh->Vertices.size();
 
-//     for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
-//         if(s_Batch.Textures[i] == texture->GetTextureID()) {
-//             textureIndex = (float) i;
-//             break;
-//         }
-//     }
+    // Set the vertex textures
+    for(size_t i = 0; i < mesh->Vertices.size(); i++) {
+        startVertex->TextureID = textureIndex;
+        startVertex++;
+    }
 
-//     if(textureIndex == 0.0f) {
-//         textureIndex = (float) s_Batch.TextureIndex;
-//         s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
-//         s_Batch.TextureIndex++;
-//     }
+    std::memcpy(s_Batch.IndexPtr, mesh->Indices.data(), sizeof(*mesh->Indices.begin()) * mesh->Indices.size());
+    s_Batch.IndexCount += mesh->Indices.size();
 
-//     for(auto& vertex : mesh->Vertices) {
-//         // Assign new vertex with the textureID
-//         Vertex v = Vertex(vertex);
-//         v.TextureID = textureIndex;
-
-//         *s_Batch.VertexPtr = v;
-//         s_Batch.VertexPtr++;
-//     }
-
-//     for(auto index : mesh->Indices) {
-//         *s_Batch.IndexPtr = index + indexOffset;
-//         s_Batch.IndexPtr++;
-//     }
-
-//     *s_Batch.OffsetPtr = positionOffset;
-//     s_Batch.OffsetPtr++;
-// }
+    *s_Batch.OffsetPtr = transform.GetTransformationMatrix();
+    s_Batch.OffsetPtr++;
+}
 
 // Utility Functions
 void Renderer::LoadOBJFile(const char* filepath, Mesh* mesh, float textureID) {

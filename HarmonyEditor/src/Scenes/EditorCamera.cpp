@@ -9,6 +9,7 @@
 
 EditorCamera::EditorCamera() {
     UpdateView();
+    UpdateProjection(); 
 }
 
 void EditorCamera::UpdateProjection() {
