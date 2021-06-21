@@ -2,6 +2,8 @@
 
 #include "harmonypch.h"
 
+#include "../Render/Transform.h"
+
 #include <entt/entt.hpp>
 
 namespace HarmonyEngine {
@@ -25,7 +27,7 @@ namespace HarmonyEngine {
         virtual void OnDestroy() { m_Registry.clear<>(); }
 
         Entity CreateEntity(const std::string& name);
-        Entity CreateEntity(const std::string& name, const glm::vec3& position);
+        Entity CreateEntity(const std::string& name, const Transform& transform);
 
         const entt::registry& GetRegistry() const { return m_Registry; }
         entt::registry& GetRegistry() { return m_Registry; }

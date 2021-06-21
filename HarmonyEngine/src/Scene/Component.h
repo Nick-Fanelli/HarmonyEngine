@@ -2,6 +2,7 @@
 
 #include "harmonypch.h"
 
+#include "../Render/Transform.h"
 #include "../Render/Renderer.h"
 
 namespace HarmonyEngine {
@@ -18,12 +19,12 @@ namespace HarmonyEngine {
 
     struct TransformComponent {
 
-        glm::vec3 Position;
+        Transform Transform;
 
         TransformComponent() = default;
         TransformComponent(const TransformComponent&) = default;
 
-        TransformComponent(const glm::vec3& position) : Position(position) {}
+        TransformComponent(const struct Transform& transform) : Transform(transform) {}
 
     };
 
@@ -42,13 +43,12 @@ namespace HarmonyEngine {
 
     struct QuadRendererComponent {
 
-        glm::vec2 Scale;
         glm::vec4 Color;
 
         QuadRendererComponent() = default;
         QuadRendererComponent(const QuadRendererComponent&) = default;
 
-        QuadRendererComponent(const glm::vec2& scale, const glm::vec4& color) : Scale(scale), Color(color) {}
+        QuadRendererComponent(const glm::vec4& color) : Color(color) {}
     };
 
 }

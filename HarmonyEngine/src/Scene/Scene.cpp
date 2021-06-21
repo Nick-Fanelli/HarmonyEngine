@@ -11,9 +11,9 @@ Entity Scene::CreateEntity(const std::string& name) {
     return entity;
 }
 
-Entity Scene::CreateEntity(const std::string& name, const glm::vec3& position) {
+Entity Scene::CreateEntity(const std::string& name, const Transform& transform) {
     Entity entity = Entity(this, m_Registry.create());
     entity.AddComponent<TagComponent>(name);
-    entity.AddComponent<TransformComponent>(position);
+    entity.AddComponent<TransformComponent>(transform);
     return entity;
 }

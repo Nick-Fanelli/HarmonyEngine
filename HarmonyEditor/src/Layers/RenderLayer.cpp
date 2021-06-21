@@ -32,7 +32,7 @@ void RenderLayer::OnUpdate() {
     auto quadRendererGroup = s_EditorScenePtr->GetRegistry().group<QuadRendererComponent>(entt::get<TransformComponent>);
     for(auto& entity : quadRendererGroup) {
         auto[renderer, transform] = quadRendererGroup.get<QuadRendererComponent, TransformComponent>(entity);
-        Renderer2D::DrawQuad(transform.Position, renderer.Scale, renderer.Color);
+        Renderer2D::DrawQuad(transform.Transform.Position, transform.Transform.Scale, renderer.Color);
     }
 
     Renderer2D::EndBatch();
@@ -44,9 +44,9 @@ void RenderLayer::OnUpdate() {
     for(auto& entity : meshRendererGroup) {
         auto[renderer, transform] = meshRendererGroup.get<MeshRendererComponent, TransformComponent>(entity);
         if(renderer.TextureHandle.IsAssigned())
-            Renderer::DrawMesh(renderer.MeshHandle, renderer.TextureHandle, transform.Position);
+            Renderer::DrawMesh(renderer.MeshHandle, renderer.TextureHandle, transform.Transform.Position);
         else
-            Renderer::DrawMesh(renderer.MeshHandle, transform.Position);
+            Renderer::DrawMesh(renderer.MeshHandle, transform.Transform.Position);
     }
 
     Renderer::EndBatch();
