@@ -46,10 +46,11 @@ void RenderLayer::OnUpdate() {
     auto meshRendererGroup = s_EditorScenePtr->GetRegistry().group<MeshRendererComponent>(entt::get<TransformComponent>);
     for(auto& entity : meshRendererGroup) {
         auto[renderer, transform] = meshRendererGroup.get<MeshRendererComponent, TransformComponent>(entity);
-        if(renderer.TextureHandle.IsAssigned())
-            Renderer::DrawMesh(renderer.MeshHandle, renderer.TextureHandle, transform.Transform.Position);
-        else
-            Renderer::DrawMesh(renderer.MeshHandle, transform.Transform.Position);
+        Renderer::DrawMesh(transform.Transform, renderer.MeshHandle);
+        // if(renderer.TextureHandle.IsAssigned())
+        //     Renderer::DrawMesh(renderer.MeshHandle, renderer.TextureHandle, transform.Transform.Position);
+        // else
+        //     Renderer::DrawMesh(renderer.MeshHandle, transform.Transform.Position);
     }
 
     Renderer::EndBatch();

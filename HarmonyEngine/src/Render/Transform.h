@@ -28,12 +28,16 @@ namespace HarmonyEngine {
 
         glm::mat4 GetTransformationMatrix() {
             return glm::translate(glm::mat4(1.0f), Position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.x), { 1.0f, 0.0f, 0.0f })
+			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.y), { 0.0f, 1.0f, 0.0f })
 			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.z), { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { Scale.x, Scale.y, 1.0f });
         }
 
         void GetTransformationMatrix(glm::mat4* out) {
             *out = glm::translate(glm::mat4(1.0f), Position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.x), { 1.0f, 0.0f, 0.0f })
+			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.y), { 0.0f, 1.0f, 0.0f })
 			* glm::rotate(glm::mat4(1.0f), glm::radians(Rotation.z), { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { Scale.x, Scale.y, 1.0f });
         }

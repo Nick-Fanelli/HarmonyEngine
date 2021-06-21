@@ -28,8 +28,8 @@ namespace HarmonyEngine {
         uint32_t* Indices = nullptr;
         uint32_t* IndexPtr = nullptr;
 
-        glm::vec3* Offsets = nullptr;
-        glm::vec3* OffsetPtr = nullptr;
+        glm::mat4* Offsets = nullptr;
+        glm::mat4* OffsetPtr = nullptr;
 
         int* Textures = nullptr;
     };
@@ -55,8 +55,9 @@ namespace HarmonyEngine {
         static void EndBatch();
 
         // Draw Methods
-        static void DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3& positionOffset = {0, 0, 0});
-        static void DrawMesh(AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture, const glm::vec3& positionOffset = {0, 0, 0});
+        static void DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh);
+        // static void DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3& positionOffset = {0, 0, 0});
+        // static void DrawMesh(AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture, const glm::vec3& positionOffset = {0, 0, 0});
 
         // Utility Functions
         static void LoadOBJFile(const char* filepath, Mesh* mesh, float textureID = 0);

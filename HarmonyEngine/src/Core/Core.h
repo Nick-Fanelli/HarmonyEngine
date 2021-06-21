@@ -8,4 +8,4 @@
 #endif
 
 // Profiling Output
-#define HARMONY_PROFILE 0
+#define HARMONY_PROFILE 1

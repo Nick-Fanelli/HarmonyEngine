@@ -45,7 +45,7 @@ void Renderer::OnCreate(Camera* camera) {
     s_Batch.Indices = new uint32_t[MaxIndexCount];
     s_Batch.IndexPtr = s_Batch.Indices;
 
-    s_Batch.Offsets = new glm::vec3[MaxObjectCount];
+    s_Batch.Offsets = new glm::mat4[MaxObjectCount];
     s_Batch.OffsetPtr = s_Batch.Offsets;
 
     s_Batch.Textures = new int[s_MaxTextureCount];
@@ -93,10 +93,17 @@ void Renderer::OnCreate(Camera* camera) {
 
     glGenBuffers(1, &s_Batch.OboID);
     glBindBuffer(GL_ARRAY_BUFFER, s_Batch.OboID);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * MaxObjectCount, nullptr, GL_DYNAMIC_DRAW);
-
-    glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * MaxObjectCount, nullptr, GL_DYNAMIC_DRAW);
+    
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), 0);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*) sizeof(glm::vec4));
+    glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*) (sizeof(glm::vec4) * 2));
+    glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*) (sizeof(glm::vec4) * 3));
+    
     glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+    glVertexAttribDivisor(7, 1);
+    glVertexAttribDivisor(8, 1);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // Unbind Framebuffer
 
@@ -111,7 +118,7 @@ void Renderer::UpdateBatchData() {
     HARMONY_PROFILE_FUNCTION();
 
     size_t vertexSize = (s_Batch.VertexPtr - s_Batch.Vertices) * sizeof(Vertex);
-    size_t offsetSize = (s_Batch.OffsetPtr - s_Batch.Offsets) * sizeof(glm::vec3);
+    size_t offsetSize = (s_Batch.OffsetPtr - s_Batch.Offsets) * sizeof(glm::mat4);
     size_t indexSize = s_Batch.IndexCount * sizeof(uint32_t);
 
     glBindBuffer(GL_ARRAY_BUFFER, s_Batch.VboID);
@@ -131,7 +138,7 @@ void Renderer::Render() {
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
-    s_Shader.AddUniformVec3("uLightPosition", {0, 20, -20});
+    s_Shader.AddUniformVec3("uLightPosition", {0, 20, 20});
 
     for(int i = 0; i < s_Batch.TextureIndex; i++) {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -147,6 +154,9 @@ void Renderer::Render() {
     glEnableVertexAttribArray(3);
     glEnableVertexAttribArray(4);
     glEnableVertexAttribArray(5);
+    glEnableVertexAttribArray(6);
+    glEnableVertexAttribArray(7);
+    glEnableVertexAttribArray(8);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the indices
     glBindBuffer(GL_ARRAY_BUFFER, s_Batch.OboID);
@@ -164,6 +174,9 @@ void Renderer::Render() {
     glDisableVertexAttribArray(3);
     glDisableVertexAttribArray(4);
     glDisableVertexAttribArray(5);
+    glDisableVertexAttribArray(6);
+    glDisableVertexAttribArray(7);
+    glDisableVertexAttribArray(8);
 
     glBindVertexArray(0);
 #endif
@@ -245,72 +258,90 @@ void Renderer::OnDestroy() {
     s_Batch.Offsets = nullptr;
 }
 
-void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3& positionOffset) {
-    size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
+void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh) {
+
+    HARMONY_PROFILE_FUNCTION();
 
     AllocateVertices(mesh->Vertices.size());
     AllocateIndices(mesh->Indices.size());
     AllocateObject();
 
-    for(auto& vertex : mesh->Vertices) {
-        *s_Batch.VertexPtr = vertex;
-        s_Batch.VertexPtr++;
-    }
+    std::memcpy(s_Batch.VertexPtr, mesh->Vertices.data(), sizeof(*mesh->Vertices.begin()) * mesh->Vertices.size());
+    s_Batch.VertexPtr += mesh->Vertices.size();
 
-    for(auto index : mesh->Indices) {
-        *s_Batch.IndexPtr = index + indexOffset;
-        s_Batch.IndexPtr++;
-    }
+    std::memcpy(s_Batch.IndexPtr, mesh->Indices.data(), sizeof(*mesh->Indices.begin()) * mesh->Indices.size());
+    s_Batch.IndexCount += mesh->Indices.size();
 
-    *s_Batch.OffsetPtr = positionOffset;
+    *s_Batch.OffsetPtr = transform.GetTransformationMatrix();
     s_Batch.OffsetPtr++;
 }
 
-void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture, const glm::vec3& positionOffset) {
-    if(texture->GetTextureID() == 0) {
-        DrawMesh(mesh, positionOffset);
-        return;
-    }
+// void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, const glm::vec3& positionOffset) {
+//     size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
 
-    size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
+//     AllocateVertices(mesh->Vertices.size());
+//     AllocateIndices(mesh->Indices.size());
+//     AllocateObject();
 
-    AllocateVertices(mesh->Vertices.size());
-    AllocateIndices(mesh->Indices.size());
-    AllocateObject();
-    AllocateTexture();
+//     for(auto& vertex : mesh->Vertices) {
+//         *s_Batch.VertexPtr = vertex;
+//         s_Batch.VertexPtr++;
+//     }
 
-    float textureIndex = 0.0f;
+//     for(auto index : mesh->Indices) {
+//         *s_Batch.IndexPtr = index + indexOffset;
+//         s_Batch.IndexPtr++;
+//     }
 
-    for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
-        if(s_Batch.Textures[i] == texture->GetTextureID()) {
-            textureIndex = (float) i;
-            break;
-        }
-    }
+//     *s_Batch.OffsetPtr = positionOffset;
+//     s_Batch.OffsetPtr++;
+// }
 
-    if(textureIndex == 0.0f) {
-        textureIndex = (float) s_Batch.TextureIndex;
-        s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
-        s_Batch.TextureIndex++;
-    }
+// void Renderer::DrawMesh(AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture, const glm::vec3& positionOffset) {
+//     if(texture->GetTextureID() == 0) {
+//         DrawMesh(mesh, positionOffset);
+//         return;
+//     }
 
-    for(auto& vertex : mesh->Vertices) {
-        // Assign new vertex with the textureID
-        Vertex v = Vertex(vertex);
-        v.TextureID = textureIndex;
+//     size_t indexOffset = s_Batch.VertexPtr - s_Batch.Vertices;
 
-        *s_Batch.VertexPtr = v;
-        s_Batch.VertexPtr++;
-    }
+//     AllocateVertices(mesh->Vertices.size());
+//     AllocateIndices(mesh->Indices.size());
+//     AllocateObject();
+//     AllocateTexture();
 
-    for(auto index : mesh->Indices) {
-        *s_Batch.IndexPtr = index + indexOffset;
-        s_Batch.IndexPtr++;
-    }
+//     float textureIndex = 0.0f;
 
-    *s_Batch.OffsetPtr = positionOffset;
-    s_Batch.OffsetPtr++;
-}
+//     for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
+//         if(s_Batch.Textures[i] == texture->GetTextureID()) {
+//             textureIndex = (float) i;
+//             break;
+//         }
+//     }
+
+//     if(textureIndex == 0.0f) {
+//         textureIndex = (float) s_Batch.TextureIndex;
+//         s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
+//         s_Batch.TextureIndex++;
+//     }
+
+//     for(auto& vertex : mesh->Vertices) {
+//         // Assign new vertex with the textureID
+//         Vertex v = Vertex(vertex);
+//         v.TextureID = textureIndex;
+
+//         *s_Batch.VertexPtr = v;
+//         s_Batch.VertexPtr++;
+//     }
+
+//     for(auto index : mesh->Indices) {
+//         *s_Batch.IndexPtr = index + indexOffset;
+//         s_Batch.IndexPtr++;
+//     }
+
+//     *s_Batch.OffsetPtr = positionOffset;
+//     s_Batch.OffsetPtr++;
+// }
 
 // Utility Functions
 void Renderer::LoadOBJFile(const char* filepath, Mesh* mesh, float textureID) {
