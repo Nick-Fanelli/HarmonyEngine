@@ -32,12 +32,14 @@ namespace HarmonyEngine {
 
         AssetHandle<Mesh> MeshHandle;
         AssetHandle<Texture> TextureHandle;
+        glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
         MeshRendererComponent() = default;
         MeshRendererComponent(const MeshRendererComponent&) = default;
 
         MeshRendererComponent(const AssetHandle<Mesh>& mesh) : MeshHandle(mesh) {}
         MeshRendererComponent(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture) : MeshHandle(mesh), TextureHandle(texture) {}
+        MeshRendererComponent(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture, const glm::vec4& color) : MeshHandle(mesh), TextureHandle(texture), Color(color) {}
 
     };
 

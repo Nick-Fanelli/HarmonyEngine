@@ -136,6 +136,10 @@ void InspectorEditorPanel::OnUpdate() {
             DrawColorControl("Color", component.Color);
         });
 
+        DrawComponent<MeshRendererComponent>("Mesh Renderer", selectedEntity, [](MeshRendererComponent& component) {
+            DrawColorControl("Tint", component.Color);
+        });
+
         DrawAddComponentButton(selectedEntity);
 
     }

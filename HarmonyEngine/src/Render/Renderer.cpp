@@ -262,6 +262,35 @@ void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh) {
     s_Batch.OffsetPtr++;
 }
 
+void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, const glm::vec4& color) {
+
+    HARMONY_PROFILE_FUNCTION();
+
+    uint32_t vertexCount = s_Batch.VertexPtr - s_Batch.Vertices;
+
+    AllocateVertices(mesh->Vertices.size());
+    AllocateIndices(mesh->Indices.size());
+    AllocateObject();
+
+    int offsetID = s_Batch.OffsetPtr - s_Batch.Offsets;
+
+    std::memcpy(s_Batch.VertexPtr, mesh->Vertices.data(), sizeof(*mesh->Vertices.begin()) * mesh->Vertices.size());
+
+    std::for_each(s_Batch.VertexPtr, s_Batch.VertexPtr + mesh->Vertices.size(), [&](Vertex& vertex) {
+        vertex.RenderID = offsetID;
+        vertex.Color = color;
+    });
+    s_Batch.VertexPtr += mesh->Vertices.size();
+
+    for(auto& index : mesh->Indices) {
+        *s_Batch.IndexPtr = index + vertexCount;
+        s_Batch.IndexPtr++;
+    }
+
+    *s_Batch.OffsetPtr = transform.GetTransformationMatrix();
+    s_Batch.OffsetPtr++;
+}
+
 void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture) {
 
     HARMONY_PROFILE_FUNCTION();
@@ -311,6 +340,58 @@ void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, AssetHand
     *s_Batch.OffsetPtr = transform.GetTransformationMatrix();
     s_Batch.OffsetPtr++;
 }
+
+void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture, const glm::vec4& color) {
+
+    HARMONY_PROFILE_FUNCTION();
+
+    if(texture->GetTextureID() == 0.0f) {
+        DrawMesh(transform, mesh);
+        return;
+    }
+
+    uint32_t vertexCount = s_Batch.VertexPtr - s_Batch.Vertices;
+
+    AllocateVertices(mesh->Vertices.size());
+    AllocateIndices(mesh->Indices.size());
+    AllocateObject();
+    AllocateTexture();
+
+    float textureIndex = 0.0f;
+
+    for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
+        if(s_Batch.Textures[i] == texture->GetTextureID()) {
+            textureIndex = (float) i;
+            break;
+        }
+    }
+
+    if(textureIndex == 0.0f) {
+        textureIndex = (float) s_Batch.TextureIndex;
+        s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
+        s_Batch.TextureIndex++;
+    }
+
+    int offsetID = s_Batch.OffsetPtr - s_Batch.Offsets;
+
+    std::memcpy(s_Batch.VertexPtr, mesh->Vertices.data(), sizeof(*mesh->Vertices.begin()) * mesh->Vertices.size());
+
+    std::for_each(s_Batch.VertexPtr, s_Batch.VertexPtr + mesh->Vertices.size(), [&](Vertex& vertex) {
+        vertex.RenderID = offsetID;
+        vertex.Color = color;
+        vertex.TextureID = textureIndex;
+    });
+    s_Batch.VertexPtr += mesh->Vertices.size();
+
+    for(auto& index : mesh->Indices) {
+        *s_Batch.IndexPtr = index + vertexCount;
+        s_Batch.IndexPtr++;
+    }
+
+    *s_Batch.OffsetPtr = transform.GetTransformationMatrix();
+    s_Batch.OffsetPtr++;
+}
+
 
 // Utility Functions
 void Renderer::LoadOBJFile(const char* filepath, Mesh* mesh, float textureID) {
