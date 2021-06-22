@@ -8,12 +8,14 @@
 
 #include "../EditorPanels/HierarchyEditorPanel.h"
 #include "../EditorPanels/InspectorEditorPanel.h"
+#include "../EditorPanels/AssetsEditorPanel.h"
 
 static EditorScene* s_EditorScenePtr;
 static const char* s_SaveFilename = "window-layout.ini";
 
 static HierarchyEditorPanel s_HierarchyEditorPanel;
 static InspectorEditorPanel s_InspectorEditorPanel;
+static AssetsEditorPanel       s_AssetsEditorPanel;
 
 bool ImGuiLayer::GetIsEditorSelected() { return s_IsEditorSelected; }
 Entity& ImGuiLayer::GetSelectedEntity() { return s_SelectedEntity; }
@@ -92,6 +94,7 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
 
     s_HierarchyEditorPanel.OnCreate(s_EditorScenePtr);
     s_InspectorEditorPanel.OnCreate(s_EditorScenePtr);
+    s_AssetsEditorPanel.OnCreate(s_EditorScenePtr);
 }
 
 
@@ -187,8 +190,6 @@ void ImGuiLayer::ShowGameViewport() {
     ImGui::End();
 }
 
-static bool s_ShowDemoWindow = true;
-
 void ImGuiLayer::OnUpdate() {
 
     HARMONY_PROFILE_FUNCTION();
@@ -204,10 +205,11 @@ void ImGuiLayer::OnUpdate() {
 
     s_HierarchyEditorPanel.OnUpdate();
     s_InspectorEditorPanel.OnUpdate();
+    s_AssetsEditorPanel.OnUpdate();
 
     ShowGameViewport();
 
-    ImGui::ShowDemoWindow(&s_ShowDemoWindow);
+    // ImGui::ShowDemoWindow();
 
     EndFrame();
 }

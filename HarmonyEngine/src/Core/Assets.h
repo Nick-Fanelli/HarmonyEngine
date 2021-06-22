@@ -30,7 +30,7 @@ namespace HarmonyEngine {
         T* operator->() { return &m_Data; }
         T* GetPtr() { return &m_Data; }
 
-        T& GetData() { return m_Data; }
+        const T& GetData() const { return m_Data; }
     };
 
     // ==========================================================================================
@@ -72,6 +72,7 @@ namespace HarmonyEngine {
         static void CreateAll();
         static void DestroyAll();
 
+        static std::list<Asset<Texture>>& GetTextureRegistry() { return s_TextureRegistry; }
     };
 
 }

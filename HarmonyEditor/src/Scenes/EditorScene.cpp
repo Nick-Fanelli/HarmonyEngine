@@ -22,16 +22,15 @@ void EditorScene::OnCreate() {
     RenderLayer::OnCreate(this);
     ImGuiLayer::OnCreate(this);
 
-    Entity entity1 = CreateEntity("Cube");
-    Entity entity2 = CreateEntity("Stall", Transform({4, 0, 0})); 
+    AssetManager::QueueTexture("assets/textures/stallTexture.png");
+    AssetManager::QueueTexture("assets/textures/grass.jpeg");
 
-    auto stallTexture = AssetManager::QueueTexture("assets/textures/stallTexture.png");
-
-    auto cubeMesh = AssetManager::QueueMesh("assets/objects/cube.obj");
     auto stallMesh = AssetManager::QueueMesh("assets/objects/stall.obj");
 
-    entity1.AddComponent<MeshRendererComponent>(cubeMesh);
-    entity2.AddComponent<MeshRendererComponent>(stallMesh, stallTexture);
+    Entity stall = CreateEntity("Stall"); 
+    stall.AddComponent<MeshRendererComponent>(stallMesh);
+
+    CreateEntity("Quad", Transform({-8.0f, 0.0f, 0.0f})).AddComponent<QuadRendererComponent>();
 
     AssetManager::CreateAll();
 }

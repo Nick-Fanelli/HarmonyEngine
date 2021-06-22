@@ -4,6 +4,7 @@
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
 #include "../Layers/ImGuiLayer.h"
+#include "AssetsEditorPanel.h"
 
 static void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f) {
     ImGui::PushID(label.c_str());
@@ -69,6 +70,21 @@ static void DrawVec3Control(const std::string& label, glm::vec3& values, float r
 
 static void DrawColorControl(const std::string& label, glm::vec4& values) {
     ImGui::ColorEdit4(label.c_str(), glm::value_ptr(values));
+}
+
+static void DrawTextureInputControl(const std::string& label, AssetHandle<Texture>& assetHandle) {
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->GetFilepath() : "[Unattached]");
+    if(ImGui::BeginDragDropTarget()) {
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::TextureDragDropID)) {
+            AssetHandle<Texture> texture = *(const AssetHandle<Texture>*) payload->Data;
+            assetHandle = texture;
+        }
+
+        ImGui::EndDragDropTarget();
+    }
+
+    ImGui::SameLine();
+    ImGui::Text("%s", label.c_str());
 }
 
 template<typename ComponentType, typename UIFunction>
@@ -153,10 +169,12 @@ void InspectorEditorPanel::OnUpdate() {
 
         DrawComponent<QuadRendererComponent>("Quad Renderer", selectedEntity, [](QuadRendererComponent& component) {
             DrawColorControl("Color", component.Color);
+            DrawTextureInputControl("Texture", component.TextureHandle);
         });
 
         DrawComponent<MeshRendererComponent>("Mesh Renderer", selectedEntity, [](MeshRendererComponent& component) {
             DrawColorControl("Tint", component.Color);
+            DrawTextureInputControl("Texture", component.TextureHandle);
         });
 
         DrawAddComponentButton(selectedEntity);
