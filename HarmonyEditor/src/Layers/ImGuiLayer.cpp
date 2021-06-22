@@ -10,6 +10,9 @@
 #include "../EditorPanels/InspectorEditorPanel.h"
 #include "../EditorPanels/AssetsEditorPanel.h"
 
+#define ICON_MIN_FA 0xe005
+#define ICON_MAX_FA 0xf8ff
+
 static EditorScene* s_EditorScenePtr;
 static const char* s_SaveFilename = "window-layout.ini";
 
@@ -19,6 +22,8 @@ static AssetsEditorPanel       s_AssetsEditorPanel;
 
 bool ImGuiLayer::GetIsEditorSelected() { return s_IsEditorSelected; }
 Entity& ImGuiLayer::GetSelectedEntity() { return s_SelectedEntity; }
+
+ImFont* ImGuiLayer::GetFontAwesome() { return s_FontAwesomePtr; }
 
 void ImGuiLayer::SetSelectedEntity(Entity& entity) { s_SelectedEntity = entity; }
 
@@ -78,6 +83,11 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
     config.OversampleV = 3;
 
     io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/segoe-ui.ttf", 18.0f, &config);
+
+    // Font Awesome
+    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+    ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
+    s_FontAwesomePtr = io.Fonts->AddFontFromFileTTF( "assets/fonts/font-awesome/Font-Awesome-Solid-900.otf", 16.0f, &icons_config, icons_ranges );
 
     ImGuiStyle& style = ImGui::GetStyle();
     if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {

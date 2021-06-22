@@ -83,6 +83,20 @@ static void DrawTextureInputControl(const std::string& label, AssetHandle<Textur
         ImGui::EndDragDropTarget();
     }
 
+    float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+    ImGui::SameLine();
+
+    ImGui::PushFont(ImGuiLayer::GetFontAwesome());
+
+    if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
+        if(assetHandle.IsAssigned()) {
+            assetHandle = AssetHandle<Texture>(nullptr);
+        }    
+    }
+
+    ImGui::PopFont();
+
     ImGui::SameLine();
     ImGui::Text("%s", label.c_str());
 }
@@ -111,9 +125,11 @@ static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction 
 
             ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
 
-            if(ImGui::Button("-", ImVec2{ lineHeight, lineHeight })) {
+            ImGui::PushFont(ImGuiLayer::GetFontAwesome());
+            if(ImGui::Button("\uf068", ImVec2{ lineHeight, lineHeight })) {
                 selectedEntity.RemoveComponenet<ComponentType>();
             }
+            ImGui::PopFont();
         }
 
         if(open) {

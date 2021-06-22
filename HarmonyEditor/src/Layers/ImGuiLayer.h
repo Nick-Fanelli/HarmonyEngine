@@ -13,6 +13,8 @@ namespace ImGuiLayer {
     static bool s_IsEditorSelected = false;
     static Entity s_SelectedEntity;
 
+    static ImFont* s_FontAwesomePtr = nullptr;
+
     void OnCreate(EditorScene* editorScenePtr);
     void OnUpdate();
     void OnDestroy();
@@ -21,6 +23,8 @@ namespace ImGuiLayer {
 
     Entity& GetSelectedEntity();
     void SetSelectedEntity(Entity& entity);
+
+    ImFont* GetFontAwesome();
 
     // TODO: to be removed
     void ShowGameViewport();
