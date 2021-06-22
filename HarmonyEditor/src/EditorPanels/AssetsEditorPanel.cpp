@@ -5,6 +5,43 @@
 using namespace HarmonyEngine;
 
 const char* AssetsEditorPanel::TextureDragDropID = "ASSET_TEXTURE";
+const char* AssetsEditorPanel::MeshDragDropID = "ASSET_MESH";
+
+static void DrawAssetTextures(ImGuiIO& io) {
+    for(auto& texture : AssetManager::GetTextureRegistry()) {
+        ImGui::Button(texture->GetFilepath());
+        if(ImGui::IsItemActive()) {
+            ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
+
+            static constexpr ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoHoldToOpenOthers | ImGuiDragDropFlags_SourceNoPreviewTooltip;
+            if(ImGui::BeginDragDropSource(flags)) {
+
+                auto textureHandle = AssetHandle<Texture>(&texture);
+
+                ImGui::SetDragDropPayload(AssetsEditorPanel::TextureDragDropID, &textureHandle, sizeof(texture));
+                ImGui::EndDragDropSource();
+            }
+        }
+    }
+}
+
+static void DrawAssetMeshes(ImGuiIO& io) {
+    for(auto& mesh : AssetManager::GetMeshRegistry()) {
+        ImGui::Button(mesh->Filepath);
+        if(ImGui::IsItemActive()) {
+            ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
+            
+            static constexpr ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoHoldToOpenOthers | ImGuiDragDropFlags_SourceNoPreviewTooltip;
+            if(ImGui::BeginDragDropSource(flags)) {
+
+                auto meshHandle = AssetHandle<Mesh>(&mesh);
+
+                ImGui::SetDragDropPayload(AssetsEditorPanel::MeshDragDropID, &meshHandle, sizeof(mesh));
+                ImGui::EndDragDropSource();
+            }
+        }
+    }
+}
 
 void AssetsEditorPanel::OnUpdate() {
 
@@ -39,22 +76,15 @@ void AssetsEditorPanel::OnUpdate() {
 
     ImGui::BeginChild("MainAssetWindow", size);
     {
-        if(m_AssetType == AssetType::AssetTypeTexture) {
-            for(auto& texture : AssetManager::GetTextureRegistry()) {
-                ImGui::Button(texture->GetFilepath());
-                if(ImGui::IsItemActive()) {
-                    ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
-
-                    static constexpr ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoHoldToOpenOthers | ImGuiDragDropFlags_SourceNoPreviewTooltip;
-                    if(ImGui::BeginDragDropSource(flags)) {
-
-                        auto textureHandle = AssetHandle<Texture>(&texture);
-
-                        ImGui::SetDragDropPayload(TextureDragDropID, &textureHandle, sizeof(texture));
-                        ImGui::EndDragDropSource();
-                    }
-                }
-            }
+        switch(m_AssetType) {
+            case AssetType::AssetTypeNone:
+                break;
+            case AssetType::AssetTypeTexture:
+                DrawAssetTextures(io);
+                break;
+            case AssetType::AssetTypeMesh:
+                DrawAssetMeshes(io);
+                break;
         }
     }
     ImGui::EndChild();

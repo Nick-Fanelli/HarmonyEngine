@@ -73,6 +73,7 @@ namespace HarmonyEngine {
         static void DestroyAll();
 
         static std::list<Asset<Texture>>& GetTextureRegistry() { return s_TextureRegistry; }
+        static std::list<Asset<Mesh>>& GetMeshRegistry() { return s_MeshRegistry; }
     };
 
 }

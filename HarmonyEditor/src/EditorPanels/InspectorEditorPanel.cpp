@@ -101,6 +101,35 @@ static void DrawTextureInputControl(const std::string& label, AssetHandle<Textur
     ImGui::Text("%s", label.c_str());
 }
 
+static void DrawMeshInputControl(const std::string& label, AssetHandle<Mesh>& assetHandle) {
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->Filepath : "[Unattached]");
+    if(ImGui::BeginDragDropTarget()) {
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::MeshDragDropID)) {
+            AssetHandle<Mesh> mesh = *(const AssetHandle<Mesh>*) payload->Data;
+            assetHandle = mesh;
+        }
+
+        ImGui::EndDragDropTarget();
+    }
+
+    float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+    ImGui::SameLine();
+
+    ImGui::PushFont(ImGuiLayer::GetFontAwesome());
+
+    if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
+        if(assetHandle.IsAssigned()) {
+            assetHandle = AssetHandle<Mesh>(nullptr);
+        }    
+    }
+
+    ImGui::PopFont();
+
+    ImGui::SameLine();
+    ImGui::Text("%s", label.c_str());
+}
+
 template<typename ComponentType, typename UIFunction>
 static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction uiFunction) {
 
@@ -190,6 +219,7 @@ void InspectorEditorPanel::OnUpdate() {
 
         DrawComponent<MeshRendererComponent>("Mesh Renderer", selectedEntity, [](MeshRendererComponent& component) {
             DrawColorControl("Tint", component.Color);
+            DrawMeshInputControl("Mesh", component.MeshHandle);
             DrawTextureInputControl("Texture", component.TextureHandle);
         });
 

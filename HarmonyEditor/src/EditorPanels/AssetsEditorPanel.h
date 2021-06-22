@@ -17,6 +17,7 @@ private:
 public:
 
     static const char* TextureDragDropID;
+    static const char* MeshDragDropID;
 
     void OnUpdate() override;
 
