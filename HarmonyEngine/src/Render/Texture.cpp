@@ -10,13 +10,8 @@ static bool s_Setup = false;
 void Texture::Create() {
     m_Created = true;
 
-    if (m_Filepath == nullptr) {
-        Log::Warn("Can not create a texture without parameters!");
-        return;
-    }
-
-    if(!FileUtils::FileExists(m_Filepath)) {
-        Log::Error(std::string("Can not load texture at: ") + m_Filepath);
+    if(!FileUtils::FileExists(m_Filepath.c_str())) {
+        Log::FormatError("Can not load texture at: %s", m_Filepath.c_str());
         return;
     }
 
@@ -38,7 +33,7 @@ void Texture::Create() {
 
     int channels;
 
-    unsigned char* data = stbi_load(m_Filepath, &m_Width, &m_Height, &channels, 0); // Load the image
+    unsigned char* data = stbi_load(m_Filepath.c_str(), &m_Width, &m_Height, &channels, 0); // Load the image
 
     if (data != nullptr) {
         if (channels == 3) { // RGB Channels

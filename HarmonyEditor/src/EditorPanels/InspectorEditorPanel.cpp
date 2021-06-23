@@ -73,7 +73,7 @@ static void DrawColorControl(const std::string& label, glm::vec4& values) {
 }
 
 static void DrawTextureInputControl(const std::string& label, AssetHandle<Texture>& assetHandle) {
-    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->GetFilepath() : "[Unattached]");
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->GetFilepath().c_str() : "[Unattached]");
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::TextureDragDropID)) {
             AssetHandle<Texture> texture = *(const AssetHandle<Texture>*) payload->Data;
@@ -102,7 +102,7 @@ static void DrawTextureInputControl(const std::string& label, AssetHandle<Textur
 }
 
 static void DrawMeshInputControl(const std::string& label, AssetHandle<Mesh>& assetHandle) {
-    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->Filepath : "[Unattached]");
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->Filepath.c_str() : "[Unattached]");
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::MeshDragDropID)) {
             AssetHandle<Mesh> mesh = *(const AssetHandle<Mesh>*) payload->Data;

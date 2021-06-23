@@ -35,7 +35,7 @@ void Renderer::OnCreate(Camera* camera) {
     replacements["MAX_TEXTURE_COUNT"] = std::to_string(s_MaxTextureCount);
     replacements["MAX_OBJECT_COUNT"] = std::to_string(MaxObjectCount);
 
-    s_Shader = Shader("assets/shaders/DefaultShader.vert.glsl", "assets/shaders/DefaultShader.frag.glsl", replacements);
+    s_Shader = Shader("engineAssets/shaders/DefaultShader.vert.glsl", "engineAssets/shaders/DefaultShader.frag.glsl", replacements);
     s_Shader.Create();
 
     s_Batch = RenderBatch();
@@ -394,13 +394,13 @@ void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, AssetHand
 
 
 // Utility Functions
-void Renderer::LoadOBJFile(const char* filepath, Mesh* mesh, float textureID) {
+void Renderer::LoadOBJFile(const std::string& filepath, Mesh* mesh, float textureID) {
     std::vector<uint32_t> vertexIndices, uvIndices, normalIndices;
     std::vector<glm::vec3> tempVertices;
     std::vector<glm::vec2> tempUvs;
     std::vector<glm::vec3> tempNormals;
 
-    FILE* file = fopen(filepath, "r");
+    FILE* file = fopen(filepath.c_str(), "r");
     if(file == NULL) {
         Log::Error("Could not find and load obj file!");
         return;

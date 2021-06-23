@@ -19,7 +19,7 @@ file(GLOB_RECURSE SRC_FILES
 )
 
 set(target ${CMAKE_CURRENT_SOURCE_DIR}/assets)
-set(link ${CMAKE_BINARY_DIR}/assets)
+set(link ${CMAKE_BINARY_DIR}/engineAssets)
 
 add_library(HarmonyEngine ${SRC_FILES})
 

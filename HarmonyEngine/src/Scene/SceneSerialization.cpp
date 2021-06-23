@@ -2,8 +2,10 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <Scene/Component.h>
-#include <Scene/Entity.h>
+#include "Core/Assets.h"
+
+#include "Scene/Component.h"
+#include "Scene/Entity.h"
 
 using namespace HarmonyEngine;
 
@@ -105,10 +107,16 @@ static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity) {
 
     SerializeComponenetYAML<QuadRendererComponent>(out, entity, "QuadRendererComponent", [&](QuadRendererComponent& component) {
         out << YAML::Key << "Color" << YAML::Value << component.Color;
+        if(component.TextureHandle.IsAssigned())
+            out << YAML::Key << "Texture" << YAML::Value << component.TextureHandle->GetFilepath();
     });
 
     SerializeComponenetYAML<MeshRendererComponent>(out, entity, "MeshRendererComponent", [&](MeshRendererComponent& component) {
         out << YAML::Key << "Color" << YAML::Value << component.Color;
+        if(component.TextureHandle.IsAssigned())
+            out << YAML::Key << "Texture" << YAML::Value << component.TextureHandle->GetFilepath();
+        if(component.MeshHandle.IsAssigned())
+            out << YAML::Key << "Mesh" << YAML::Value << component.MeshHandle->Filepath;
     });
 
     // End Entity Map
@@ -138,13 +146,26 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
 
     DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, "QuadRendererComponent", [&](QuadRendererComponent& component, YAML::Node& node) {
         component.Color = node["Color"].as<glm::vec4>();
+
+        if(auto textureNode = node["Texture"]) {
+            auto textureFilepath = textureNode.as<std::string>();
+            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath);;
+        }
     });
 
     DeserializeComponentYAML<MeshRendererComponent>(entityNode, entity, "MeshRendererComponent", [&](MeshRendererComponent& component, YAML::Node& node) {
         component.Color = node["Color"].as<glm::vec4>();
+
+        if(auto textureNode = node["Texture"]) {
+            auto textureFilepath = textureNode.as<std::string>();
+            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath);;
+        }
+
+        if(auto meshNode = node["Mesh"]) {
+            auto meshFilepath = meshNode.as<std::string>();
+            component.MeshHandle = AssetManager::QueueOrGetMesh(meshFilepath);
+        }
     });
-
-
 }
 
 void SceneSerializer::SerializeYAML() {

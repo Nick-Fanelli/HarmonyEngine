@@ -20,18 +20,19 @@ void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
 
     this->m_SceneName = "Editor Scene";
-    s_SceneSerializer = SceneSerializer(this, "scene.yaml");
-    s_SceneSerializer.DeserializeYAML();
     
     m_Camera = EditorCamera();
+
+    s_SceneSerializer = SceneSerializer(this, "scene.yaml");
+    s_SceneSerializer.DeserializeYAML();
 
     RenderLayer::OnCreate(this);
     ImGuiLayer::OnCreate(this);
 
-    AssetManager::QueueTexture("assets/textures/stallTexture.png");
-    AssetManager::QueueTexture("assets/textures/grass.jpeg");
+    // AssetManager::QueueTexture("assets/textures/stallTexture.png");
+    // AssetManager::QueueTexture("assets/textures/grass.jpeg");
 
-    AssetManager::QueueMesh("assets/objects/stall.obj");
+    // AssetManager::QueueMesh("assets/objects/stall.obj");
 
     // Entity stall = CreateEntity("Stall"); 
     // stall.AddComponent<MeshRendererComponent>(stallMesh);

@@ -9,7 +9,7 @@ const char* AssetsEditorPanel::MeshDragDropID = "ASSET_MESH";
 
 static void DrawAssetTextures(ImGuiIO& io) {
     for(auto& texture : AssetManager::GetTextureRegistry()) {
-        ImGui::Button(texture->GetFilepath());
+        ImGui::Button(texture.GetFilepath().c_str());
         if(ImGui::IsItemActive()) {
             ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
 
@@ -27,7 +27,7 @@ static void DrawAssetTextures(ImGuiIO& io) {
 
 static void DrawAssetMeshes(ImGuiIO& io) {
     for(auto& mesh : AssetManager::GetMeshRegistry()) {
-        ImGui::Button(mesh->Filepath);
+        ImGui::Button(mesh.Filepath.c_str());
         if(ImGui::IsItemActive()) {
             ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
             

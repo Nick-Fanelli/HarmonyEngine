@@ -82,12 +82,12 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
     config.OversampleH = 3;
     config.OversampleV = 3;
 
-    io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/segoe-ui.ttf", 18.0f, &config);
+    io.FontDefault = io.Fonts->AddFontFromFileTTF("engineAssets/fonts/segoe-ui.ttf", 18.0f, &config);
 
     // Font Awesome
     static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
     ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-    s_FontAwesomePtr = io.Fonts->AddFontFromFileTTF( "assets/fonts/font-awesome/Font-Awesome-Solid-900.otf", 16.0f, &icons_config, icons_ranges );
+    s_FontAwesomePtr = io.Fonts->AddFontFromFileTTF( "engineAssets/fonts/font-awesome/Font-Awesome-Solid-900.otf", 16.0f, &icons_config, icons_ranges );
 
     ImGuiStyle& style = ImGui::GetStyle();
     if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {

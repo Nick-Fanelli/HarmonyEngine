@@ -60,7 +60,7 @@ namespace HarmonyEngine {
         static void DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, AssetHandle<Texture>& texture, const glm::vec4& color);
 
         // Utility Functions
-        static void LoadOBJFile(const char* filepath, Mesh* mesh, float textureID = 0);
+        static void LoadOBJFile(const std::string& filepath, Mesh* mesh, float textureID = 0);
 
     };
 }
