@@ -42,4 +42,6 @@ struct Mesh {
 
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices) :
     Filepath(""), Vertices(vertices), Indices(indices) {}
+
+    bool IsCreated() { return Vertices.size() != 0 && Indices.size() != 0; }
 };

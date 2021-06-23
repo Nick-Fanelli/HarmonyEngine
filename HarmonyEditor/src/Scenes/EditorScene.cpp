@@ -26,6 +26,8 @@ void EditorScene::OnCreate() {
     s_SceneSerializer = SceneSerializer(this, "scene.yaml");
     s_SceneSerializer.DeserializeYAML();
 
+    AssetManager::CreateAll();
+
     RenderLayer::OnCreate(this);
     ImGuiLayer::OnCreate(this);
 
@@ -38,8 +40,6 @@ void EditorScene::OnCreate() {
     // stall.AddComponent<MeshRendererComponent>(stallMesh);
 
     // CreateEntity("Quad", Transform({-8.0f, 0.0f, 0.0f})).AddComponent<QuadRendererComponent>();
-
-    AssetManager::CreateAll();
 }
 
 void EditorScene::OnUpdate(float deltaTime) {

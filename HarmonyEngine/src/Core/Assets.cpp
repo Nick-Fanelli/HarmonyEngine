@@ -36,24 +36,13 @@ AssetHandle<Mesh> AssetManager::QueueOrGetMesh(const std::string& filepath) {
     return AssetManager::QueueMesh(filepath);
 }
 
-void AssetManager::DirectlyAddTexture(const std::string& filepath) {
-    auto& texture = s_TextureRegistry.emplace_back(filepath);
-    texture.Create();
-}
-
-void AssetManager::DirectlyAddMesh(const std::string& filepath) {
-    auto& mesh = s_MeshRegistry.emplace_back(filepath);
-    Renderer::LoadOBJFile(mesh.Filepath, &mesh);
-}
-
-
 void AssetManager::UpdateTextureRegistry(const std::string& filepath) {
     for(auto& texture : s_TextureRegistry) {
         if(texture.GetFilepath() == filepath)
             return;
     }
 
-    AssetManager::DirectlyAddTexture(filepath);
+    QueueTexture(filepath);
 }
 
 void AssetManager::UpdateMeshRegistry(const std::string& filepath) {
@@ -62,7 +51,7 @@ void AssetManager::UpdateMeshRegistry(const std::string& filepath) {
             return;
     }
 
-    AssetManager::DirectlyAddMesh(filepath);
+    QueueMesh(filepath);
 }
 
 

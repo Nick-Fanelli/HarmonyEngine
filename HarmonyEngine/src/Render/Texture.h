@@ -42,6 +42,8 @@ namespace HarmonyEngine {
         const GLuint& GetTextureID() const { return m_TextureID; }
         const std::string& GetFilepath() const { return m_Filepath; }
 
+        bool IsCreated() { return m_TextureID != 0; }
+
         const int GetWidth() const { return m_Width; }
         const int GetHeight() const { return m_Height; }
     };

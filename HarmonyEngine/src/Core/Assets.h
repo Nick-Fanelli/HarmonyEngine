@@ -24,6 +24,8 @@ namespace HarmonyEngine {
 
         const T* operator->() const { return m_Asset; }
         T* operator->() { return m_Asset; }
+
+        T* GetAsset() const { return m_Asset; }
  
         bool IsAssigned() { return m_Asset != nullptr; }
     };
@@ -43,9 +45,6 @@ namespace HarmonyEngine {
 
         static AssetHandle<Texture> QueueOrGetTexture(const std::string& filepath);
         static AssetHandle<Mesh> QueueOrGetMesh(const std::string& filepath);
-
-        static void DirectlyAddTexture(const std::string& filepath);
-        static void DirectlyAddMesh(const std::string& filepath);
 
         static void UpdateTextureRegistry(const std::string& filepath);
         static void UpdateMeshRegistry(const std::string& filepath);
