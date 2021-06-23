@@ -18,31 +18,15 @@ namespace HarmonyEngine {
 
         SceneSerializer(Scene* scenePtr, const std::string& filepath);
 
-        void LoadDefault() {
-#if HARMONY_DEBUG
-            LoadYAML();
-#else
-            LoadBinary();
-#endif
-        }
-
-        void LoadYAML();
-        void LoadBinary();
-
-        void SerializeDefault() {
-#if HARMONY_DEBUG
-            SerializeYAML();
-#else
-            SerializeBinary();
-#endif
-        }
-
         void SerializeYAML();
-        void SerializeBinary();
+        void SerializerBinary();
+
+        void DeserializeYAML();
+        void DeserializeBinary();
 
     private:
         Scene* m_ScenePtr;
-        std::string m_Filepath;
+        std::string m_Filepath; 
 
     };
 

@@ -21,6 +21,7 @@ void EditorScene::OnCreate() {
 
     this->m_SceneName = "Editor Scene";
     s_SceneSerializer = SceneSerializer(this, "scene.yaml");
+    s_SceneSerializer.DeserializeYAML();
     
     m_Camera = EditorCamera();
 
@@ -30,12 +31,12 @@ void EditorScene::OnCreate() {
     AssetManager::QueueTexture("assets/textures/stallTexture.png");
     AssetManager::QueueTexture("assets/textures/grass.jpeg");
 
-    auto stallMesh = AssetManager::QueueMesh("assets/objects/stall.obj");
+    AssetManager::QueueMesh("assets/objects/stall.obj");
 
-    Entity stall = CreateEntity("Stall"); 
-    stall.AddComponent<MeshRendererComponent>(stallMesh);
+    // Entity stall = CreateEntity("Stall"); 
+    // stall.AddComponent<MeshRendererComponent>(stallMesh);
 
-    CreateEntity("Quad", Transform({-8.0f, 0.0f, 0.0f})).AddComponent<QuadRendererComponent>();
+    // CreateEntity("Quad", Transform({-8.0f, 0.0f, 0.0f})).AddComponent<QuadRendererComponent>();
 
     AssetManager::CreateAll();
 }

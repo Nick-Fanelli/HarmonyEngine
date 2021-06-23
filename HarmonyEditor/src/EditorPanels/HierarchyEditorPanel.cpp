@@ -17,9 +17,11 @@ void HierarchyEditorPanel::OnUpdate() {
 
     ImGui::SameLine();
     if(ImGui::Button("Delete Entity")) {
-        Entity nullEntity = Entity();
-        m_ScenePtr->DeleteEntity(ImGuiLayer::GetSelectedEntity());
-        ImGuiLayer::SetSelectedEntity(nullEntity);
+        if(ImGuiLayer::GetSelectedEntity().IsCreated()) {
+            Entity nullEntity = Entity();
+            m_ScenePtr->DeleteEntity(ImGuiLayer::GetSelectedEntity());
+            ImGuiLayer::SetSelectedEntity(nullEntity);
+        }
     }
 
     m_ScenePtr->GetRegistry().each([&](auto entityID) {
