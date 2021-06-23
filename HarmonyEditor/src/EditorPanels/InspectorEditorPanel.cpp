@@ -89,7 +89,7 @@ static void DrawTextureInputControl(const std::string& label, AssetHandle<Textur
 
     ImGui::PushFont(ImGuiLayer::GetFontAwesome());
 
-    if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
+    if(ImGui::Button("\uf0e2##DrawTextureInputControl", { lineHeight, lineHeight })) {
         if(assetHandle.IsAssigned()) {
             assetHandle = AssetHandle<Texture>(nullptr);
         }    
@@ -118,7 +118,7 @@ static void DrawMeshInputControl(const std::string& label, AssetHandle<Mesh>& as
 
     ImGui::PushFont(ImGuiLayer::GetFontAwesome());
 
-    if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
+    if(ImGui::Button("\uf0e2##DrawMeshInputControl", { lineHeight, lineHeight })) {
         if(assetHandle.IsAssigned()) {
             assetHandle = AssetHandle<Mesh>(nullptr);
         }    

@@ -39,12 +39,12 @@ namespace HarmonyEngine {
     template<typename T>
     class AssetHandle {
 
-        Asset<T>* m_Asset;
+        Asset<T>* m_Asset = nullptr;
 
     public:
 
-        AssetHandle() : m_Asset(nullptr) {}
-        AssetHandle(const AssetHandle& other) { m_Asset = other.m_Asset; } 
+        AssetHandle() = default;
+        AssetHandle(const AssetHandle& other) = default;
         AssetHandle(Asset<T>* assetPtr) : m_Asset(assetPtr) {}
 
         T* operator->() { return m_Asset->GetPtr(); }
