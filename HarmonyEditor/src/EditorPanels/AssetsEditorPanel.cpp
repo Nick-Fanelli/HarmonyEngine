@@ -1,11 +1,42 @@
 #include "AssetsEditorPanel.h"
 
+#include <time.h>
+#include <filesystem>
+
 #include <Core/Assets.h>
 
 using namespace HarmonyEngine;
 
 const char* AssetsEditorPanel::TextureDragDropID = "ASSET_TEXTURE";
 const char* AssetsEditorPanel::MeshDragDropID = "ASSET_MESH";
+
+static const std::string AssetsPath = "assets/";
+
+static const uint32_t AssetUpdateSeconds = 2;
+
+static void UpdateFile(const std::filesystem::directory_entry& entry) {
+    if(entry.is_directory()) {
+        for(const auto& file : std::filesystem::directory_iterator(entry.path())) {
+            UpdateFile(file);
+        }
+    } else {
+
+        static const std::regex imageRegex(".jpeg|.png|.jpg|.tga|.bmp|.psd|.gif|.hdr|.pic|.pnm");
+        static const std::regex meshRegex(".obj");
+
+        auto extension = entry.path().extension();
+        if(std::regex_match(extension.c_str(), imageRegex)) {
+            AssetManager::UpdateTextureRegistry(entry.path());
+        } else if(std::regex_match(extension.c_str(), meshRegex)) {
+            AssetManager::UpdateMeshRegistry(entry.path());
+        }
+    }
+}
+
+static void UpdateFilesystem() {
+    for(const auto& entry : std::filesystem::directory_iterator(AssetsPath))
+        UpdateFile(entry);
+}
 
 static void DrawAssetTextures(ImGuiIO& io) {
     for(auto& texture : AssetManager::GetTextureRegistry()) {
@@ -43,6 +74,13 @@ static void DrawAssetMeshes(ImGuiIO& io) {
     }
 }
 
+static time_t s_Timer = time(0);
+
+void AssetsEditorPanel::OnCreate(Scene* scene) {
+    m_ScenePtr = scene;
+    UpdateFilesystem();
+}
+
 void AssetsEditorPanel::OnUpdate() {
 
     static ImGuiIO& io = ImGui::GetIO();
@@ -73,6 +111,11 @@ void AssetsEditorPanel::OnUpdate() {
     ImGui::SameLine();
     ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
     ImGui::SameLine();
+
+    if(difftime(time(0), s_Timer) == AssetUpdateSeconds) {
+        s_Timer = time(0);
+        UpdateFilesystem();
+    }
 
     ImGui::BeginChild("MainAssetWindow", size);
     {
