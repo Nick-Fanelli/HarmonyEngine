@@ -4,18 +4,23 @@
 
 #include <Scene/Entity.h>
 #include <Scene/Component.h>
+#include <Scene/SceneSerialization.h>
+
+#include <Core/Input.h>
 
 #include "../Layers/RenderLayer.h"
 #include "../Layers/ImGuiLayer.h"
 #include "../Scenes/EditorCamera.h"
 
 static Entity s_Entity;
+static SceneSerializer s_SceneSerializer;
 
 void EditorScene::OnCreate() {
 
     HARMONY_PROFILE_FUNCTION();
 
     this->m_SceneName = "Editor Scene";
+    s_SceneSerializer = SceneSerializer(this, "scene.yaml");
     
     m_Camera = EditorCamera();
 
@@ -44,11 +49,17 @@ void EditorScene::OnUpdate(float deltaTime) {
 
     RenderLayer::OnUpdate();
     ImGuiLayer::OnUpdate();
+
+    if(Input::IsKeyDown(HARMONY_KEY_SPACE)) {
+        s_SceneSerializer.SerializeYAML();
+    }
 }
 
 void EditorScene::OnDestroy() {
 
     HARMONY_PROFILE_FUNCTION();
+
+    s_SceneSerializer.SerializeYAML();
 
     RenderLayer::OnDestroy();
     ImGuiLayer::OnDestroy();

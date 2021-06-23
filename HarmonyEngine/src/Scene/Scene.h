@@ -9,8 +9,11 @@
 namespace HarmonyEngine {
 
     class Entity;
+    class SceneSerializer;
 
     class Scene {
+
+        friend class SceneSerializer;
         
     protected:
         std::string m_SceneName;
