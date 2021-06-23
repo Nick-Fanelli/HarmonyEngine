@@ -7,3 +7,6 @@
 [submodule "HarmonyEngine/vendor/glfw"]
 	path = HarmonyEngine/vendor/glfw
 	url = https://github.com/Nick-Fanelli/glfw.git
+[submodule "HarmonyEngine/vendor/yaml-cpp"]
+	path = HarmonyEngine/vendor/yaml-cpp
+	url = https://github.com/Nick-Fanelli/yaml-cpp.git

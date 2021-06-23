@@ -11,6 +11,7 @@ set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/yaml-cpp)
 
 file(GLOB_RECURSE SRC_FILES
         "src/**.h"
@@ -28,6 +29,7 @@ add_custom_target(link_target ALL
 target_include_directories(HarmonyEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_include_directories(HarmonyEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 target_include_directories(HarmonyEngine PUBLIC ${CMAKE_CURRENT_SORCE_DIR}/vendor/glfw/include/GLFW)
+target_include_directories(HarmonyEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/vendor/yaml-cpp/include/yaml-cpp)
 
 target_link_libraries(HarmonyEngine glad)
 target_link_libraries(HarmonyEngine glfw)
