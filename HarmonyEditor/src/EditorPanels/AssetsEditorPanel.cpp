@@ -11,79 +11,43 @@ const char* AssetsEditorPanel::TextureDragDropID = "ASSET_TEXTURE";
 const char* AssetsEditorPanel::MeshDragDropID = "ASSET_MESH";
 
 static const std::filesystem::path AssetsPath = "assets/";
-static std::filesystem::path s_CurrentPath = AssetsPath;
 
-// static const uint32_t AssetUpdateSeconds = 2;
-// static time_t s_Timer = time(0);
+static const uint32_t AssetUpdateSeconds = 2;
+static time_t s_Timer = time(0);
 
-// static void UpdateFile(const std::filesystem::directory_entry& entry) {
-//     if(entry.is_directory()) {
-//         for(const auto& file : std::filesystem::directory_iterator(entry.path())) {
-//             UpdateFile(file);
-//         }
-//     } else {
+struct AssetFile {
 
-//         // static const std::regex imageRegex(".jpeg|.png|.jpg|.tga|.bmp|.psd|.gif|.hdr|.pic|.pnm");
-//         // static const std::regex meshRegex(".obj");
+    std::filesystem::path Path;
+    std::vector<AssetFile> Children;
+    bool IsDirectory = false;
 
-//         // auto extension = entry.path().extension();
-//         // if(std::regex_match(extension.c_str(), imageRegex)) {
-//         //     AssetManager::UpdateTextureRegistry(entry.path());
-//         // } else if(std::regex_match(extension.c_str(), meshRegex)) {
-//         //     AssetManager::UpdateMeshRegistry(entry.path());
-//         // }
-//     }
-// }
+    AssetFile() = default;
+    AssetFile(const std::filesystem::path& path, bool isDirectory) : Path(path), IsDirectory(isDirectory) {}
 
-// static void DrawAssetTextures(ImGuiIO& io) {
-//     for(auto& texture : AssetManager::GetTextureRegistry()) {
-//         ImGui::Button(texture.GetFilepath().c_str());
-//         if(ImGui::IsItemActive()) {
-//             ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
+};
 
-//             static constexpr ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoHoldToOpenOthers | ImGuiDragDropFlags_SourceNoPreviewTooltip;
-//             if(ImGui::BeginDragDropSource(flags)) {
+static AssetFile s_RootFile = { AssetsPath, true };
 
-//                 auto textureHandle = AssetHandle<Texture>(&texture);
+static void LoadFile(AssetFile& parent) {
+    for(const auto& childEntry : std::filesystem::directory_iterator(parent.Path)) {
+        auto& childAssetFile = parent.Children.emplace_back(childEntry.path(), childEntry.is_directory());
+        if(childAssetFile.IsDirectory)
+            LoadFile(childAssetFile);
+    }
+}
 
-//                 ImGui::SetDragDropPayload(AssetsEditorPanel::TextureDragDropID, &textureHandle, sizeof(texture));
-//                 ImGui::EndDragDropSource();
-//             }
-//         }
-//     }
-// }
+static void DrawFileImGui(const std::filesystem::path& parentPath, const AssetFile& child) {
 
-// static void DrawAssetMeshes(ImGuiIO& io) {
-//     for(auto& mesh : AssetManager::GetMeshRegistry()) {
-//         ImGui::Button(mesh.Filepath.c_str());
-//         if(ImGui::IsItemActive()) {
-//             ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
-            
-//             static constexpr ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoHoldToOpenOthers | ImGuiDragDropFlags_SourceNoPreviewTooltip;
-//             if(ImGui::BeginDragDropSource(flags)) {
-
-//                 auto meshHandle = AssetHandle<Mesh>(&mesh);
-
-//                 ImGui::SetDragDropPayload(AssetsEditorPanel::MeshDragDropID, &meshHandle, sizeof(mesh));
-//                 ImGui::EndDragDropSource();
-//             }
-//         }
-//     }
-// }
-
-static void LoadFile(const std::filesystem::path& rootPath, const std::filesystem::directory_entry& entry) {
-    static const ImGuiIO& io = ImGui::GetIO();
-
-    if(entry.is_directory()) {
-        if(ImGui::TreeNode(std::filesystem::relative(entry.path(), rootPath).c_str())) {
-
-            for(const auto& childEntry : std::filesystem::directory_iterator(entry.path())) {
-                LoadFile(entry.path(), childEntry);
-            }
+    if(child.IsDirectory) {
+        if(ImGui::TreeNode(std::filesystem::relative(child.Path, parentPath).c_str())) {
+            for(auto& file : child.Children) 
+                DrawFileImGui(child.Path, file);
 
             ImGui::TreePop();
         }
     } else {
+        static ImGuiIO& io = ImGui::GetIO();
+
         float height = GImGui->Font->FontSize + GImGui->Style.FramePadding.y;
         float width = ImGui::GetContentRegionAvailWidth();
 
@@ -92,33 +56,33 @@ static void LoadFile(const std::filesystem::path& rootPath, const std::filesyste
         ImGui::PushStyleColor(ImGuiCol_Button, ImGuiCol_ChildBg);
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f)); // Align Button Text
 
-        ImGui::ButtonEx(std::filesystem::relative(entry.path(), rootPath).c_str(), buttonSize, ImGuiButtonFlags_AlignTextBaseLine);
+        ImGui::ButtonEx(std::filesystem::relative(child.Path, parentPath).c_str(), buttonSize, ImGuiButtonFlags_AlignTextBaseLine);
 
         if(ImGui::IsItemActive()) {
 
             static const std::regex imageRegex(".jpeg|.png|.jpg|.tga|.bmp|.psd|.gif|.hdr|.pic|.pnm");
             static const std::regex meshRegex(".obj");
-            if(std::regex_match(entry.path().extension().c_str(), imageRegex)) { // Supported Texture Files
+            if(std::regex_match(child.Path.extension().c_str(), imageRegex)) { // Supported Texture Files
 
                 ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
 
                 static constexpr ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoHoldToOpenOthers | ImGuiDragDropFlags_SourceNoPreviewTooltip;
                 if(ImGui::BeginDragDropSource(flags)) {
 
-                    auto textureHandle = AssetHandle<Texture>(AssetManager::QueueOrGetTexture(entry.path()));
+                    auto textureHandle = AssetHandle<Texture>(AssetManager::QueueOrGetTexture(child.Path));
 
                     ImGui::SetDragDropPayload(AssetsEditorPanel::TextureDragDropID, &textureHandle, sizeof(textureHandle));
                     ImGui::EndDragDropSource();
                 }
 
-            } else if(std::regex_match(entry.path().extension().c_str(), meshRegex)) {
+            } else if(std::regex_match(child.Path.extension().c_str(), meshRegex)) {
 
                 ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
 
                 static constexpr ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoHoldToOpenOthers | ImGuiDragDropFlags_SourceNoPreviewTooltip;
                 if(ImGui::BeginDragDropSource(flags)) {
                     
-                    auto meshHandle = AssetHandle<Mesh>(AssetManager::QueueOrGetMesh(entry.path()));
+                    auto meshHandle = AssetHandle<Mesh>(AssetManager::QueueOrGetMesh(child.Path));
 
                     ImGui::SetDragDropPayload(AssetsEditorPanel::MeshDragDropID, &meshHandle, sizeof(meshHandle));
                     ImGui::EndDragDropSource();
@@ -130,10 +94,12 @@ static void LoadFile(const std::filesystem::path& rootPath, const std::filesyste
         ImGui::PopStyleVar(); // Align Button Text
         ImGui::PopStyleColor();
     }
+
 }
 
 void AssetsEditorPanel::OnCreate(Scene* scene) {
     m_ScenePtr = scene;
+    LoadFile(s_RootFile);
 }
 
 void AssetsEditorPanel::OnUpdate() {
@@ -142,8 +108,16 @@ void AssetsEditorPanel::OnUpdate() {
 
     ImGui::Begin("Asset Dock");
 
-    for(const auto& entry : std::filesystem::directory_iterator(s_CurrentPath)) {
-        LoadFile(AssetsPath, entry);
+    if(difftime(time(0), s_Timer) >= AssetUpdateSeconds) {
+        s_RootFile.Children.clear();
+
+        LoadFile(s_RootFile);
+
+        s_Timer = time(0);
+    }
+
+    for(auto& child : s_RootFile.Children) {
+        DrawFileImGui(AssetsPath, child);
     }
 
     ImGui::End();

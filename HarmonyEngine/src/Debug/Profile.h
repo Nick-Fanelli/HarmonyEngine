@@ -6,6 +6,8 @@
 
 namespace HarmonyEngine {
 
+#if HARMONY_PROFILE
+
 	using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
 
 	struct ProfileResult
@@ -191,6 +193,8 @@ namespace HarmonyEngine {
 			return result;
 		}
 	}
+
+#endif
 }
 
 #if HARMONY_PROFILE
