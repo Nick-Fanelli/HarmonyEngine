@@ -80,13 +80,13 @@ namespace HarmonyEngine {
         static void Begin() {
             CurrentBatchCount = 0;
             CurrentVertexCount = 0;
-            CurrentTextureCount = 0;
+            CurrentIndexCount = 0;
         }
 
         static void End() {
             BatchCount = CurrentBatchCount;
             VertexCount = CurrentVertexCount;
-            TextureCount = CurrentTextureCount;
+            IndexCount = CurrentIndexCount;
         }
 
         static void DrawImGUIStats() {
@@ -94,7 +94,7 @@ namespace HarmonyEngine {
 
             ImGui::Text("Batch Count: %zu", BatchCount);
             ImGui::Text("Vertex Count: %zu", VertexCount);
-            ImGui::Text("Texture Count: %zu", TextureCount);
+            ImGui::Text("Index Count: %zu", IndexCount);
 
             ImGui::End();
         }
@@ -109,9 +109,9 @@ namespace HarmonyEngine {
 
         static size_t VertexCount;
         static size_t CurrentVertexCount;
-        
-        static size_t TextureCount;
-        static size_t CurrentTextureCount;
+
+        static size_t IndexCount;
+        static size_t CurrentIndexCount;
     };
 
     class Renderer2D {

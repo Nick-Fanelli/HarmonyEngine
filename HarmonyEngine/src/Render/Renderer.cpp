@@ -178,6 +178,7 @@ void Renderer::AllocateIndices(uint32_t amount) {
     }
 
     s_Batch.IndexCount += amount;
+    RendererStats::CurrentIndexCount += amount;
 }
 
 void Renderer::AllocateObject() {
@@ -211,8 +212,6 @@ void Renderer::StartBatch() {
 void Renderer::EndBatch() {
     Renderer::UpdateBatchData();
     Renderer::Render();
-
-    RendererStats::CurrentTextureCount += s_Batch.TextureIndex + 1;
 }
 
 void Renderer::OnDestroy() {

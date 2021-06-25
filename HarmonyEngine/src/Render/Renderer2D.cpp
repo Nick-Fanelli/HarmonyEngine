@@ -25,8 +25,8 @@ size_t RendererStats::CurrentBatchCount = 0;
 size_t RendererStats::VertexCount = 0;
 size_t RendererStats::CurrentVertexCount = 0;
 
-size_t RendererStats::TextureCount = 0;
-size_t RendererStats::CurrentTextureCount = 0;
+size_t RendererStats::IndexCount = 0;
+size_t RendererStats::CurrentIndexCount = 0;
 
 static int* s_TextureSlots;
 
@@ -201,8 +201,6 @@ void Renderer2D::StartBatch() {
 void Renderer2D::EndBatch() {
     Renderer2D::UpdateBatchVertexData();
     Renderer2D::Render();
-
-    RendererStats::CurrentTextureCount += s_Batch.TextureIndex + 1;
 }
 
 void Renderer2D::OnDestroy() {
@@ -247,6 +245,7 @@ void Renderer2D::DrawQuad(Transform& transform, const glm::vec4& color) {
     }
 
     s_Batch.IndexCount += 6; // Six vertices per quad
+    RendererStats::CurrentIndexCount += 6;
 }
 
 void Renderer2D::DrawQuad(Transform& transform, const glm::vec4& color, AssetHandle<Texture>& texture) {
@@ -283,4 +282,5 @@ void Renderer2D::DrawQuad(Transform& transform, const glm::vec4& color, AssetHan
     }
     
     s_Batch.IndexCount += 6; // Six vertices per quad
+    RendererStats::CurrentIndexCount += 6;
 }
