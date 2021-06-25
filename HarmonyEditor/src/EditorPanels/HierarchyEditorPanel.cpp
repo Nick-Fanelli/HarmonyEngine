@@ -18,8 +18,9 @@ void HierarchyEditorPanel::OnUpdate() {
     ImGui::SameLine();
     if(ImGui::Button("Delete Entity")) {
         if(ImGuiLayer::GetSelectedEntity().IsCreated()) {
-            Entity nullEntity = Entity();
             m_ScenePtr->DeleteEntity(ImGuiLayer::GetSelectedEntity());
+
+            Entity nullEntity; 
             ImGuiLayer::SetSelectedEntity(nullEntity);
         }
     }
@@ -52,6 +53,17 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
     bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t) entity, flags, "%s", entityName.c_str());
     if(ImGui::IsItemClicked()) {
         ImGuiLayer::SetSelectedEntity(entity);
+    }
+
+    if(ImGui::BeginPopupContextItem("Right Click Menu", ImGuiPopupFlags_MouseButtonRight)) {
+        if(ImGui::Selectable("Delete")) {
+            m_ScenePtr->DeleteEntity(entity);
+
+            Entity nullEntity;
+            ImGuiLayer::SetSelectedEntity(nullEntity);
+        }
+
+        ImGui::EndPopup();
     }
 
     if(opened) {
