@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include "Shader.h"
+#include "Renderer2D.h"
 
 using namespace HarmonyEngine;
 
@@ -160,6 +161,8 @@ void Renderer::Render() {
 }
 
 void Renderer::AllocateVertices(uint32_t amount) {
+    RendererStats::CurrentVertexCount += amount;
+
     uint32_t vertexCount = s_Batch.VertexPtr - s_Batch.Vertices;
 
     if(vertexCount + amount > MaxVertexCount) {
@@ -199,11 +202,17 @@ void Renderer::StartBatch() {
     s_Batch.VertexPtr = s_Batch.Vertices;
     s_Batch.IndexPtr = s_Batch.Indices;
     s_Batch.OffsetPtr = s_Batch.Offsets;
+
+    s_Batch.TextureIndex = 1;
+
+    RendererStats::CurrentBatchCount++;
 }
 
 void Renderer::EndBatch() {
     Renderer::UpdateBatchData();
     Renderer::Render();
+
+    RendererStats::CurrentTextureCount += s_Batch.TextureIndex + 1;
 }
 
 void Renderer::OnDestroy() {

@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include <Core/Display.h>
+#include <Render/Renderer2D.h>
 
 #include "../Theme.h"
 
@@ -218,6 +219,8 @@ void ImGuiLayer::OnUpdate() {
     s_AssetsEditorPanel.OnUpdate();
 
     ShowGameViewport();
+
+    RendererStats::DrawImGUIStats();
 
     // ImGui::ShowDemoWindow();
 

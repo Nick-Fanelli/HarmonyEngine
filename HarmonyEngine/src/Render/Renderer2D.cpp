@@ -19,8 +19,14 @@ static glm::vec4 s_QuadVertexPositions[4];
 
 Camera* Renderer2D::s_Camera = nullptr;
 
-size_t RendererStats2D::BatchCount = 0;
-size_t RendererStats2D::CurrentBatchCount = 0;
+size_t RendererStats::BatchCount = 0;
+size_t RendererStats::CurrentBatchCount = 0;
+
+size_t RendererStats::VertexCount = 0;
+size_t RendererStats::CurrentVertexCount = 0;
+
+size_t RendererStats::TextureCount = 0;
+size_t RendererStats::CurrentTextureCount = 0;
 
 static int* s_TextureSlots;
 
@@ -165,7 +171,8 @@ void Renderer2D::UpdateBatchVertexData() {
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Batch.Vertices);
 }
 
-static void AllocateVertices(int amount) {
+void Renderer2D::AllocateVertices(int amount) {
+    RendererStats::CurrentVertexCount += amount;
     uint32_t vertexCount = s_Batch.VertexPtr - s_Batch.Vertices;
 
     // If there isn't enough space, start a new render batch!
@@ -175,7 +182,7 @@ static void AllocateVertices(int amount) {
     }
 }
 
-static void AllocateTexture() {
+void Renderer2D::AllocateTexture() {
     if(s_Batch.TextureIndex >= s_MaxTextureCount) {
         Renderer2D::EndBatch();
         Renderer2D::StartBatch();
@@ -188,12 +195,14 @@ void Renderer2D::StartBatch() {
 
     s_Batch.VertexPtr = s_Batch.Vertices;
 
-    RendererStats2D::CurrentBatchCount++;
+    RendererStats::CurrentBatchCount++;
 }
 
 void Renderer2D::EndBatch() {
     Renderer2D::UpdateBatchVertexData();
     Renderer2D::Render();
+
+    RendererStats::CurrentTextureCount += s_Batch.TextureIndex + 1;
 }
 
 void Renderer2D::OnDestroy() {

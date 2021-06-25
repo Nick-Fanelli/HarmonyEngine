@@ -1,6 +1,7 @@
 #pragma once
 
 #include "harmonypch.h"
+#include "imguipch.h"
 
 #include <glm/glm.hpp>
 
@@ -10,6 +11,8 @@
 #include "../Core/Assets.h"
 
 namespace HarmonyEngine {
+
+    class Renderer;
 
     static const std::array<glm::vec4, 4> DefaultColor = {
         glm::vec4(1, 1, 1, 1),
@@ -72,23 +75,43 @@ namespace HarmonyEngine {
         uint32_t* Textures = nullptr;
     };
 
-    struct RendererStats2D {
+    struct RendererStats {
 
-        friend class Renderer2D;
-
-        static size_t BatchCount;
-
-        static void Start() {
+        static void Begin() {
             CurrentBatchCount = 0;
+            CurrentVertexCount = 0;
+            CurrentTextureCount = 0;
         }
 
         static void End() {
             BatchCount = CurrentBatchCount;
+            VertexCount = CurrentVertexCount;
+            TextureCount = CurrentTextureCount;
+        }
+
+        static void DrawImGUIStats() {
+            ImGui::Begin("Renderer Stats");
+
+            ImGui::Text("Batch Count: %zu", BatchCount);
+            ImGui::Text("Vertex Count: %zu", VertexCount);
+            ImGui::Text("Texture Count: %zu", TextureCount);
+
+            ImGui::End();
         }
 
     private:
+
+        friend class Renderer;
+        friend class Renderer2D;
+
+        static size_t BatchCount;
         static size_t CurrentBatchCount;
 
+        static size_t VertexCount;
+        static size_t CurrentVertexCount;
+        
+        static size_t TextureCount;
+        static size_t CurrentTextureCount;
     };
 
     class Renderer2D {
@@ -97,6 +120,8 @@ namespace HarmonyEngine {
 
         static void Render();
         static void UpdateBatchVertexData();
+        static void AllocateVertices(int amount);
+        static void AllocateTexture();
 
     public:
 
