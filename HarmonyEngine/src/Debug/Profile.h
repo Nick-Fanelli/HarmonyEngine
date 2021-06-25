@@ -2,6 +2,8 @@
 
 #include "harmonypch.h"
 
+// @author TheCherno
+
 namespace HarmonyEngine {
 
 	using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
