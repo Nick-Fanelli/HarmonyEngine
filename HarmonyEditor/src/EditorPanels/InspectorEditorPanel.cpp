@@ -77,9 +77,10 @@ static void DrawTextureInputControl(const std::string& label, AssetHandle<Textur
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::TextureDragDropID)) {
             AssetHandle<Texture> texture = *(const AssetHandle<Texture>*) payload->Data;
-            if(!texture->IsCreated())
-                texture->Create();
             assetHandle = texture;
+            if(!assetHandle->IsCreated()) {
+                assetHandle->Create();
+            }
         }
 
         ImGui::EndDragDropTarget();
@@ -94,7 +95,7 @@ static void DrawTextureInputControl(const std::string& label, AssetHandle<Textur
     if(ImGui::Button("\uf0e2##DrawTextureInputControl", { lineHeight, lineHeight })) {
         if(assetHandle.IsAssigned()) {
             assetHandle = AssetHandle<Texture>(nullptr);
-        }    
+        }
     }
 
     ImGui::PopFont();
@@ -108,9 +109,10 @@ static void DrawMeshInputControl(const std::string& label, AssetHandle<Mesh>& as
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::MeshDragDropID)) {
             AssetHandle<Mesh> mesh = *(const AssetHandle<Mesh>*) payload->Data;
-            if(!mesh->IsCreated())
-                Renderer::LoadOBJFile(mesh->Filepath, mesh.GetAsset());
             assetHandle = mesh;
+            if(!assetHandle->IsCreated()) {
+                Renderer::LoadOBJFile(assetHandle->Filepath, assetHandle.GetAsset());
+            }
         }
 
         ImGui::EndDragDropTarget();
