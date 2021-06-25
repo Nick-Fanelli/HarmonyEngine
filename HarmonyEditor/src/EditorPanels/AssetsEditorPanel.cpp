@@ -138,14 +138,7 @@ void AssetsEditorPanel::OnCreate(Scene* scene) {
 
 void AssetsEditorPanel::OnUpdate() {
 
-    // static ImGuiIO& io = ImGui::GetIO();
-
-    // ImGui::ShowDemoWindow();
-
-    // if(difftime(time(0), s_Timer) == AssetUpdateSeconds) {
-    //     s_Timer = time(0);
-    //     UpdateFilesystem();
-    // }
+    HARMONY_PROFILE_FUNCTION();
 
     ImGui::Begin("Asset Dock");
 

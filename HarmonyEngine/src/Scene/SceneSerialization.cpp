@@ -142,6 +142,8 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
         transformComponent.Transform.Position = transformComponentNode["Position"].as<glm::vec3>();
         transformComponent.Transform.Rotation = transformComponentNode["Rotation"].as<glm::vec3>();
         transformComponent.Transform.Scale = transformComponentNode["Scale"].as<glm::vec3>();
+    } else {
+        entity.RemoveComponenet<TransformComponent>();
     }
 
     DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, "QuadRendererComponent", [&](QuadRendererComponent& component, YAML::Node& node) {

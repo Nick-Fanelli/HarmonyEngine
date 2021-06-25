@@ -190,6 +190,7 @@ static void DrawAddComponentButton(Entity& entity) {
         ImGui::OpenPopup("AddComponent");
 
     if(ImGui::BeginPopup("AddComponent")) {
+        DrawAddComponentMenuItem<TransformComponent>("Transform", entity);
         DrawAddComponentMenuItem<QuadRendererComponent>("Quad Renderer", entity);
         DrawAddComponentMenuItem<MeshRendererComponent>("Mesh Renderer", entity);
 
