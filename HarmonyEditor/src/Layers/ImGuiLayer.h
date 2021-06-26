@@ -26,6 +26,7 @@ namespace ImGuiLayer {
 
     ImFont* GetFontAwesome();
 
+    void DrawInput(const std::string& label, std::string& value);
     void DrawVector3(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f);
     void DrawColorControl(const std::string& label, glm::vec4& values, float resetValue = 255.0f);
 

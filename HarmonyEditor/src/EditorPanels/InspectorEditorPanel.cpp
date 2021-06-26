@@ -1,7 +1,6 @@
 #include "InspectorEditorPanel.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <imgui/misc/cpp/imgui_stdlib.h>
 
 #include "../Layers/ImGuiLayer.h"
 #include "AssetsEditorPanel.h"
@@ -144,7 +143,7 @@ void InspectorEditorPanel::OnUpdate() {
     if(selectedEntity.IsCreated()) {
 
         DrawComponent<TagComponent>("Entity Tag", selectedEntity, [](TagComponent& component) {
-            ImGui::InputText("Name", &component.Name);
+            ImGuiLayer::DrawInput("Name", component.Name);
         });
 
         DrawComponent<TransformComponent>("Transform", selectedEntity, [](TransformComponent& component) {

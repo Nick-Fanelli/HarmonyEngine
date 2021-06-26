@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <imgui/misc/cpp/imgui_stdlib.h>
+
 #include <Core/Display.h>
 #include <Render/Renderer2D.h>
 
@@ -230,6 +232,22 @@ void ImGuiLayer::OnUpdate() {
 
 void ImGuiLayer::OnDestroy() {
     ImGui::SaveIniSettingsToDisk(s_SaveFilename);
+}
+
+void ImGuiLayer::DrawInput(const std::string& label, std::string& value) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Columns(2);
+    ImGui::SetColumnWidth(0, 100.0f);
+
+    ImGui::Text("%s", label.c_str());
+
+    ImGui::NextColumn();
+    ImGui::InputText("", &value);
+
+    ImGui::Columns(1);
+
+    ImGui::PopID();
 }
 
 void ImGuiLayer::DrawVector3(const std::string& label, glm::vec3& values, float resetValue, float columnWidth) {
