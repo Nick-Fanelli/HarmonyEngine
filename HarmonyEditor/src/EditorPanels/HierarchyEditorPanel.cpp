@@ -55,7 +55,7 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
         ImGuiLayer::SetSelectedEntity(entity);
     }
 
-    if(ImGui::BeginPopupContextItem("Right Click Menu", ImGuiPopupFlags_MouseButtonRight)) {
+    if(ImGui::BeginPopupContextItem(std::to_string((uint32_t) entity.GetEntityID()).c_str(), ImGuiPopupFlags_MouseButtonRight)) {
         if(ImGui::Selectable("Delete")) {
             m_ScenePtr->DeleteEntity(entity);
 

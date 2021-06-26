@@ -53,6 +53,9 @@ namespace HarmonyEngine {
         static void StartBatch();
         static void EndBatch();
 
+        // TODO: Remove
+        static void DrawImGuiEnvironmentLighting();
+
         // Draw Methods
         static void DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh);
         static void DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh, const glm::vec4& color);

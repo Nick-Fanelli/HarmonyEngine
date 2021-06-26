@@ -221,6 +221,7 @@ void ImGuiLayer::OnUpdate() {
     ShowGameViewport();
 
     RendererStats::DrawImGUIStats();
+    Renderer::DrawImGuiEnvironmentLighting();
 
     // ImGui::ShowDemoWindow();
 

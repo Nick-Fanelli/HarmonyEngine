@@ -121,6 +121,11 @@ void Shader::AddUnformInt(const char* varName, int integer) const {
     glUniform1i(location, integer);
 }
 
+void Shader::AddUniformFloat(const char* varName, float value) const {
+    auto location = glGetUniformLocation(m_ProgramID, varName);
+    glUniform1f(location, value);
+}
+
 void Shader::AddUniformIntArray(const char* varName, int count, const int* array) const {
     auto location = glGetUniformLocation(m_ProgramID, varName);
     glUniform1iv(location, count, array);

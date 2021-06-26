@@ -8,6 +8,8 @@ in float vTextureID;
 in mat4 vModel;
 
 uniform vec3 uLightPosition;
+uniform vec3 uLightColor;
+uniform float uAmbientStrength;
 
 // The &KEYWORD means that something will be replaced at runtime!
 uniform sampler2D[&MAX_TEXTURE_COUNT] uTextures;
@@ -16,15 +18,13 @@ out vec4 out_Color;
 
 void main() {
 
-    float ambientStength = 0.2;
-    vec3 lightColor = vec3(1, 1, 1);
-    vec3 ambient = ambientStength * lightColor;
+    vec3 ambient = uAmbientStrength * uLightColor;
 
     vec3 norm = mat3(transpose(inverse(vModel))) * vNormal;
     vec3 lightDirection = normalize(uLightPosition - vPosition);
 
-    float diff = max(dot(norm, lightDirection), 0.0);
-    vec3 diffuse = diff * lightColor;
+    float diff = max(dot(norm, lightDirection), 0);
+    vec3 diffuse = diff * uLightColor;
 
     vTextureCoord;
     vTextureID;

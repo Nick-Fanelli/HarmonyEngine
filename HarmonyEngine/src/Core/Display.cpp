@@ -105,8 +105,6 @@ void Display::CreateDisplay(const char* title) {
 
     glEnable(GL_CULL_FACE);
 
-    glEnable(GL_TEXTURE_2D);
-
     // glfwSetInputMode(s_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     Log::Success("Created the GLFW Display!");

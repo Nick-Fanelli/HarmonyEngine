@@ -46,6 +46,7 @@ namespace HarmonyEngine {
         void AddUniformVec3(const char* varName, const glm::vec3& vec3) const;
         void AddUniformMat4(const char* varName, const glm::mat4& mat4) const;
         void AddUnformInt(const char* varName, int integer) const;
+        void AddUniformFloat(const char* varName, float value) const;
         void AddUniformIntArray(const char* varName, int size, const int* array) const;
         void AddUniformUintArray(const char* varName, int size, const uint32_t* array) const;
         void AddUniformMat4Array(const char* varName, int size, const glm::mat4 array[]) const;

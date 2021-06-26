@@ -20,6 +20,10 @@ Camera* Renderer::s_Camera = nullptr;
 
 static int* s_TextureSlots;
 
+static glm::vec3 s_LightPosition = { 0, 15, 0 };
+static glm::vec3 s_LightColor = { 1, 1, 1 };
+static float s_AmbientStrength = 0.2f;
+
 void Renderer::OnCreate(Camera* camera) {
     HARMONY_PROFILE_FUNCTION();
 
@@ -123,8 +127,12 @@ void Renderer::Render() {
     s_Shader.Bind();
     s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
-    s_Shader.AddUniformVec3("uLightPosition", {0, 20, 20});
     s_Shader.AddUniformMat4Array("uTransformations", objectCount, s_Batch.Offsets);
+
+    // Environmental Lighting
+    s_Shader.AddUniformVec3("uLightPosition", s_LightPosition);
+    s_Shader.AddUniformVec3("uLightColor", s_LightColor);
+    s_Shader.AddUniformFloat("uAmbientStrength", s_AmbientStrength);
 
     for(int i = 0; i < s_Batch.TextureIndex; i++) {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -240,6 +248,16 @@ void Renderer::OnDestroy() {
     s_Batch.Indices = nullptr;
     s_Batch.Textures = nullptr;
     s_Batch.Offsets = nullptr;
+}
+
+void Renderer::DrawImGuiEnvironmentLighting() {
+    ImGui::Begin("Environment");
+
+    ImGui::DragFloat3("Light Position", glm::value_ptr(s_LightPosition));
+    ImGui::ColorEdit3("Light Color", glm::value_ptr(s_LightColor));
+    ImGui::DragFloat("Ambient Strength", &s_AmbientStrength, 0.1f, 0, 1);
+
+    ImGui::End();
 }
 
 void Renderer::DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh) {
