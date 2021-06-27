@@ -406,3 +406,75 @@ void ImGuiLayer::DrawColorControl(const std::string& label, glm::vec4& values, f
 
     ImGui::PopID();
 }
+
+void ImGuiLayer::DrawTextureInputControl(const std::string& label, AssetHandle<Texture>& assetHandle) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->GetFilepath().c_str() : "[Unattached]");
+    if(ImGui::BeginDragDropTarget()) {
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::TextureDragDropID)) {
+            AssetHandle<Texture> texture = *(const AssetHandle<Texture>*) payload->Data;
+            assetHandle = texture;
+            if(!assetHandle->IsCreated()) {
+                assetHandle->Create();
+            }
+        }
+
+        ImGui::EndDragDropTarget();
+    }
+
+    float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+    ImGui::SameLine();
+
+    ImGui::PushFont(ImGuiLayer::GetFontAwesome());
+
+    if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
+        if(assetHandle.IsAssigned()) {
+            assetHandle = AssetHandle<Texture>(nullptr);
+        }
+    }
+
+    ImGui::PopFont();
+
+    ImGui::SameLine();
+    ImGui::Text("%s", label.c_str());
+
+    ImGui::PopID();
+}
+
+void ImGuiLayer::DrawMeshInputControl(const std::string& label, AssetHandle<Mesh>& assetHandle) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->Filepath.c_str() : "[Unattached]");
+    if(ImGui::BeginDragDropTarget()) {
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::MeshDragDropID)) {
+            AssetHandle<Mesh> mesh = *(const AssetHandle<Mesh>*) payload->Data;
+            assetHandle = mesh;
+            if(!assetHandle->IsCreated()) {
+                Renderer::LoadOBJFile(assetHandle->Filepath, assetHandle.GetAsset());
+            }
+        }
+
+        ImGui::EndDragDropTarget();
+    }
+
+    float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+    ImGui::SameLine();
+
+    ImGui::PushFont(ImGuiLayer::GetFontAwesome());
+
+    if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
+        if(assetHandle.IsAssigned()) {
+            assetHandle = AssetHandle<Mesh>(nullptr);
+        }    
+    }
+
+    ImGui::PopFont();
+
+    ImGui::SameLine();
+    ImGui::Text("%s", label.c_str());
+
+    ImGui::PopID();
+}
