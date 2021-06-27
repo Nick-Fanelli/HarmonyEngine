@@ -17,6 +17,8 @@
 #define ICON_MIN_FA 0xe005
 #define ICON_MAX_FA 0xf8ff
 
+static constexpr float ColumnWidth = 75.0f;
+
 static EditorScene* s_EditorScenePtr;
 static const char* s_SaveFilename = "window-layout.ini";
 
@@ -238,7 +240,7 @@ void ImGuiLayer::DrawInput(const std::string& label, std::string& value) {
     ImGui::PushID(label.c_str());
 
     ImGui::Columns(2);
-    ImGui::SetColumnWidth(0, 100.0f);
+    ImGui::SetColumnWidth(0, ColumnWidth);
 
     ImGui::Text("%s", label.c_str());
 
@@ -322,7 +324,7 @@ void ImGuiLayer::DrawColorControl(const std::string& label, glm::vec4& values, f
     glm::vec4 tempColor = glm::vec4(values) * 255.0f;
 
     ImGui::Columns(2);
-    ImGui::SetColumnWidth(0, 50.0f);
+    ImGui::SetColumnWidth(0, ColumnWidth);
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
     
@@ -410,6 +412,11 @@ void ImGuiLayer::DrawColorControl(const std::string& label, glm::vec4& values, f
 void ImGuiLayer::DrawTextureInputControl(const std::string& label, AssetHandle<Texture>& assetHandle) {
     ImGui::PushID(label.c_str());
 
+    ImGui::Columns(2);
+    ImGui::SetColumnWidth(0, ColumnWidth);
+    ImGui::Text("%s", label.c_str());
+    ImGui::NextColumn();
+
     ImGui::Button(assetHandle.IsAssigned() ? assetHandle->GetFilepath().c_str() : "[Unattached]");
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::TextureDragDropID)) {
@@ -436,15 +443,18 @@ void ImGuiLayer::DrawTextureInputControl(const std::string& label, AssetHandle<T
     }
 
     ImGui::PopFont();
-
-    ImGui::SameLine();
-    ImGui::Text("%s", label.c_str());
+    ImGui::Columns(1);
 
     ImGui::PopID();
 }
 
 void ImGuiLayer::DrawMeshInputControl(const std::string& label, AssetHandle<Mesh>& assetHandle) {
     ImGui::PushID(label.c_str());
+
+    ImGui::Columns(2);
+    ImGui::SetColumnWidth(0, ColumnWidth);
+    ImGui::Text("%s", label.c_str());
+    ImGui::NextColumn();
 
     ImGui::Button(assetHandle.IsAssigned() ? assetHandle->Filepath.c_str() : "[Unattached]");
     if(ImGui::BeginDragDropTarget()) {
@@ -472,9 +482,7 @@ void ImGuiLayer::DrawMeshInputControl(const std::string& label, AssetHandle<Mesh
     }
 
     ImGui::PopFont();
-
-    ImGui::SameLine();
-    ImGui::Text("%s", label.c_str());
+    ImGui::Columns(1);
 
     ImGui::PopID();
 }
