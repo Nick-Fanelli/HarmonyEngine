@@ -8,6 +8,8 @@
 #include <Core/Display.h>
 #include <Render/Renderer2D.h>
 
+#include "MenuBarLayer.h"
+
 #include "../Theme.h"
 
 #include "../EditorPanels/HierarchyEditorPanel.h"
@@ -107,6 +109,8 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
 
     ImGui_ImplGlfw_InitForOpenGL(Display::GetWindowPtr(), true);
     ImGui_ImplOpenGL3_Init(glslVersion);
+
+    MenuBarLayer::OnCreate();
 
     s_HierarchyEditorPanel.OnCreate(s_EditorScenePtr);
     s_InspectorEditorPanel.OnCreate(s_EditorScenePtr);
@@ -212,11 +216,13 @@ void ImGuiLayer::OnUpdate() {
     StartFrame();
 
     ImGuiStyle& style = ImGui::GetStyle();
+
     float minWindowSizeX = style.WindowMinSize.x;
     style.WindowMinSize.x = 370.0f;
     DrawDockspace();
-
     style.WindowMinSize.x = minWindowSizeX;
+
+    MenuBarLayer::OnUpdate();
 
     s_HierarchyEditorPanel.OnUpdate();
     s_InspectorEditorPanel.OnUpdate();
@@ -224,8 +230,11 @@ void ImGuiLayer::OnUpdate() {
 
     ShowGameViewport();
 
-    RendererStats::DrawImGUIStats();
-    Renderer::DrawImGuiEnvironmentLighting();
+    if(MenuBarLayer::ShouldShowRendererStats())
+        RendererStats::DrawImGUIStats();
+
+    if(MenuBarLayer::ShouldShowEnvironmentSettings())
+        Renderer::DrawImGuiEnvironmentLighting();
 
     // ImGui::ShowDemoWindow();
 

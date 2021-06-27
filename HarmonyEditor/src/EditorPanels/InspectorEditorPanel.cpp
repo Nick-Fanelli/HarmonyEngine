@@ -9,6 +9,8 @@ template<typename ComponentType, typename UIFunction>
 static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction uiFunction) {
 
     HARMONY_PROFILE_FUNCTION();
+
+    ImGui::PushID(label);
             
     static constexpr ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
@@ -41,6 +43,8 @@ static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction 
             ImGui::TreePop();
         }
     }
+
+    ImGui::PopID();
 }
 
 template<typename ComponentType>
