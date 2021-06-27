@@ -89,6 +89,7 @@
         "filesystem": "cpp",
         "clocale": "cpp",
         "queue": "cpp",
-        "forward_list": "cpp"
+        "forward_list": "cpp",
+        "__memory": "cpp"
     }
 }

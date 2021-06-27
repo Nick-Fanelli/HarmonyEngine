@@ -22,6 +22,7 @@
 static constexpr float ColumnWidth = 75.0f;
 
 static EditorScene* s_EditorScenePtr;
+static Settings* s_SettingsPtr;
 static const char* s_SaveFilename = "window-layout.ini";
 
 static HierarchyEditorPanel s_HierarchyEditorPanel;
@@ -68,11 +69,12 @@ static void SetDarkThemeColors() {
     colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 }
 
-void ImGuiLayer::OnCreate(EditorScene* editorScenePtr) {
+void ImGuiLayer::OnCreate(EditorScene* editorScenePtr, Settings* settings) {
 
     HARMONY_PROFILE_FUNCTION();
 
     s_EditorScenePtr = editorScenePtr;
+    s_SettingsPtr = settings;
 
     const char* glslVersion = "#version 410 core";
 
@@ -236,6 +238,8 @@ void ImGuiLayer::OnUpdate() {
     if(MenuBarLayer::ShouldShowEnvironmentSettings())
         Renderer::DrawImGuiEnvironmentLighting();
 
+    s_SettingsPtr->OnImGuiRender();
+
     // ImGui::ShowDemoWindow();
 
     EndFrame();
@@ -245,18 +249,45 @@ void ImGuiLayer::OnDestroy() {
     ImGui::SaveIniSettingsToDisk(s_SaveFilename);
 }
 
-void ImGuiLayer::DrawInput(const std::string& label, std::string& value) {
+void ImGuiLayer::DrawInteger(const std::string& label, int& value, float speed, int min, int max) {
     ImGui::PushID(label.c_str());
 
     ImGui::Columns(2);
-    ImGui::SetColumnWidth(0, ColumnWidth);
+    ImGui::Text("%s", label.c_str());
+    ImGui::NextColumn();
+
+    ImGui::DragInt("", &value, speed, min, max);
+    ImGui::Columns(1);
+   
+    ImGui::PopID();
+}
+
+void ImGuiLayer::DrawFloat(const std::string& label, float& value, float speed, float min, float max, const std::string& format) {
+    ImGui::PushID(label.c_str());
 
     ImGui::Text("%s", label.c_str());
+    ImGui::SameLine();
+    ImGui::DragFloat("", &value, speed, min, max, format.c_str());
 
-    ImGui::NextColumn();
+    ImGui::PopID();
+}
+
+void ImGuiLayer::DrawFloat(const std::string& label, float& value, float speed, float min, float max) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Text("%s", label.c_str());
+    ImGui::SameLine();
+    ImGui::DragFloat("", &value, speed, min, max);
+
+    ImGui::PopID();
+}
+
+void ImGuiLayer::DrawInput(const std::string& label, std::string& value) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Text("%s", label.c_str());
+    ImGui::SameLine();
     ImGui::InputText("", &value);
-
-    ImGui::Columns(1);
 
     ImGui::PopID();
 }
@@ -265,7 +296,7 @@ void ImGuiLayer::DrawVector3(const std::string& label, glm::vec3& values, float 
     ImGui::PushID(label.c_str());
 
     ImGui::Columns(2);
-    ImGui::SetColumnWidth(0, columnWidth);
+    ImGui::SetColumnWidth(0, ColumnWidth);
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
 

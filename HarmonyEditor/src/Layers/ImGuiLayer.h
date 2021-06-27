@@ -4,6 +4,7 @@
 
 #include <Scene/Entity.h>
 
+#include "../Settings.h"
 #include "../Scenes/EditorScene.h"
 
 using namespace HarmonyEngine;
@@ -15,7 +16,7 @@ namespace ImGuiLayer {
 
     static ImFont* s_FontAwesomePtr = nullptr;
 
-    void OnCreate(EditorScene* editorScenePtr);
+    void OnCreate(EditorScene* editorScenePtr, Settings* settings);
     void OnUpdate();
     void OnDestroy();
 
@@ -25,6 +26,11 @@ namespace ImGuiLayer {
     void SetSelectedEntity(Entity& entity);
 
     ImFont* GetFontAwesome();
+
+    void DrawInteger(const std::string& label, int& value, float speed = 1.0f, int min = std::numeric_limits<int>::min(), int max = std::numeric_limits<int>::max());
+
+    void DrawFloat(const std::string& label, float& value, float speed = 1.0f, float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max());
+    void DrawFloat(const std::string& label, float& value, float speed, float min, float max, const std::string& format);
 
     void DrawInput(const std::string& label, std::string& value);
     void DrawVector3(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f);

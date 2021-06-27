@@ -8,12 +8,15 @@
 
 #include <Core/Input.h>
 
+#include "../Settings.h"
+
 #include "../Layers/RenderLayer.h"
 #include "../Layers/ImGuiLayer.h"
 #include "../Scenes/EditorCamera.h"
 
 static Entity s_Entity;
 static SceneSerializer s_SceneSerializer;
+static Settings s_Settings;
 
 void EditorScene::OnCreate() {
 
@@ -26,10 +29,13 @@ void EditorScene::OnCreate() {
     s_SceneSerializer = SceneSerializer(this, "scene.yaml");
     s_SceneSerializer.DeserializeYAML();
 
+    s_Settings = Settings();
+    s_Settings.LoadSettings();
+
     AssetManager::CreateAll();
 
     RenderLayer::OnCreate(this);
-    ImGuiLayer::OnCreate(this);
+    ImGuiLayer::OnCreate(this, &s_Settings);
 
     // AssetManager::QueueTexture("assets/textures/stallTexture.png");
     // AssetManager::QueueTexture("assets/textures/grass.jpeg");
@@ -58,6 +64,7 @@ void EditorScene::OnDestroy() {
     HARMONY_PROFILE_FUNCTION();
 
     s_SceneSerializer.SerializeYAML();
+    s_Settings.SaveSettings();
 
     RenderLayer::OnDestroy();
     ImGuiLayer::OnDestroy();

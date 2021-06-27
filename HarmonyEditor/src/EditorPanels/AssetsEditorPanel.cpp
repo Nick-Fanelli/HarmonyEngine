@@ -5,6 +5,8 @@
 
 #include <Core/Assets.h>
 
+#include "../Settings.h"
+
 using namespace HarmonyEngine;
 
 const char* AssetsEditorPanel::TextureDragDropID = "ASSET_TEXTURE";
@@ -12,7 +14,6 @@ const char* AssetsEditorPanel::MeshDragDropID = "ASSET_MESH";
 
 static const std::filesystem::path AssetsPath = "assets/";
 
-static const uint32_t AssetUpdateSeconds = 2;
 static time_t s_Timer = time(0);
 
 struct AssetFile {
@@ -108,7 +109,7 @@ void AssetsEditorPanel::OnUpdate() {
 
     ImGui::Begin("Asset Dock");
 
-    if(difftime(time(0), s_Timer) >= AssetUpdateSeconds) {
+    if(difftime(time(0), s_Timer) >= Settings::GetAssetsUpdateSeconds()) {
         s_RootFile.Children.clear();
 
         LoadFile(s_RootFile);
