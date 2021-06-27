@@ -109,7 +109,7 @@ void AssetsEditorPanel::OnUpdate() {
 
     ImGui::Begin("Asset Dock");
 
-    if(difftime(time(0), s_Timer) >= Settings::GetAssetsUpdateSeconds()) {
+    if(difftime(time(0), s_Timer) >= Settings::GetAssetsUpdateSecond()) {
         s_RootFile.Children.clear();
 
         LoadFile(s_RootFile);

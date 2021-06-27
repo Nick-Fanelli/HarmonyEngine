@@ -7,15 +7,29 @@ using namespace HarmonyEngine;
 
 class Settings {
 
-private: // Settings
+public:
+    template<typename DataType>
+    struct Setting {
 
-    // Assets Settings
-    static int s_AssetsUpdateSeconds;
+        DataType DefaultValue;
+        DataType CurrentValue;
+        std::string SettingID;
 
-public: // Getters for Settings
+        Setting(const DataType& dataType, const char* settingID) 
+        : DefaultValue(dataType), CurrentValue(dataType), SettingID(settingID) {}
 
-    // Assets Settings
-    static int GetAssetsUpdateSeconds() { return s_AssetsUpdateSeconds; }
+        operator DataType&() { return CurrentValue; }
+        operator DataType() const { return CurrentValue; }
+
+        const DataType& GetCurrentValue() const { return CurrentValue; }
+        const DataType& GetDefaultValue() const { return DefaultValue; }
+    };
+
+private:
+    static Setting<int> s_AssetsUpdateSeconds;
+
+public:
+    static int GetAssetsUpdateSecond() { return s_AssetsUpdateSeconds; }
 
 public:
     static void LoadSettings();
