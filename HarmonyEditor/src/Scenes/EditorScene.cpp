@@ -51,10 +51,6 @@ void EditorScene::OnUpdate(float deltaTime) {
 
     RenderLayer::OnUpdate();
     ImGuiLayer::OnUpdate();
-
-    if(Input::IsKeyDown(HARMONY_KEY_SPACE)) {
-        s_SceneSerializer.SerializeYAML();
-    }
 }
 
 void EditorScene::OnDestroy() {
