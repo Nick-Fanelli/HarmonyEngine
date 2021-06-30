@@ -1,17 +1,20 @@
-#include "harmonypch.h"
+#include "Application.h"
 
-#include "Core/Display.h"
-#include "Scene/SceneManager.h"
+#include <Core/Display.h>
+#include <Scene/SceneManager.h>
+
 #include "Scenes/EditorScene.h"
 
 using namespace HarmonyEngine;
 
 int main() {
 
+    Log::SetLogLevel(Log::LogLevelWarn);
+
 #if HARMONY_DEBUG
-    Log::Info("Running Harmony Engine in DEBUG mode!");
+    std::cout << "Running Harmony Engine in DEBUG mode!" << std::endl;
 #else
-    Log::Info("Running Harmony Engine in RELEASE mode!");
+    std::cout << "Running Harmony Engine in RELEASE mode!" << std::endl;
 #endif
 
     // Startup

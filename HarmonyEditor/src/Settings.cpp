@@ -1,12 +1,9 @@
 #include "Settings.h"
 
-#include <filesystem>
-
 #include <yaml-cpp/yaml.h>
 
+#include "Application.h"
 #include "Layers/ImGuiLayer.h"
-
-static const std::filesystem::path SaveFilepath = "user-setting.yaml";
 
 // ====================================================================================================
 // Settings
@@ -15,6 +12,20 @@ static const std::filesystem::path SaveFilepath = "user-setting.yaml";
 // Assets Settings
 Settings::Setting Settings::s_AssetsUpdateSeconds = { 2, "AssetsUpdateSeconds" };
 
+const std::filesystem::path& Settings::GetSaveFilepath() {
+#ifdef HARMONY_PLATFORM_MACOS
+    static std::filesystem::path path = Application::GetApplicationSupportDirectory() + "/user-settings.yaml";
+#elif defined(HARMONY_PLATFORM_WINDOWS)
+    static auto path = std::filesystem::canonical("");
+#endif
+
+    if(!std::filesystem::exists(path.parent_path()))
+        std::filesystem::create_directories(path.parent_path());
+
+    return path;
+}
+
+
 template<typename T>
 static void LoadSpecificSetting(YAML::Node& node, Settings::Setting<T>& setting) {
     if(node[setting.SettingID])
@@ -22,7 +33,7 @@ static void LoadSpecificSetting(YAML::Node& node, Settings::Setting<T>& setting)
 }
 
 void Settings::LoadSettings() {
-    std::ifstream in(SaveFilepath);
+    std::ifstream in(Settings::GetSaveFilepath());
     std::stringstream stream;
     stream << in.rdbuf();
 
@@ -53,7 +64,7 @@ void Settings::SaveSettings() {
 
     out << YAML::EndMap; // Root
 
-    std::ofstream outStream(SaveFilepath);
+    std::ofstream outStream(Settings::GetSaveFilepath());
     outStream << out.c_str();
 }
 

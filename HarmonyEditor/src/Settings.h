@@ -3,6 +3,8 @@
 #include <harmonypch.h>
 #include <imguipch.h>
 
+#include <filesystem>
+
 using namespace HarmonyEngine;
 
 class Settings {
@@ -27,6 +29,8 @@ public:
 
 private:
     static Setting<int> s_AssetsUpdateSeconds;
+
+    static const std::filesystem::path& GetSaveFilepath();
 
 public:
     static int GetAssetsUpdateSecond() { return s_AssetsUpdateSeconds; }
