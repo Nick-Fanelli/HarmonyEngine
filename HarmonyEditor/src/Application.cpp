@@ -5,6 +5,8 @@
 
 #include "Scenes/EditorScene.h"
 
+#include <nfd.h>
+
 using namespace HarmonyEngine;
 
 int main() {
@@ -36,4 +38,31 @@ int main() {
     Display::CleanUp();
     HARMONY_PROFILE_END_SESSION();
 
+}
+
+void Application::OpenFolderDialog(const char* rootDirectory, const std::function<void(const char*)>& function) {
+    NFD_Init();
+
+    nfdchar_t* outPath;
+    nfdresult_t result = NFD_PickFolder(&outPath, rootDirectory);
+    if(result == NFD_OKAY) {
+        function(outPath);
+        NFD_FreePath(outPath);
+    }
+
+    NFD_Quit();
+}
+
+void Application::OpenFileDialog(const std::function<void(const char*)>& function) {
+    NFD_Init();
+
+    nfdchar_t* outPath;
+    nfdfilteritem_t filterItem[1] = { { "All Files", "hpp" } };
+    nfdresult_t result = NFD_OpenDialog(&outPath, filterItem, 1, nullptr);
+    if(result == NFD_OKAY) {
+        function(outPath);
+        NFD_FreePath(outPath);
+    } 
+
+    NFD_Quit();
 }

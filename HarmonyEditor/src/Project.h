@@ -31,7 +31,7 @@ public:
     static const char* CreateProjectPopupID;
 
     static void OnImGuiRender();
-    static void CreateProject(const std::filesystem::path& path);
+    static void CreateProject(const std::string& name, const std::filesystem::path& path);
 
     static void PromptCreateProject() { s_CreateProjectPromptOpen = true; }
 };
