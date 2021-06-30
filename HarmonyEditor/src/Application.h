@@ -2,7 +2,12 @@
 
 #include <harmonypch.h>
 
+#include "Project.h"
+
 class Application {
+
+	friend class ProjectManager;
+	Project m_Project;
 
 public:
 
@@ -14,5 +19,7 @@ public:
 #endif
         return path;
     }
+
+	const Project& GetCurrentProject() const { return m_Project; }
 
 };

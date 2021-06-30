@@ -11,6 +11,7 @@
 #include "MenuBarLayer.h"
 
 #include "../Application.h"
+#include "../Project.h"
 
 #include "../Theme.h"
 
@@ -243,6 +244,8 @@ void ImGuiLayer::OnUpdate() {
         Renderer::DrawImGuiEnvironmentLighting();
 
     s_SettingsPtr->OnImGuiRender();
+
+    ProjectManager::OnImGuiRender();
 
     // ImGui::ShowDemoWindow();
 

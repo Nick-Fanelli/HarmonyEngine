@@ -2,6 +2,8 @@
 
 #include <imguipch.h>
 
+#include "../Project.h"
+
 #include "ImGuiLayer.h"
 
 bool MenuBarLayer::s_ShowRendererStats = false;
@@ -22,6 +24,12 @@ static void DrawMenu(const char* title, UIFunction uiFunction) {
 void MenuBarLayer::OnUpdate() {
 
     if(ImGui::BeginMainMenuBar()) {
+
+        DrawMenu("File", []() {
+            if(ImGui::MenuItem("New Project")) {
+                ProjectManager::PromptCreateProject();
+            }
+        });
 
         DrawMenu("Window", [](){
             ImGui::MenuItem("Renderer Stats", "", &s_ShowRendererStats);
