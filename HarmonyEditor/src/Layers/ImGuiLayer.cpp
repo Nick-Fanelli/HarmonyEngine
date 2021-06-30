@@ -10,6 +10,8 @@
 
 #include "MenuBarLayer.h"
 
+#include "../Application.h"
+
 #include "../Theme.h"
 
 #include "../EditorPanels/HierarchyEditorPanel.h"
@@ -23,7 +25,7 @@ static constexpr float ColumnWidth = 75.0f;
 
 static EditorScene* s_EditorScenePtr;
 static Settings* s_SettingsPtr;
-static const char* s_SaveFilename = "window-layout.ini";
+static std::string s_SaveFilename;
 
 static HierarchyEditorPanel s_HierarchyEditorPanel;
 static InspectorEditorPanel s_InspectorEditorPanel;
@@ -76,13 +78,15 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr, Settings* settings) {
     s_EditorScenePtr = editorScenePtr;
     s_SettingsPtr = settings;
 
+    s_SaveFilename = Application::GetApplicationSupportDirectory() + "/window-layout.ini";
+
     const char* glslVersion = "#version 410 core";
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
 
-    io.IniFilename = s_SaveFilename;
+    io.IniFilename = s_SaveFilename.c_str();
 
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -246,7 +250,7 @@ void ImGuiLayer::OnUpdate() {
 }
 
 void ImGuiLayer::OnDestroy() {
-    ImGui::SaveIniSettingsToDisk(s_SaveFilename);
+    ImGui::SaveIniSettingsToDisk(s_SaveFilename.c_str());
 }
 
 void ImGuiLayer::DrawInteger(const std::string& label, int& value, float speed, int min, int max) {
