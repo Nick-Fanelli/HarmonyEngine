@@ -26,9 +26,6 @@ void EditorScene::OnCreate() {
     
     m_Camera = EditorCamera();
 
-    s_SceneSerializer = SceneSerializer(this, "scene.yaml");
-    s_SceneSerializer.DeserializeYAML();
-
     s_Settings = Settings();
     s_Settings.LoadSettings();
 
@@ -36,20 +33,9 @@ void EditorScene::OnCreate() {
 
     RenderLayer::OnCreate(this);
     ImGuiLayer::OnCreate(this, &s_Settings);
-
-    // AssetManager::QueueTexture("assets/textures/stallTexture.png");
-    // AssetManager::QueueTexture("assets/textures/grass.jpeg");
-
-    // AssetManager::QueueMesh("assets/objects/stall.obj");
-
-    // Entity stall = CreateEntity("Stall"); 
-    // stall.AddComponent<MeshRendererComponent>(stallMesh);
-
-    // CreateEntity("Quad", Transform({-8.0f, 0.0f, 0.0f})).AddComponent<QuadRendererComponent>();
 }
 
 void EditorScene::OnUpdate(float deltaTime) {
-
     HARMONY_PROFILE_FUNCTION();
 
     if(ImGuiLayer::GetIsEditorSelected())
@@ -60,10 +46,8 @@ void EditorScene::OnUpdate(float deltaTime) {
 }
 
 void EditorScene::OnDestroy() {
-
     HARMONY_PROFILE_FUNCTION();
 
-    s_SceneSerializer.SerializeYAML();
     s_Settings.SaveSettings();
 
     RenderLayer::OnDestroy();

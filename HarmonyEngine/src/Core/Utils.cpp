@@ -44,6 +44,25 @@ namespace HarmonyEngine {
                 return false;
             }
         }
+
+        bool FileExists(const std::filesystem::path& filepath) {
+            return std::filesystem::exists(filepath);
+        }
+
+        void CreateFile(const char* filepath) {
+            std::ofstream fileStream(filepath);
+            fileStream.close();
+        }
+
+        void CreateFile(const std::string& filepath) {
+            std::ofstream fileStream(filepath);
+            fileStream.close();
+        }
+
+        void CreateFile(const std::filesystem::path& filepath) {
+            std::ofstream fileStream(filepath);
+            fileStream.close();
+        }
     }
 
     namespace OpenGLUtils {

@@ -33,6 +33,8 @@ int main() {
     Display::StartGameLoop();
     HARMONY_PROFILE_END_SESSION();
 
+    ProjectManager::SaveCurrentProject();
+
     // Shutdown
     HARMONY_PROFILE_BEGIN_SESSION("Shutdown", "HarmonyProfile-Shutdown.json");
     Display::CleanUp();
