@@ -52,11 +52,14 @@ void Display::StartGameLoop() {
 
 }
 
-void Display::CreateDisplay(const char* title) {
+void Display::CreateDisplay(const char* title, const glm::vec2& displaySize) {
         
     HARMONY_PROFILE_FUNCTION();
 
     Log::Info("Creating the display...");
+
+    s_DisplayWidth = displaySize.x;    
+    s_DisplayHeight = displaySize.y;    
 
     if(!glfwInit()) {
         Log::Error("Could not initialize GLFW!");

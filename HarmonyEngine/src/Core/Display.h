@@ -24,7 +24,7 @@ namespace HarmonyEngine {
 
     public:
 
-        static void CreateDisplay(const char* title);
+        static void CreateDisplay(const char* title, const glm::vec2& displaySize = { 1600, 900 });
         static void CleanUp();
         static void StartGameLoop();
         static void CloseDisplay();

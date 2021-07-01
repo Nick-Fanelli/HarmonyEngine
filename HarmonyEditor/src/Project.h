@@ -26,6 +26,8 @@ private:
     std::filesystem::path m_ProjectPath;
     std::string m_ProjectName;
 
+    std::vector<std::filesystem::path> s_SceneFiles;
+
     bool m_IsAssigned = false;
 };
 
@@ -36,15 +38,24 @@ private:
 class ProjectManager {
 
     static bool s_CreateProjectPromptOpen;
+    static bool s_CreateScenePromptOpen;
+
     static Project m_CurrentProject;
+
+private:
+    static void CreateProjectPopupRender();
+    static void CreateScenePopupRender();
 
 public:
     static const char* CreateProjectPopupID;
 
     static void OnImGuiRender();
-    static void CreateProject(const std::string& name, const std::filesystem::path& path);
 
-    static void PromptCreateProject() { s_CreateProjectPromptOpen = true; }
+    static void CreateProject(const std::string& name, const std::filesystem::path& path);
+    static void CreateScene(const std::string& name);
+
+    static void PromptCreateProject() { s_CreateScenePromptOpen = false; s_CreateProjectPromptOpen = true; }
+    static void PromptCreateScene() { s_CreateProjectPromptOpen = false; s_CreateScenePromptOpen = true; }
 
     static void SaveCurrentProject() { m_CurrentProject.Save(); }
 

@@ -55,14 +55,16 @@ void Project::Save() {
 // ================================================================
 
 const char* ProjectManager::CreateProjectPopupID = "CreateProjectPopup-ProjectManager";
-bool ProjectManager::s_CreateProjectPromptOpen = true;
+
+bool ProjectManager::s_CreateProjectPromptOpen = false;
+bool ProjectManager::s_CreateScenePromptOpen = true; // TODO: Set false
 
 static std::string s_TempCreateProjectName;
 static std::string s_TempCreateProjectSaveLocation;
 
 Project ProjectManager::m_CurrentProject;
 
-void ProjectManager::OnImGuiRender() {
+void ProjectManager::CreateProjectPopupRender() {
     static constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoDocking
                                             | ImGuiWindowFlags_NoCollapse;
 
@@ -102,14 +104,43 @@ void ProjectManager::OnImGuiRender() {
         if(ImGui::ButtonEx("Create Project", {}, fileExists ? 0 : ImGuiButtonFlags_Disabled))
             ProjectManager::CreateProject(s_TempCreateProjectName, s_TempCreateProjectSaveLocation);
 
-        if(fileExists) {
-            ImGui::PopStyleColor();
-            ImGui::PopStyleColor();
-        }
+        ImGui::PopStyleColor(fileExists ? 2 : 0);
 
         ImGui::End();
     }
+}
 
+static std::string s_TempSceneName;
+
+void ProjectManager::CreateScenePopupRender() {
+    static constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoDocking
+                                            | ImGuiWindowFlags_NoCollapse;
+
+    if(s_CreateScenePromptOpen) {
+        ImGui::Begin("Create Scene", &s_CreateScenePromptOpen, flags);
+
+        ImGuiLayer::DrawInput("Scene Name", s_TempSceneName);
+
+        if(!s_TempSceneName.empty()) {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.2039215686, 0.5019607843, 0.9803921569, 1});
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.09803921569, 0.4431372549, 1, 1});
+        }
+
+        if(ImGui::ButtonEx("Create", {}, s_TempSceneName.empty() ? ImGuiButtonFlags_Disabled : 0)) {
+            ProjectManager::CreateScene(s_TempSceneName);
+            s_TempSceneName = "";
+            ImGui::PopStyleColor(2);
+        }
+
+        ImGui::PopStyleColor(!s_TempSceneName.empty() ? 2 : 0);
+
+        ImGui::End();
+    }
+}
+
+void ProjectManager::OnImGuiRender() {
+    CreateProjectPopupRender();
+    CreateScenePopupRender();
 }
 
 void ProjectManager::CreateProject(const std::string& name, const std::filesystem::path& path) {
@@ -144,4 +175,24 @@ void ProjectManager::CreateProject(const std::string& name, const std::filesyste
     
     m_CurrentProject.Save();
     s_CreateProjectPromptOpen = false;
+}
+
+void ProjectManager::CreateScene(const std::string& name) {
+
+    if(!m_CurrentProject.m_IsAssigned) {
+        Log::Warn("Must create project first!");
+        return;
+    }
+
+    Log::FormatInfo("Creating Scene: ", name.c_str());
+
+    std::filesystem::path scenePath = m_CurrentProject.GetAssetsPath().string() + "/" + name + ".yaml";
+
+    if(!FileUtils::FileExists(scenePath)) {
+        FileUtils::CreateFile(scenePath);
+    } else {
+        Log::Warn("File already exists!");
+    }
+
+    m_CurrentProject.s_SceneFiles.push_back(scenePath);
 }
