@@ -5,14 +5,13 @@
 
 #include <Core/Assets.h>
 
+#include "../Project.h"
 #include "../Settings.h"
 
 using namespace HarmonyEngine;
 
 const char* AssetsEditorPanel::TextureDragDropID = "ASSET_TEXTURE";
 const char* AssetsEditorPanel::MeshDragDropID = "ASSET_MESH";
-
-static const std::filesystem::path AssetsPath = "assets/";
 
 static time_t s_Timer = time(0);
 
@@ -27,7 +26,7 @@ struct AssetFile {
 
 };
 
-static AssetFile s_RootFile = { AssetsPath, true };
+static AssetFile s_RootFile;
 
 static void LoadFile(AssetFile& parent) {
     for(const auto& childEntry : std::filesystem::directory_iterator(parent.Path)) {
@@ -100,7 +99,6 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, const AssetFi
 
 void AssetsEditorPanel::OnCreate(Scene* scene) {
     m_ScenePtr = scene;
-    LoadFile(s_RootFile);
 }
 
 void AssetsEditorPanel::OnUpdate() {
@@ -109,16 +107,19 @@ void AssetsEditorPanel::OnUpdate() {
 
     ImGui::Begin("Asset Dock");
 
-    if(difftime(time(0), s_Timer) >= Settings::GetAssetsUpdateSecond()) {
-        s_RootFile.Children.clear();
+    if(ProjectManager::GetCurrentProject().IsAssigned()) {
+        if(difftime(time(0), s_Timer) >= Settings::GetAssetsUpdateSecond()) {
+            s_RootFile.Children.clear();
 
-        LoadFile(s_RootFile);
+            s_RootFile = { ProjectManager::GetCurrentProject().GetAssetsPath(), true };
+            LoadFile(s_RootFile);
 
-        s_Timer = time(0);
-    }
+            s_Timer = time(0);
+        }
 
-    for(auto& child : s_RootFile.Children) {
-        DrawFileImGui(AssetsPath, child);
+        for(auto& child : s_RootFile.Children) {
+            DrawFileImGui(ProjectManager::GetCurrentProject().GetAssetsPath(), child);
+        }
     }
 
     ImGui::End();
