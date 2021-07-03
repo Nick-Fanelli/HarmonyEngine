@@ -34,6 +34,9 @@ static void LoadSpecificSetting(YAML::Node& node, Settings::Setting<T>& setting)
 }
 
 void Settings::LoadSettings() {
+
+    HARMONY_PROFILE_FUNCTION();
+
     std::ifstream in(Settings::GetSaveFilepath());
     std::stringstream stream;
     stream << in.rdbuf();
@@ -54,6 +57,8 @@ static void SaveSetting(YAML::Emitter& out, Settings::Setting<T>& setting) {
 
 void Settings::SaveSettings() {
 
+    HARMONY_PROFILE_FUNCTION();
+
     YAML::Emitter out;
 
     out << YAML::BeginMap; // Root
@@ -71,6 +76,8 @@ void Settings::SaveSettings() {
 
 void Settings::LoadCacheData() {
 
+    HARMONY_PROFILE_FUNCTION();
+
     std::ifstream in(Application::GetApplicationCacheFilepath());
     std::stringstream stream;
     stream << in.rdbuf();
@@ -86,6 +93,8 @@ void Settings::LoadCacheData() {
 }
 
 void Settings::SaveCacheData() {
+
+    HARMONY_PROFILE_FUNCTION();
 
     YAML::Emitter out;
 

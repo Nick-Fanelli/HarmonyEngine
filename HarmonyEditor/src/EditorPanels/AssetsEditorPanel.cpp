@@ -39,6 +39,8 @@ static void LoadFile(AssetFile& parent) {
 
 static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& child) {
 
+    HARMONY_PROFILE_FUNCTION();
+
     if(!child.ShouldDraw)
         return;
 
@@ -50,6 +52,8 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
             ImGui::TreePop();
         }
     } else {
+        HARMONY_PROFILE_SCOPE("DrawFileImGUI - Draw Non-Directory");
+
         static ImGuiIO& io = ImGui::GetIO();
 
         float height = GImGui->Font->FontSize + GImGui->Style.FramePadding.y;

@@ -23,6 +23,8 @@ static void DrawMenu(const char* title, UIFunction uiFunction) {
 
 void MenuBarLayer::OnUpdate() {
 
+    HARMONY_PROFILE_FUNCTION();
+
     if(ImGui::BeginMainMenuBar()) {
 
         DrawMenu("File", []() {
@@ -30,6 +32,8 @@ void MenuBarLayer::OnUpdate() {
             if(ImGui::MenuItem("Open Project")) {
                 ProjectManager::PromptOpenProject();
             }
+
+            ImGui::Separator();
 
             if(ImGui::MenuItem("New Project")) {
                 ProjectManager::PromptCreateProject();

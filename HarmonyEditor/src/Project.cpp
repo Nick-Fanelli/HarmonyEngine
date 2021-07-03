@@ -29,6 +29,8 @@ const std::filesystem::path& Project::GetAssetsPath() const {
 }
 
 void Project::Load() {
+    HARMONY_PROFILE_FUNCTION();
+
     if(!m_IsAssigned)
         return;
 
@@ -45,6 +47,8 @@ void Project::Load() {
 }
 
 void Project::Save() {
+    HARMONY_PROFILE_FUNCTION();
+
     if(!m_IsAssigned)
         return;
 
@@ -76,6 +80,8 @@ static std::string s_TempCreateProjectSaveLocation;
 Project ProjectManager::m_CurrentProject;
 
 void ProjectManager::CreateProjectPopupRender() {
+    HARMONY_PROFILE_FUNCTION();
+
     static constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoDocking
                                             | ImGuiWindowFlags_NoCollapse;
 
@@ -124,6 +130,8 @@ void ProjectManager::CreateProjectPopupRender() {
 static std::string s_TempSceneName;
 
 void ProjectManager::CreateScenePopupRender() {
+    HARMONY_PROFILE_FUNCTION();
+
     static constexpr ImGuiWindowFlags flags = ImGuiWindowFlags_NoDocking
                                             | ImGuiWindowFlags_NoCollapse;
 
@@ -166,6 +174,8 @@ void ProjectManager::PromptOpenProject() {
 }
 
 void ProjectManager::OnImGuiRender() {
+    HARMONY_PROFILE_FUNCTION();
+
     CreateProjectPopupRender();
     CreateScenePopupRender();
 
