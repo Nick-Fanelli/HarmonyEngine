@@ -171,7 +171,7 @@ void ProjectManager::OnImGuiRender() {
 
     ImGui::Begin("Project Info");
 
-    ImGui::LabelText("Is Assigned", "%d", m_CurrentProject.m_IsAssigned);
+    ImGui::LabelText("Is Assigned", "%s", m_CurrentProject.m_IsAssigned ? "true" : "false");
 
     if(m_CurrentProject.m_IsAssigned) {
         ImGui::LabelText("Project Name", "%s", m_CurrentProject.m_ProjectName.c_str());

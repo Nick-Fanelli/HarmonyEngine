@@ -20,6 +20,7 @@ struct AssetFile {
     std::filesystem::path Path;
     std::vector<AssetFile> Children;
     bool IsDirectory = false;
+    bool ShouldDraw = true;
 
     AssetFile() = default;
     AssetFile(const std::filesystem::path& path, bool isDirectory) : Path(path), IsDirectory(isDirectory) {}
@@ -36,7 +37,10 @@ static void LoadFile(AssetFile& parent) {
     }
 }
 
-static void DrawFileImGui(const std::filesystem::path& parentPath, const AssetFile& child) {
+static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& child) {
+
+    if(!child.ShouldDraw)
+        return;
 
     if(child.IsDirectory) {
         if(ImGui::TreeNode(std::filesystem::relative(child.Path, parentPath).c_str())) {
@@ -89,6 +93,18 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, const AssetFi
                 }
 
             }
+
+            if(ImGui::BeginPopupContextItem(child.Path.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+                if(ImGui::Selectable("Delete")) {
+                    if(remove(child.Path)) {
+                        child.ShouldDraw = false;
+                    } else {
+                        Log::FormatWarn("File at: %s, not deleted", child.Path.c_str());
+                    }
+                }
+
+                ImGui::EndPopup();
+            }
         }
 
         ImGui::PopStyleVar(); // Align Button Text
@@ -99,6 +115,10 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, const AssetFi
 
 void AssetsEditorPanel::OnCreate(Scene* scene) {
     m_ScenePtr = scene;
+    if(ProjectManager::GetCurrentProject().IsAssigned()) {
+        s_RootFile = { ProjectManager::GetCurrentProject().GetAssetsPath(), true };
+        LoadFile(s_RootFile);
+    }
 }
 
 void AssetsEditorPanel::OnUpdate() {
