@@ -28,11 +28,19 @@ public:
     };
 
 private:
+    // General
+    static Setting<bool> s_ShouldCacheCurrentProject;
+
+    // Assets
     static Setting<int> s_AssetsUpdateSeconds;
 
     static const std::filesystem::path& GetSaveFilepath();
 
 public:
+    // General
+    static bool ShouldCacheCurrentProject() { return s_ShouldCacheCurrentProject; }
+
+    // Assets
     static int GetAssetsUpdateSecond() { return s_AssetsUpdateSeconds; }
 
 public:

@@ -27,6 +27,8 @@ namespace ImGuiLayer {
 
     ImFont* GetFontAwesome();
 
+    void DrawBool(const std::string& label, bool& value);
+
     void DrawInteger(const std::string& label, int& value, float speed = 1.0f, int min = std::numeric_limits<int>::min(), int max = std::numeric_limits<int>::max());
 
     void DrawFloat(const std::string& label, float& value, float speed = 1.0f, float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max());

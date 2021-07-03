@@ -13,6 +13,9 @@
 // Settings
 // ====================================================================================================
 
+// General Settings
+Settings::Setting Settings::s_ShouldCacheCurrentProject = { true, "ShouldCacheCurrentProject" };
+
 // Assets Settings
 Settings::Setting Settings::s_AssetsUpdateSeconds = { 2, "AssetsUpdateSeconds" };
 
@@ -43,6 +46,12 @@ void Settings::LoadSettings() {
 
     YAML::Node root = YAML::Load(stream.str());
 
+    if(root["General"]) {
+        auto general = root["General"];
+
+        LoadSpecificSetting(general, s_ShouldCacheCurrentProject);
+    }
+
     if(root["Assets"]) {
         auto assets = root["Assets"];
 
@@ -63,9 +72,18 @@ void Settings::SaveSettings() {
 
     out << YAML::BeginMap; // Root
 
+    // General
+    out << YAML::Key << "General" << YAML::BeginMap; // General
+
+    SaveSetting(out, s_ShouldCacheCurrentProject);
+
+    out << YAML::EndMap; // General
+
     // Assets
     out << YAML::Key << "Assets" << YAML::BeginMap; // Assets
+
     SaveSetting(out, s_AssetsUpdateSeconds);
+
     out << YAML::EndMap; // Assets
 
     out << YAML::EndMap; // Root
@@ -84,7 +102,7 @@ void Settings::LoadCacheData() {
 
     YAML::Node root = YAML::Load(stream.str());
 
-    if(root["Current Project"]) {
+    if(Settings::ShouldCacheCurrentProject() && root["Current Project"]) {
         std::filesystem::path projectPath = root["Current Project"].as<std::string>();
         if(std::filesystem::exists(projectPath) && std::filesystem::is_directory(projectPath.parent_path())) {
             ProjectManager::LoadProject(projectPath.parent_path());
@@ -100,7 +118,7 @@ void Settings::SaveCacheData() {
 
     out << YAML::BeginMap; // Root
 
-    if(ProjectManager::GetCurrentProject().IsAssigned())
+    if(Settings::ShouldCacheCurrentProject() && ProjectManager::GetCurrentProject().IsAssigned())
         out << YAML::Key << "Current Project" << YAML::Value << ProjectManager::GetCurrentProject().GetProjectFilepath();
 
     out << YAML::EndMap; // Root
@@ -131,11 +149,13 @@ void Settings::OnImGuiRender() {
     ImGui::Begin("Global Settings");
 
     if(ImGui::CollapsingHeader("General")) {
-
+        DrawSetting(s_ShouldCacheCurrentProject, [&]() {
+            ImGuiLayer::DrawBool("Should Cache Current Project", s_ShouldCacheCurrentProject);
+        });
     }
 
     if(ImGui::CollapsingHeader("Assets")) {
-        DrawSetting(s_AssetsUpdateSeconds, []() {
+        DrawSetting(s_AssetsUpdateSeconds, [&]() {
             ImGuiLayer::DrawInteger("Assets Update Seconds", s_AssetsUpdateSeconds, 0.05f, 0);
         });
     }

@@ -256,6 +256,17 @@ void ImGuiLayer::OnDestroy() {
     ImGui::SaveIniSettingsToDisk(s_SaveFilename.c_str());
 }
 
+void ImGuiLayer::DrawBool(const std::string& label, bool& value) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Text("%s", label.c_str());
+    ImGui::SameLine();
+    ImGui::Checkbox("", &value);
+
+    ImGui::PopID();
+}
+
+
 void ImGuiLayer::DrawInteger(const std::string& label, int& value, float speed, int min, int max) {
     ImGui::PushID(label.c_str());
 
