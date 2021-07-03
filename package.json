@@ -1,6 +1,6 @@
 {
   "name": "harmonyengine",
-  "version": "v0.0.1",
+  "version": "0.1.0",
   "description": "Game engine written in C++ with OpenGL",
   "main": "index.js",
   "scripts": {
