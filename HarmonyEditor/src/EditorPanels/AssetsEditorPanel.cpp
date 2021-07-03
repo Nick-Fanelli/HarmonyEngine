@@ -70,7 +70,13 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
             static const std::regex imageRegex(".jpeg|.png|.jpg|.tga|.bmp|.psd|.gif|.hdr|.pic|.pnm");
             static const std::regex meshRegex(".obj");
-            if(std::regex_match(child.Path.extension().c_str(), imageRegex)) { // Supported Texture Files
+            if(child.Path.extension() == ".hyscene") {
+
+                if(ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+                    ProjectManager::OpenScene(child.Path);
+                }
+
+            } else if(std::regex_match(child.Path.extension().c_str(), imageRegex)) { // Supported Texture Files
 
                 ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
 
@@ -97,18 +103,18 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                 }
 
             }
+        }
 
-            if(ImGui::BeginPopupContextItem(child.Path.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
-                if(ImGui::Selectable("Delete")) {
-                    if(remove(child.Path)) {
-                        child.ShouldDraw = false;
-                    } else {
-                        Log::FormatWarn("File at: %s, not deleted", child.Path.c_str());
-                    }
+        if(ImGui::BeginPopupContextItem(child.Path.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+            if(ImGui::Selectable("Delete")) {
+                if(remove(child.Path)) {
+                    child.ShouldDraw = false;
+                } else {
+                    Log::FormatWarn("File at: %s, not deleted", child.Path.c_str());
                 }
-
-                ImGui::EndPopup();
             }
+
+            ImGui::EndPopup();
         }
 
         ImGui::PopStyleVar(); // Align Button Text
@@ -117,7 +123,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
 }
 
-void AssetsEditorPanel::OnCreate(Scene* scene) {
+void AssetsEditorPanel::OnCreate(EditorScene* scene) {
     m_ScenePtr = scene;
     if(ProjectManager::GetCurrentProject().IsAssigned()) {
         s_RootFile = { ProjectManager::GetCurrentProject().GetAssetsPath(), true };

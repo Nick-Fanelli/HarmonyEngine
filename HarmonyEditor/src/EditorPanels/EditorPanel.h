@@ -2,15 +2,18 @@
 
 #include <harmonypch.h>
 
-#include <Scene/Scene.h>
+#include "../Project.h"
+#include "../Scenes/EditorScene.h"
+
+using namespace HarmonyEngine;
 
 class EditorPanel {
 
 protected:
-    HarmonyEngine::Scene* m_ScenePtr;
+    EditorScene* m_ScenePtr;
 
 public:
-    virtual void OnCreate(HarmonyEngine::Scene* scene) { m_ScenePtr = scene; }
+    virtual void OnCreate(EditorScene* scene) { m_ScenePtr = scene; }
     virtual void OnUpdate() = 0;
 
 };

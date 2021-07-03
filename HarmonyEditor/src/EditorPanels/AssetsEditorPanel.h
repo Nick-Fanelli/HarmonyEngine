@@ -11,7 +11,7 @@ public:
     static const char* TextureDragDropID;
     static const char* MeshDragDropID;
 
-    void OnCreate(HarmonyEngine::Scene* scene) override;
+    void OnCreate(EditorScene* scene) override;
     void OnUpdate() override;
 
 };

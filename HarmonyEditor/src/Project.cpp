@@ -7,6 +7,8 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <Scene/SceneSerialization.h>
+
 #include "Application.h"
 #include "Layers/ImGuiLayer.h"
 
@@ -76,6 +78,8 @@ bool ProjectManager::s_CreateScenePromptOpen = false;
 
 static std::string s_TempCreateProjectName;
 static std::string s_TempCreateProjectSaveLocation;
+
+EditorScene* ProjectManager::m_ScenePtr = nullptr;
 
 Project ProjectManager::m_CurrentProject;
 
@@ -235,7 +239,7 @@ void ProjectManager::CreateScene(const std::string& name) {
 
     Log::FormatInfo("Creating Scene: ", name.c_str());
 
-    std::filesystem::path scenePath = m_CurrentProject.GetAssetsPath().string() + "/" + name + ".yaml";
+    std::filesystem::path scenePath = m_CurrentProject.GetAssetsPath().string() + "/" + name + ".hyscene";
 
     if(!FileUtils::FileExists(scenePath)) {
         FileUtils::CreateFile(scenePath);
@@ -243,5 +247,22 @@ void ProjectManager::CreateScene(const std::string& name) {
         Log::Warn("File already exists!");
     }
 
-    m_CurrentProject.s_SceneFiles.push_back(scenePath);
+    s_CreateScenePromptOpen = false;
+
+}
+
+void ProjectManager::OpenScene(const std::filesystem::path& path) {
+    if(!m_CurrentProject.IsAssigned())
+        return;
+
+    if(m_ScenePtr->GetCurrentSceneFile() != "no-path") {
+        SceneSerializer serializer = SceneSerializer(m_ScenePtr, m_ScenePtr->GetCurrentSceneFile());
+        serializer.SerializeYAML();
+    }
+
+    m_ScenePtr->m_Registry.clear();
+    m_ScenePtr->m_CurrentSceneFile = path;
+
+    SceneSerializer serializer = SceneSerializer(m_ScenePtr, path);
+    serializer.DeserializeYAML();
 }

@@ -4,6 +4,8 @@
 
 #include <filesystem>
 
+#include "Scenes/EditorScene.h"
+
 // ================================================================
 // Project
 // ================================================================
@@ -28,8 +30,6 @@ private:
     std::filesystem::path m_ProjectPath;
     std::string m_ProjectName;
 
-    std::vector<std::filesystem::path> s_SceneFiles;
-
     bool m_IsAssigned = false;
 };
 
@@ -38,6 +38,8 @@ private:
 // ================================================================
 
 class ProjectManager {
+
+    static EditorScene* m_ScenePtr;
 
     static bool s_CreateProjectPromptOpen;
     static bool s_CreateScenePromptOpen;
@@ -51,6 +53,8 @@ private:
 public:
     static const char* CreateProjectPopupID;
 
+    static void Initialize(EditorScene* editorScene) { m_ScenePtr = editorScene; }
+
     static void OnImGuiRender();
 
     static void CreateProject(const std::string& name, const std::filesystem::path& path);
@@ -60,6 +64,8 @@ public:
 
     static void PromptCreateProject() { s_CreateScenePromptOpen = false; s_CreateProjectPromptOpen = true; }
     static void PromptCreateScene() { s_CreateProjectPromptOpen = false; s_CreateScenePromptOpen = true; }
+
+    static void OpenScene(const std::filesystem::path& path);
 
     static void PromptOpenProject();
 

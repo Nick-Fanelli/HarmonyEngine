@@ -2,6 +2,8 @@
 
 #include <harmonypch.h>
 
+#include <filesystem>
+
 #include <Core/Assets.h>
 #include <Scene/Scene.h>
 #include <Render/Camera.h>
@@ -12,6 +14,8 @@ using namespace HarmonyEngine;
 
 class EditorScene : public Scene {
 
+    friend class ProjectManager;
+
 public:
     void OnCreate() override;
     void OnUpdate(float deltaTime) override;
@@ -20,6 +24,7 @@ public:
 private:
     EditorCamera m_Camera;
     GLuint* m_RenderTexture = nullptr;
+    std::filesystem::path m_CurrentSceneFile = "no-path";
 
 public:
     Camera* GetGenericCameraPtr() { return &m_Camera; }
@@ -29,5 +34,7 @@ public:
     EditorCamera& GetEditorCamera() { return m_Camera; }
 
     void SetRenderTexture(GLuint* texture) { m_RenderTexture = texture; }
+
+    const std::filesystem::path& GetCurrentSceneFile() const { return m_CurrentSceneFile; }
 
 };

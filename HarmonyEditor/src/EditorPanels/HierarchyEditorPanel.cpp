@@ -4,6 +4,8 @@
 
 #include <Scene/Component.h>
 
+#include "../Project.h"
+
 #include "../Layers/ImGuiLayer.h"
 
 void HierarchyEditorPanel::OnUpdate() {
@@ -11,28 +13,34 @@ void HierarchyEditorPanel::OnUpdate() {
 
     ImGui::Begin("Hierarchy");
 
-    if(ImGui::Button("New Entity")) {
-        m_ScenePtr->CreateEntity("New Entity");
-    }
+    if(m_ScenePtr->GetCurrentSceneFile() != "no-path") {
+        if(ImGui::Button("New Entity")) {
+            m_ScenePtr->CreateEntity("New Entity");
+        }
 
-    ImGui::SameLine();
-    if(ImGui::Button("Delete Entity")) {
-        if(ImGuiLayer::GetSelectedEntity().IsCreated()) {
-            m_ScenePtr->DeleteEntity(ImGuiLayer::GetSelectedEntity());
+        ImGui::SameLine();
+        if(ImGui::Button("Delete Entity")) {
+            if(ImGuiLayer::GetSelectedEntity().IsCreated()) {
+                m_ScenePtr->DeleteEntity(ImGuiLayer::GetSelectedEntity());
 
-            Entity nullEntity; 
+                Entity nullEntity; 
+                ImGuiLayer::SetSelectedEntity(nullEntity);
+            }
+        }
+
+        m_ScenePtr->GetRegistry().each([&](auto entityID) {
+            Entity entity = Entity(m_ScenePtr, entityID);
+            AddToHierarchy(entity);
+        });
+
+        if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered()) {
+            Entity nullEntity = Entity();
             ImGuiLayer::SetSelectedEntity(nullEntity);
         }
-    }
-
-    m_ScenePtr->GetRegistry().each([&](auto entityID) {
-        Entity entity = Entity(m_ScenePtr, entityID);
-        AddToHierarchy(entity);
-    });
-
-    if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered()) {
-        Entity nullEntity = Entity();
-        ImGuiLayer::SetSelectedEntity(nullEntity);
+    } else {
+        if(ImGui::Button("Create Scene")) {
+            ProjectManager::PromptCreateScene();
+        }
     }
 
     ImGui::End();

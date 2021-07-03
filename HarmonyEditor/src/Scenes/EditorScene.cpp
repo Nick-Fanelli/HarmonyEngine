@@ -9,13 +9,13 @@
 #include <Core/Input.h>
 
 #include "../Settings.h"
+#include "../Project.h"
 
 #include "../Layers/RenderLayer.h"
 #include "../Layers/ImGuiLayer.h"
 #include "../Scenes/EditorCamera.h"
 
 static Entity s_Entity;
-static SceneSerializer s_SceneSerializer;
 static Settings s_Settings;
 
 void EditorScene::OnCreate() {
@@ -23,6 +23,8 @@ void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
 
     this->m_SceneName = "Editor Scene";
+
+    ProjectManager::Initialize(this);
     
     m_Camera = EditorCamera();
 
@@ -51,6 +53,11 @@ void EditorScene::OnDestroy() {
 
     s_Settings.SaveSettings();
     s_Settings.SaveCacheData();
+
+    if(m_CurrentSceneFile != "no-path") {
+        SceneSerializer serializer{this, m_CurrentSceneFile};
+        serializer.SerializeYAML();
+    }
 
     RenderLayer::OnDestroy();
     ImGuiLayer::OnDestroy();
