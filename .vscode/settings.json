@@ -90,7 +90,8 @@
         "clocale": "cpp",
         "queue": "cpp",
         "forward_list": "cpp",
-        "__memory": "cpp"
+        "__memory": "cpp",
+        "__functional_03": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

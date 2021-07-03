@@ -55,11 +55,11 @@ void Application::OpenFolderDialog(const char* rootDirectory, const std::functio
     NFD_Quit();
 }
 
-void Application::OpenFileDialog(const std::function<void(const char*)>& function) {
+void Application::OpenFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const char*)>& function) {
     NFD_Init();
 
     nfdchar_t* outPath;
-    nfdfilteritem_t filterItem[1] = { { "All Files", "hpp" } };
+    nfdfilteritem_t filterItem[1] = { { filterItems.first, filterItems.second } };
     nfdresult_t result = NFD_OpenDialog(&outPath, filterItem, 1, nullptr);
     if(result == NFD_OKAY) {
         function(outPath);

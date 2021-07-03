@@ -31,6 +31,17 @@ const std::filesystem::path& Project::GetAssetsPath() const {
 void Project::Load() {
     if(!m_IsAssigned)
         return;
+
+    std::ifstream in(GetProjectFilepath());
+    std::stringstream stream;
+    stream << in.rdbuf();
+
+    YAML::Node root = YAML::Load(stream.str());
+
+    if(root["Project Name"]) {
+        m_ProjectName = root["Project Name"].as<std::string>();
+    }
+
 }
 
 void Project::Save() {
@@ -57,7 +68,7 @@ void Project::Save() {
 const char* ProjectManager::CreateProjectPopupID = "CreateProjectPopup-ProjectManager";
 
 bool ProjectManager::s_CreateProjectPromptOpen = false;
-bool ProjectManager::s_CreateScenePromptOpen = true; // TODO: Set false
+bool ProjectManager::s_CreateScenePromptOpen = false;
 
 static std::string s_TempCreateProjectName;
 static std::string s_TempCreateProjectSaveLocation;
@@ -138,9 +149,34 @@ void ProjectManager::CreateScenePopupRender() {
     }
 }
 
+void ProjectManager::PromptOpenProject() {
+    Application::OpenFileDialog({ "Harmony Project", "hyproj" }, [&](const char* path) {
+        if(m_CurrentProject.m_IsAssigned)
+            m_CurrentProject.Save();
+
+        std::filesystem::path projectFilePath = path;
+
+        m_CurrentProject = Project(projectFilePath.parent_path(), "Unassigned");
+        m_CurrentProject.m_IsAssigned = true;
+        m_CurrentProject.Load();
+    });
+}
+
 void ProjectManager::OnImGuiRender() {
     CreateProjectPopupRender();
     CreateScenePopupRender();
+
+    ImGui::Begin("Project Info");
+
+    ImGui::LabelText("Is Assigned", "%d", m_CurrentProject.m_IsAssigned);
+
+    if(m_CurrentProject.m_IsAssigned) {
+        ImGui::LabelText("Project Name", "%s", m_CurrentProject.m_ProjectName.c_str());
+        ImGui::LabelText("Project Location", "%s", m_CurrentProject.GetProjectFilepath().c_str());
+        ImGui::LabelText("Assets Location", "%s", m_CurrentProject.GetAssetsPath().c_str());
+    }
+
+    ImGui::End();
 }
 
 void ProjectManager::CreateProject(const std::string& name, const std::filesystem::path& path) {

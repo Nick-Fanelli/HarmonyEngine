@@ -22,8 +22,6 @@ public:
 
 	const Project& GetCurrentProject() const { return m_Project; }
 
-
 	static void OpenFolderDialog(const char* rootDirectory, const std::function<void(const char*)>& function);
-	static void OpenFileDialog(const std::function<void(const char*)>& function);
-
+	static void OpenFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const char*)>& function);
 };

@@ -57,6 +57,8 @@ public:
     static void PromptCreateProject() { s_CreateScenePromptOpen = false; s_CreateProjectPromptOpen = true; }
     static void PromptCreateScene() { s_CreateProjectPromptOpen = false; s_CreateScenePromptOpen = true; }
 
+    static void PromptOpenProject();
+
     static void SaveCurrentProject() { m_CurrentProject.Save(); }
 
     static const Project& GetCurrentProject() { return m_CurrentProject; }

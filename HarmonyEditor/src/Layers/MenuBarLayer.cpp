@@ -26,6 +26,11 @@ void MenuBarLayer::OnUpdate() {
     if(ImGui::BeginMainMenuBar()) {
 
         DrawMenu("File", []() {
+
+            if(ImGui::MenuItem("Open Project")) {
+                ProjectManager::PromptOpenProject();
+            }
+
             if(ImGui::MenuItem("New Project")) {
                 ProjectManager::PromptCreateProject();
             }
