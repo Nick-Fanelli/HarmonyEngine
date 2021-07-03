@@ -1,8 +1,12 @@
 #include "Settings.h"
 
+#include <filesystem>
+
 #include <yaml-cpp/yaml.h>
 
 #include "Application.h"
+#include "Project.h"
+
 #include "Layers/ImGuiLayer.h"
 
 // ====================================================================================================
@@ -18,9 +22,6 @@ const std::filesystem::path& Settings::GetSaveFilepath() {
 #elif defined(HARMONY_PLATFORM_WINDOWS)
     static auto path = std::filesystem::canonical("");
 #endif
-
-    if(!std::filesystem::exists(path.parent_path()))
-        std::filesystem::create_directories(path.parent_path());
 
     return path;
 }
@@ -66,6 +67,38 @@ void Settings::SaveSettings() {
 
     std::ofstream outStream(Settings::GetSaveFilepath());
     outStream << out.c_str();
+}
+
+void Settings::LoadCacheData() {
+
+    std::ifstream in(Application::GetApplicationCacheFilepath());
+    std::stringstream stream;
+    stream << in.rdbuf();
+
+    YAML::Node root = YAML::Load(stream.str());
+
+    if(root["Current Project"]) {
+        std::filesystem::path projectPath = root["Current Project"].as<std::string>();
+        if(std::filesystem::exists(projectPath) && std::filesystem::is_directory(projectPath.parent_path())) {
+            ProjectManager::LoadProject(projectPath.parent_path());
+        }
+    }
+}
+
+void Settings::SaveCacheData() {
+
+    YAML::Emitter out;
+
+    out << YAML::BeginMap; // Root
+
+    if(ProjectManager::GetCurrentProject().IsAssigned())
+        out << YAML::Key << "Current Project" << YAML::Value << ProjectManager::GetCurrentProject().GetProjectFilepath();
+
+    out << YAML::EndMap; // Root
+
+    std::ofstream outStream(Application::GetApplicationCacheFilepath());
+    outStream << out.c_str();
+
 }
 
 template<typename SettingType, typename UIFunction>

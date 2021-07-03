@@ -36,9 +36,11 @@ public:
     static int GetAssetsUpdateSecond() { return s_AssetsUpdateSeconds; }
 
 public:
-    static void LoadSettings();
-    static void SaveSettings();
+    void LoadSettings();
+    void SaveSettings();
 
-    static void OnImGuiRender();
+    void LoadCacheData();
+    void SaveCacheData();
 
+    void OnImGuiRender();
 };

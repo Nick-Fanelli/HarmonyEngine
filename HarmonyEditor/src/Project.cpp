@@ -149,16 +149,19 @@ void ProjectManager::CreateScenePopupRender() {
     }
 }
 
+void ProjectManager::LoadProject(const std::filesystem::path& path) {
+    if(m_CurrentProject.m_IsAssigned)
+        m_CurrentProject.Save();
+
+    m_CurrentProject = Project(path, "Unassigned");
+    m_CurrentProject.m_IsAssigned = true;
+    m_CurrentProject.Load();
+}
+
 void ProjectManager::PromptOpenProject() {
     Application::OpenFileDialog({ "Harmony Project", "hyproj" }, [&](const char* path) {
-        if(m_CurrentProject.m_IsAssigned)
-            m_CurrentProject.Save();
-
-        std::filesystem::path projectFilePath = path;
-
-        m_CurrentProject = Project(projectFilePath.parent_path(), "Unassigned");
-        m_CurrentProject.m_IsAssigned = true;
-        m_CurrentProject.Load();
+        std::filesystem::path projectPath = path;
+        LoadProject(projectPath.parent_path());
     });
 }
 

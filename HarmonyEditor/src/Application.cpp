@@ -7,8 +7,6 @@
 
 #include <nfd.h>
 
-using namespace HarmonyEngine;
-
 int main() {
 
     Log::SetLogLevel(Log::LogLevelWarn);

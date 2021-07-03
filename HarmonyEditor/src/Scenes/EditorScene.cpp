@@ -28,6 +28,7 @@ void EditorScene::OnCreate() {
 
     s_Settings = Settings();
     s_Settings.LoadSettings();
+    s_Settings.LoadCacheData();
 
     AssetManager::CreateAll();
 
@@ -49,6 +50,7 @@ void EditorScene::OnDestroy() {
     HARMONY_PROFILE_FUNCTION();
 
     s_Settings.SaveSettings();
+    s_Settings.SaveCacheData();
 
     RenderLayer::OnDestroy();
     ImGuiLayer::OnDestroy();

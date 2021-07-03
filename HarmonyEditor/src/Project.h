@@ -22,6 +22,8 @@ public:
     void Load();
     void Save();
 
+    bool IsAssigned() const { return m_IsAssigned; }
+
 private:
     std::filesystem::path m_ProjectPath;
     std::string m_ProjectName;
@@ -53,6 +55,8 @@ public:
 
     static void CreateProject(const std::string& name, const std::filesystem::path& path);
     static void CreateScene(const std::string& name);
+
+    static void LoadProject(const std::filesystem::path& path);
 
     static void PromptCreateProject() { s_CreateScenePromptOpen = false; s_CreateProjectPromptOpen = true; }
     static void PromptCreateScene() { s_CreateProjectPromptOpen = false; s_CreateScenePromptOpen = true; }
