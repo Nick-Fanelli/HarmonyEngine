@@ -6,12 +6,6 @@
 
 #include "ImGuiLayer.h"
 
-bool MenuBarLayer::s_ShowRendererStats = false;
-bool MenuBarLayer::s_ShowEnvironmentSettings = false;
-bool MenuBarLayer::s_ShowAssetsStats = false;
-bool MenuBarLayer::s_ShowProjectInfo = false;
-bool MenuBarLayer::s_ShowGlobalSettings = false;
-
 void MenuBarLayer::OnCreate() {
     // Load Menubar Saved Settings
 }
@@ -49,11 +43,16 @@ void MenuBarLayer::OnUpdate() {
 
         DrawMenu("Window", []() {
             if(ImGui::BeginMenu("Panels")) {
-                ImGui::MenuItem("Renderer Stats", "", &s_ShowRendererStats);
-                ImGui::MenuItem("Environment Settings", "", &s_ShowEnvironmentSettings);
-                ImGui::MenuItem("Assets Stats", "", &s_ShowAssetsStats);
-                ImGui::MenuItem("Project Info", "", &s_ShowProjectInfo);
-                ImGui::MenuItem("Global Settings", "", &s_ShowGlobalSettings);
+                ImGui::MenuItem("Environment Settings", "", &Settings::s_ShouldShowEnvironmentSettings.CurrentValue);
+                ImGui::MenuItem("Global Settings", "", &Settings::s_ShouldShowGlobalSettings.CurrentValue);
+
+                ImGui::EndMenu();
+            }
+
+            if(ImGui::BeginMenu("Debug Panels")) {
+                ImGui::MenuItem("Assets Stats", "", &Settings::s_ShouldShowAssetsStats.CurrentValue);
+                ImGui::MenuItem("Project Info", "", &Settings::s_ShouldShowProjectInfo.CurrentValue);
+                ImGui::MenuItem("Renderer Stats", "", &Settings::s_ShouldShowRendererStats.CurrentValue);
 
                 ImGui::EndMenu();
             }

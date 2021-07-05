@@ -265,13 +265,13 @@ void ImGuiLayer::OnUpdate() {
 
     ShowGameViewport();
 
-    if(MenuBarLayer::ShouldShowRendererStats())
+    if(Settings::ShouldShowRendererStats())
         RendererStats::DrawImGUIStats();
 
-    if(MenuBarLayer::ShouldShowEnvironmentSettings())
+    if(Settings::ShouldShowEnvironmentSettings())
         Renderer::DrawImGuiEnvironmentLighting();
 
-    if(MenuBarLayer::ShouldShowAssetsStats())
+    if(Settings::ShouldShowAssetsStats())
         DrawAssetsStats();
 
     s_SettingsPtr->OnImGuiRender();

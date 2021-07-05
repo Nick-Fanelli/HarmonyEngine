@@ -18,6 +18,13 @@
 Settings::Setting Settings::s_ShouldCacheCurrentProject = { true, "ShouldCacheCurrentProject" };
 Settings::Setting Settings::s_ShouldCacheCurrentScene = { true, "ShouldCacheCurrentScene" };
 
+// Panel Settings
+Settings::Setting Settings::s_ShouldShowRendererStats = { false, "ShouldShowRendererStats" };
+Settings::Setting Settings::s_ShouldShowEnvironmentSettings = { false, "ShouldShowEnvironmentSettings" };
+Settings::Setting Settings::s_ShouldShowAssetsStats = { false, "ShouldShowAssetsStats" };
+Settings::Setting Settings::s_ShouldShowProjectInfo = { false, "ShouldShowProjectInfo" };
+Settings::Setting Settings::s_ShouldShowGlobalSettings = { false, "ShouldShowGlobalSettings" };
+
 // Assets Settings
 Settings::Setting Settings::s_AssetsUpdateSeconds = { 2, "AssetsUpdateSeconds" };
 
@@ -55,6 +62,16 @@ void Settings::LoadSettings() {
         LoadSpecificSetting(cache, s_ShouldCacheCurrentScene);
     }
 
+    if(root["Panels"]) {
+        auto panels = root["Panels"];
+
+        LoadSpecificSetting(panels, s_ShouldShowRendererStats);
+        LoadSpecificSetting(panels, s_ShouldShowEnvironmentSettings);
+        LoadSpecificSetting(panels, s_ShouldShowAssetsStats);
+        LoadSpecificSetting(panels, s_ShouldShowProjectInfo);
+        LoadSpecificSetting(panels, s_ShouldShowGlobalSettings);
+    }
+
     if(root["Assets"]) {
         auto assets = root["Assets"];
 
@@ -82,6 +99,17 @@ void Settings::SaveSettings() {
     SaveSetting(out, s_ShouldCacheCurrentScene);
 
     out << YAML::EndMap; // Cache
+
+    // Panels
+    out << YAML::Key << "Panels" << YAML::BeginMap;
+
+    SaveSetting(out, s_ShouldShowRendererStats);
+    SaveSetting(out, s_ShouldShowEnvironmentSettings);
+    SaveSetting(out, s_ShouldShowAssetsStats);
+    SaveSetting(out, s_ShouldShowProjectInfo);
+    SaveSetting(out, s_ShouldShowGlobalSettings);
+
+    out << YAML::EndMap;
 
     // Assets
     out << YAML::Key << "Assets" << YAML::BeginMap; // Assets
@@ -161,22 +189,22 @@ static void DrawSetting(Settings::Setting<SettingType>& setting, UIFunction uiFu
 
 void Settings::OnImGuiRender() {
 
-    if(MenuBarLayer::ShouldShowGlobalSettings()) {
-        ImGui::Begin("Global Settings");
+    if(Settings::ShouldShowGlobalSettings()) {
+        ImGui::Begin("Global Settings", &s_ShouldShowGlobalSettings.CurrentValue);
 
         if(ImGui::CollapsingHeader("Cache")) {
             DrawSetting(s_ShouldCacheCurrentProject, [&]() {
-                ImGuiLayer::DrawBool("Should Cache Current Project", s_ShouldCacheCurrentProject.CurrentValue);
+                ImGuiLayer::DrawBool("Should Cache Current Project", s_ShouldCacheCurrentProject);
             });
 
             DrawSetting(s_ShouldCacheCurrentScene, [&]() {
-                ImGuiLayer::DrawBool("Should Cache Current Scene", s_ShouldCacheCurrentScene.CurrentValue);
+                ImGuiLayer::DrawBool("Should Cache Current Scene", s_ShouldCacheCurrentScene);
             }); 
         }
 
         if(ImGui::CollapsingHeader("Assets")) {
             DrawSetting(s_AssetsUpdateSeconds, [&]() {
-                ImGuiLayer::DrawInteger("Assets Update Seconds", s_AssetsUpdateSeconds.CurrentValue, 0.05f, 0);
+                ImGuiLayer::DrawInteger("Assets Update Seconds", s_AssetsUpdateSeconds, 0.05f, 0);
             });
         }
 

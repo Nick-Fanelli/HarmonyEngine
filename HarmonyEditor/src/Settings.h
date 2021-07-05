@@ -5,9 +5,13 @@
 
 #include <filesystem>
 
+#include "Layers/MenuBarLayer.h"
+
 using namespace HarmonyEngine;
 
 class Settings {
+
+    friend class MenuBarLayer;
 
 public:
     template<typename DataType>
@@ -32,6 +36,13 @@ private:
     static Setting<bool> s_ShouldCacheCurrentProject;
     static Setting<bool> s_ShouldCacheCurrentScene;
 
+    // Panel
+    static Setting<bool> s_ShouldShowRendererStats;
+    static Setting<bool> s_ShouldShowEnvironmentSettings;
+    static Setting<bool> s_ShouldShowAssetsStats;
+    static Setting<bool> s_ShouldShowProjectInfo;
+    static Setting<bool> s_ShouldShowGlobalSettings;
+
     // Assets
     static Setting<int> s_AssetsUpdateSeconds;
 
@@ -41,6 +52,13 @@ public:
     // Cache
     static bool ShouldCacheCurrentProject() { return s_ShouldCacheCurrentProject; }
     static bool ShouldCacheCurrentScene() { return s_ShouldCacheCurrentScene; }
+
+    // Panel
+    static bool ShouldShowRendererStats() { return s_ShouldShowRendererStats; }
+    static bool ShouldShowEnvironmentSettings() { return s_ShouldShowEnvironmentSettings; }
+    static bool ShouldShowAssetsStats() { return s_ShouldShowAssetsStats; }
+    static bool ShouldShowProjectInfo() { return s_ShouldShowProjectInfo; }
+    static bool ShouldShowGlobalSettings() { return s_ShouldShowGlobalSettings; }
 
     // Assets
     static int GetAssetsUpdateSecond() { return s_AssetsUpdateSeconds; }

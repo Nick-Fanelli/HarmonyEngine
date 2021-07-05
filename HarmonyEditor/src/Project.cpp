@@ -12,6 +12,7 @@
 #include "Application.h"
 #include "Layers/ImGuiLayer.h"
 #include "Layers/MenuBarLayer.h"
+#include "Settings.h"
 
 using namespace HarmonyEngine;
 
@@ -184,7 +185,7 @@ void ProjectManager::OnImGuiRender() {
     CreateProjectPopupRender();
     CreateScenePopupRender();
 
-    if(MenuBarLayer::ShouldShowProjectInfo()) {
+    if(Settings::ShouldShowProjectInfo()) {
         ImGui::Begin("Project Info");
 
         ImGui::LabelText("Is Assigned", "%s", m_CurrentProject.m_IsAssigned ? "true" : "false");
