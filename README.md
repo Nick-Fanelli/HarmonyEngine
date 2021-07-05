@@ -55,13 +55,13 @@ git clone https://github.com/Nick-Fanelli/HarmonyEngine --recursive
 
 ### Getting Started with Windows
 
-Getting statred instructions for Windows coming soon...
+Getting started instructions for Windows coming soon...
 
 ---
 
 ### Getting Started with Linux
 
-Getting statred instructions for Linux coming soon...
+Getting started instructions for Linux coming soon...
 
 ---
 
