@@ -13,8 +13,9 @@
 // Settings
 // ====================================================================================================
 
-// General Settings
+// Cache Settings
 Settings::Setting Settings::s_ShouldCacheCurrentProject = { true, "ShouldCacheCurrentProject" };
+Settings::Setting Settings::s_ShouldCacheCurrentScene = { true, "ShouldCacheCurrentScene" };
 
 // Assets Settings
 Settings::Setting Settings::s_AssetsUpdateSeconds = { 2, "AssetsUpdateSeconds" };
@@ -46,10 +47,11 @@ void Settings::LoadSettings() {
 
     YAML::Node root = YAML::Load(stream.str());
 
-    if(root["General"]) {
-        auto general = root["General"];
+    if(root["Cache"]) {
+        auto cache = root["Cache"];
 
-        LoadSpecificSetting(general, s_ShouldCacheCurrentProject);
+        LoadSpecificSetting(cache, s_ShouldCacheCurrentProject);
+        LoadSpecificSetting(cache, s_ShouldCacheCurrentScene);
     }
 
     if(root["Assets"]) {
@@ -72,12 +74,13 @@ void Settings::SaveSettings() {
 
     out << YAML::BeginMap; // Root
 
-    // General
-    out << YAML::Key << "General" << YAML::BeginMap; // General
+    // Cache
+    out << YAML::Key << "Cache" << YAML::BeginMap; // Cache
 
     SaveSetting(out, s_ShouldCacheCurrentProject);
+    SaveSetting(out, s_ShouldCacheCurrentScene);
 
-    out << YAML::EndMap; // General
+    out << YAML::EndMap; // Cache
 
     // Assets
     out << YAML::Key << "Assets" << YAML::BeginMap; // Assets
@@ -108,6 +111,13 @@ void Settings::LoadCacheData() {
             ProjectManager::LoadProject(projectPath.parent_path());
         }
     }
+
+    if(Settings::ShouldCacheCurrentScene() && root["Current Scene"]) {
+        if(ProjectManager::GetCurrentProject().IsAssigned()) {
+            std::string pathString = root["Current Scene"].as<std::string>();
+            ProjectManager::OpenScene(std::filesystem::path{pathString});
+        }
+    }
 }
 
 void Settings::SaveCacheData() {
@@ -121,6 +131,9 @@ void Settings::SaveCacheData() {
     if(Settings::ShouldCacheCurrentProject() && ProjectManager::GetCurrentProject().IsAssigned())
         out << YAML::Key << "Current Project" << YAML::Value << ProjectManager::GetCurrentProject().GetProjectFilepath();
 
+    if(Settings::ShouldCacheCurrentScene() && ProjectManager::GetCurrentProject().IsAssigned() && ProjectManager::GetScenePtr()->GetCurrentSceneFile() != "no-path")
+        out << YAML::Key << "Current Scene" << YAML::Value << ProjectManager::GetScenePtr()->GetCurrentSceneFile();
+ 
     out << YAML::EndMap; // Root
 
     std::ofstream outStream(Application::GetApplicationCacheFilepath());
@@ -135,24 +148,32 @@ static void DrawSetting(Settings::Setting<SettingType>& setting, UIFunction uiFu
     ImGui::SameLine();
     const float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 
+    ImGui::PushID(setting.SettingID.c_str());
+
     if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
         // TODO: Push to undo buffer
         setting.CurrentValue = setting.DefaultValue;
     }
+
+    ImGui::PopID();
 }
 
 void Settings::OnImGuiRender() {
     ImGui::Begin("Global Settings");
 
-    if(ImGui::CollapsingHeader("General")) {
+    if(ImGui::CollapsingHeader("Cache")) {
         DrawSetting(s_ShouldCacheCurrentProject, [&]() {
-            ImGuiLayer::DrawBool("Should Cache Current Project", s_ShouldCacheCurrentProject);
+            ImGuiLayer::DrawBool("Should Cache Current Project", s_ShouldCacheCurrentProject.CurrentValue);
         });
+
+        DrawSetting(s_ShouldCacheCurrentScene, [&]() {
+            ImGuiLayer::DrawBool("Should Cache Current Scene", s_ShouldCacheCurrentScene.CurrentValue);
+        }); 
     }
 
     if(ImGui::CollapsingHeader("Assets")) {
         DrawSetting(s_AssetsUpdateSeconds, [&]() {
-            ImGuiLayer::DrawInteger("Assets Update Seconds", s_AssetsUpdateSeconds, 0.05f, 0);
+            ImGuiLayer::DrawInteger("Assets Update Seconds", s_AssetsUpdateSeconds.CurrentValue, 0.05f, 0);
         });
     }
 

@@ -28,8 +28,9 @@ public:
     };
 
 private:
-    // General
+    // Cache
     static Setting<bool> s_ShouldCacheCurrentProject;
+    static Setting<bool> s_ShouldCacheCurrentScene;
 
     // Assets
     static Setting<int> s_AssetsUpdateSeconds;
@@ -37,8 +38,9 @@ private:
     static const std::filesystem::path& GetSaveFilepath();
 
 public:
-    // General
+    // Cache
     static bool ShouldCacheCurrentProject() { return s_ShouldCacheCurrentProject; }
+    static bool ShouldCacheCurrentScene() { return s_ShouldCacheCurrentScene; }
 
     // Assets
     static int GetAssetsUpdateSecond() { return s_AssetsUpdateSeconds; }

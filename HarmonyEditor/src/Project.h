@@ -55,6 +55,8 @@ public:
 
     static void Initialize(EditorScene* editorScene) { m_ScenePtr = editorScene; }
 
+    static EditorScene* GetScenePtr() { return m_ScenePtr; }
+
     static void OnImGuiRender();
 
     static void CreateProject(const std::string& name, const std::filesystem::path& path);
