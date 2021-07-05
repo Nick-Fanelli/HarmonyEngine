@@ -36,6 +36,8 @@ namespace HarmonyEngine {
         static const float GetAspectHeight() { return DisplayAspect.y; }
         static const glm::vec2& GetRawDisplayAspect() { return DisplayAspect; }
 
+        static int GetFps() { return s_CurrentFps; }
+
         static const float GetAspectRatio() {
             static float aspectRatio = DisplayAspect.x / DisplayAspect.y;
             return aspectRatio;

@@ -16,10 +16,9 @@ void Display::StartGameLoop() {
 
     float endTime, startTime = (float) glfwGetTime();
     float deltaTime = -1.0f;
+    float accumulativeDeltatime = 0.0f;
 
-    double lastTime = glfwGetTime();
-    double currentTime;
-    int frameCount = 0;
+    uint32_t frameCount = 0;
 
     while(!glfwWindowShouldClose(s_Window)) {
 
@@ -35,19 +34,18 @@ void Display::StartGameLoop() {
         glfwSwapBuffers(s_Window);
         glfwPollEvents();
 
-        currentTime = glfwGetTime();
-        frameCount++;
-
-        if(currentTime - lastTime >= 1.0f) {
-            s_CurrentFps = 1000 / frameCount;
-            frameCount = 0;
-            lastTime = glfwGetTime();
-        }
-
         endTime = (float) glfwGetTime();
         deltaTime = endTime - startTime;
         startTime = endTime;
 
+        accumulativeDeltatime += deltaTime;
+        if(accumulativeDeltatime >= 1.0f) {
+            s_CurrentFps = frameCount;
+            frameCount = 0;
+            accumulativeDeltatime = 0.0f;
+        }
+
+        frameCount++;
     }
 
 }
@@ -74,6 +72,8 @@ void Display::CreateDisplay(const char* title, const glm::vec2& displaySize) {
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
     s_Window = glfwCreateWindow(s_DisplayWidth, s_DisplayHeight, title, nullptr, nullptr);
+    glfwSwapInterval(1); // Enable V-Sync
+    // glfwSwapInterval(0); // Disable V-Sync
 
     if(s_Window == nullptr) {
         glfwTerminate();
