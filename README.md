@@ -23,16 +23,16 @@ git clone https://github.com/Nick-Fanelli/HarmonyEngine --recursive
 ```
 ***Note: Use flag --recursive to get access to the submodules***
 
-**2. Installing the Dependencies**
+**2. Installing CMake**
 
 * Install [Homebrew](https://brew.sh/)
     ```shell
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     ```
 
-* Install GLFW, CMake and GLEW
+* Install, CMake
     ```shell
-    brew install cmake glew
+    brew install cmake
     ```
 **3. Building the Project**
 
