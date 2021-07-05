@@ -54,7 +54,7 @@ namespace HarmonyEngine {
         static void EndBatch();
 
         // TODO: Remove
-        static void DrawImGuiEnvironmentLighting();
+        static void DrawImGuiEnvironmentLighting(bool* open);
 
         // Draw Methods
         static void DrawMesh(Transform& transform, AssetHandle<Mesh>& mesh);

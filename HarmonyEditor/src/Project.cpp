@@ -186,7 +186,7 @@ void ProjectManager::OnImGuiRender() {
     CreateScenePopupRender();
 
     if(Settings::ShouldShowProjectInfo()) {
-        ImGui::Begin("Project Info");
+        ImGui::Begin("Project Info", Settings::GetShowProjectInofPtr());
 
         ImGui::LabelText("Is Assigned", "%s", m_CurrentProject.m_IsAssigned ? "true" : "false");
 

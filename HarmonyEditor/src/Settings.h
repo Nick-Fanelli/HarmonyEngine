@@ -60,6 +60,12 @@ public:
     static bool ShouldShowProjectInfo() { return s_ShouldShowProjectInfo; }
     static bool ShouldShowGlobalSettings() { return s_ShouldShowGlobalSettings; }
 
+    static bool* GetShowRendererStatsPtr() { return &s_ShouldShowRendererStats.CurrentValue; }
+    static bool* GetShowEnvironmentSettingsPtr() { return &s_ShouldShowEnvironmentSettings.CurrentValue; }
+    static bool* GetShowAssetsStatsPtr() { return &s_ShouldShowAssetsStats.CurrentValue; }
+    static bool* GetShowProjectInofPtr() { return &s_ShouldShowProjectInfo.CurrentValue; }
+    static bool* GetShowGlobalSettingsPtr() { return &s_ShouldShowGlobalSettings.CurrentValue; }
+
     // Assets
     static int GetAssetsUpdateSecond() { return s_AssetsUpdateSeconds; }
 

@@ -89,8 +89,8 @@ namespace HarmonyEngine {
             IndexCount = CurrentIndexCount;
         }
 
-        static void DrawImGUIStats() {
-            ImGui::Begin("Renderer Stats");
+        static void DrawImGUIStats(bool* open) {
+            ImGui::Begin("Renderer Stats", open);
 
             ImGui::Text("Batch Count: %zu", BatchCount);
             ImGui::Text("Vertex Count: %zu", VertexCount);

@@ -217,7 +217,7 @@ void ImGuiLayer::ShowGameViewport() {
 }
 
 static void DrawAssetsStats() {
-    ImGui::Begin("Assets Stats");
+    ImGui::Begin("Assets Stats", Settings::GetShowAssetsStatsPtr());
 
     if(ImGui::TreeNode("Currently Loaded Assets")) {
 
@@ -266,10 +266,10 @@ void ImGuiLayer::OnUpdate() {
     ShowGameViewport();
 
     if(Settings::ShouldShowRendererStats())
-        RendererStats::DrawImGUIStats();
+        RendererStats::DrawImGUIStats(Settings::GetShowRendererStatsPtr());
 
     if(Settings::ShouldShowEnvironmentSettings())
-        Renderer::DrawImGuiEnvironmentLighting();
+        Renderer::DrawImGuiEnvironmentLighting(Settings::GetShowEnvironmentSettingsPtr());
 
     if(Settings::ShouldShowAssetsStats())
         DrawAssetsStats();

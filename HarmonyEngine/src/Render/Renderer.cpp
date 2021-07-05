@@ -250,8 +250,8 @@ void Renderer::OnDestroy() {
     s_Batch.Offsets = nullptr;
 }
 
-void Renderer::DrawImGuiEnvironmentLighting() {
-    ImGui::Begin("Environment");
+void Renderer::DrawImGuiEnvironmentLighting(bool* open) {
+    ImGui::Begin("Environment", open);
 
     ImGui::DragFloat3("Light Position", glm::value_ptr(s_LightPosition));
     ImGui::ColorEdit3("Light Color", glm::value_ptr(s_LightColor));
