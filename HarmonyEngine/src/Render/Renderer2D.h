@@ -92,6 +92,22 @@ namespace HarmonyEngine {
         static void DrawImGUIStats(bool* open) {
             ImGui::Begin("Renderer Stats", open);
 
+
+            static const GLubyte* openglVersion = glGetString(GL_VERSION);
+            static const GLubyte* graphicsVendor = glGetString(GL_VENDOR);
+            static const GLubyte* graphicsRenderer = glGetString(GL_RENDERER);
+
+            ImGui::Text("Rendering Type: OpenGL");
+            ImGui::Text("OpenGL Version: %s", openglVersion);
+            ImGui::Text("Graphics Vendor: %s", graphicsVendor);
+            ImGui::Text("Graphics Renderer: %s", graphicsRenderer);
+
+            ImGui::Spacing();
+
+            ImGui::Text("Current FPS: %d", Display::GetFps());
+
+            ImGui::Spacing();
+
             ImGui::Text("Batch Count: %zu", BatchCount);
             ImGui::Text("Vertex Count: %zu", VertexCount);
             ImGui::Text("Index Count: %zu", IndexCount);
