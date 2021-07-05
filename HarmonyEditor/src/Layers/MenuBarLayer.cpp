@@ -8,6 +8,9 @@
 
 bool MenuBarLayer::s_ShowRendererStats = false;
 bool MenuBarLayer::s_ShowEnvironmentSettings = false;
+bool MenuBarLayer::s_ShowAssetsStats = false;
+bool MenuBarLayer::s_ShowProjectInfo = false;
+bool MenuBarLayer::s_ShowGlobalSettings = false;
 
 void MenuBarLayer::OnCreate() {
     // Load Menubar Saved Settings
@@ -44,9 +47,16 @@ void MenuBarLayer::OnUpdate() {
             }
         });
 
-        DrawMenu("Window", [](){
-            ImGui::MenuItem("Renderer Stats", "", &s_ShowRendererStats);
-            ImGui::MenuItem("Environment Settings", "", &s_ShowEnvironmentSettings);
+        DrawMenu("Window", []() {
+            if(ImGui::BeginMenu("Panels")) {
+                ImGui::MenuItem("Renderer Stats", "", &s_ShowRendererStats);
+                ImGui::MenuItem("Environment Settings", "", &s_ShowEnvironmentSettings);
+                ImGui::MenuItem("Assets Stats", "", &s_ShowAssetsStats);
+                ImGui::MenuItem("Project Info", "", &s_ShowProjectInfo);
+                ImGui::MenuItem("Global Settings", "", &s_ShowGlobalSettings);
+
+                ImGui::EndMenu();
+            }
         });
 
     }

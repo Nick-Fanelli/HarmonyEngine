@@ -11,6 +11,7 @@
 
 #include "Application.h"
 #include "Layers/ImGuiLayer.h"
+#include "Layers/MenuBarLayer.h"
 
 using namespace HarmonyEngine;
 
@@ -183,17 +184,19 @@ void ProjectManager::OnImGuiRender() {
     CreateProjectPopupRender();
     CreateScenePopupRender();
 
-    ImGui::Begin("Project Info");
+    if(MenuBarLayer::ShouldShowProjectInfo()) {
+        ImGui::Begin("Project Info");
 
-    ImGui::LabelText("Is Assigned", "%s", m_CurrentProject.m_IsAssigned ? "true" : "false");
+        ImGui::LabelText("Is Assigned", "%s", m_CurrentProject.m_IsAssigned ? "true" : "false");
 
-    if(m_CurrentProject.m_IsAssigned) {
-        ImGui::LabelText("Project Name", "%s", m_CurrentProject.m_ProjectName.c_str());
-        ImGui::LabelText("Project Location", "%s", m_CurrentProject.GetProjectFilepath().c_str());
-        ImGui::LabelText("Assets Location", "%s", m_CurrentProject.GetAssetsPath().c_str());
+        if(m_CurrentProject.m_IsAssigned) {
+            ImGui::LabelText("Project Name", "%s", m_CurrentProject.m_ProjectName.c_str());
+            ImGui::LabelText("Project Location", "%s", m_CurrentProject.GetProjectFilepath().c_str());
+            ImGui::LabelText("Assets Location", "%s", m_CurrentProject.GetAssetsPath().c_str());
+        }
+
+        ImGui::End();
     }
-
-    ImGui::End();
 }
 
 void ProjectManager::CreateProject(const std::string& name, const std::filesystem::path& path) {

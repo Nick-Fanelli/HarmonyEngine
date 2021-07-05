@@ -8,6 +8,7 @@
 #include "Project.h"
 
 #include "Layers/ImGuiLayer.h"
+#include "Layers/MenuBarLayer.h"
 
 // ====================================================================================================
 // Settings
@@ -159,23 +160,26 @@ static void DrawSetting(Settings::Setting<SettingType>& setting, UIFunction uiFu
 }
 
 void Settings::OnImGuiRender() {
-    ImGui::Begin("Global Settings");
 
-    if(ImGui::CollapsingHeader("Cache")) {
-        DrawSetting(s_ShouldCacheCurrentProject, [&]() {
-            ImGuiLayer::DrawBool("Should Cache Current Project", s_ShouldCacheCurrentProject.CurrentValue);
-        });
+    if(MenuBarLayer::ShouldShowGlobalSettings()) {
+        ImGui::Begin("Global Settings");
 
-        DrawSetting(s_ShouldCacheCurrentScene, [&]() {
-            ImGuiLayer::DrawBool("Should Cache Current Scene", s_ShouldCacheCurrentScene.CurrentValue);
-        }); 
+        if(ImGui::CollapsingHeader("Cache")) {
+            DrawSetting(s_ShouldCacheCurrentProject, [&]() {
+                ImGuiLayer::DrawBool("Should Cache Current Project", s_ShouldCacheCurrentProject.CurrentValue);
+            });
+
+            DrawSetting(s_ShouldCacheCurrentScene, [&]() {
+                ImGuiLayer::DrawBool("Should Cache Current Scene", s_ShouldCacheCurrentScene.CurrentValue);
+            }); 
+        }
+
+        if(ImGui::CollapsingHeader("Assets")) {
+            DrawSetting(s_AssetsUpdateSeconds, [&]() {
+                ImGuiLayer::DrawInteger("Assets Update Seconds", s_AssetsUpdateSeconds.CurrentValue, 0.05f, 0);
+            });
+        }
+
+        ImGui::End();
     }
-
-    if(ImGui::CollapsingHeader("Assets")) {
-        DrawSetting(s_AssetsUpdateSeconds, [&]() {
-            ImGuiLayer::DrawInteger("Assets Update Seconds", s_AssetsUpdateSeconds.CurrentValue, 0.05f, 0);
-        });
-    }
-
-    ImGui::End();
 }

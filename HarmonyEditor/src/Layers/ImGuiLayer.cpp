@@ -271,11 +271,12 @@ void ImGuiLayer::OnUpdate() {
     if(MenuBarLayer::ShouldShowEnvironmentSettings())
         Renderer::DrawImGuiEnvironmentLighting();
 
+    if(MenuBarLayer::ShouldShowAssetsStats())
+        DrawAssetsStats();
+
     s_SettingsPtr->OnImGuiRender();
 
     ProjectManager::OnImGuiRender();
-
-    DrawAssetsStats();
 
     EndFrame();
 }
