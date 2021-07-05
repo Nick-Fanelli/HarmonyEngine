@@ -260,9 +260,13 @@ void ProjectManager::OpenScene(const std::filesystem::path& path) {
         serializer.SerializeYAML();
     }
 
+    AssetManager::DestroyAll();
+
     m_ScenePtr->m_Registry.clear();
     m_ScenePtr->m_CurrentSceneFile = path;
 
     SceneSerializer serializer = SceneSerializer(m_ScenePtr, path);
     serializer.DeserializeYAML();
+
+    AssetManager::CreateAll();
 }

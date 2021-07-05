@@ -135,14 +135,10 @@ static void DrawSetting(Settings::Setting<SettingType>& setting, UIFunction uiFu
     ImGui::SameLine();
     const float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 
-    ImGui::PushFont(ImGuiLayer::GetFontAwesome());
-
     if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
         // TODO: Push to undo buffer
         setting.CurrentValue = setting.DefaultValue;
     }
-
-    ImGui::PopFont();
 }
 
 void Settings::OnImGuiRender() {

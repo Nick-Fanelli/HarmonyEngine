@@ -28,6 +28,7 @@ struct AssetFile {
 };
 
 static AssetFile s_RootFile;
+static std::filesystem::path s_SelectedPath;
 
 static void LoadFile(AssetFile& parent) {
     for(const auto& childEntry : std::filesystem::directory_iterator(parent.Path)) {
@@ -45,7 +46,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
         return;
 
     if(child.IsDirectory) {
-        if(ImGui::TreeNode(std::filesystem::relative(child.Path, parentPath).c_str())) {
+        if(ImGui::TreeNode(child.Path.c_str(), "\uf07b %s", std::filesystem::relative(child.Path, parentPath).c_str())) {
             for(auto& file : child.Children) 
                 DrawFileImGui(child.Path, file);
 
@@ -56,27 +57,29 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
         static ImGuiIO& io = ImGui::GetIO();
 
-        float height = GImGui->Font->FontSize + GImGui->Style.FramePadding.y;
-        float width = ImGui::GetContentRegionAvailWidth();
-
-        ImVec2 buttonSize = { width, height };
-
         ImGui::PushStyleColor(ImGuiCol_Button, ImGuiCol_ChildBg);
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f)); // Align Button Text
 
-        ImGui::ButtonEx(std::filesystem::relative(child.Path, parentPath).c_str(), buttonSize, ImGuiButtonFlags_AlignTextBaseLine);
+        static constexpr ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Leaf;
 
-        if(ImGui::IsItemActive()) {
+        static const std::regex imageRegex(".jpeg|.png|.jpg|.tga|.bmp|.psd|.gif|.hdr|.pic|.pnm");
+        static const std::regex meshRegex(".obj");
+        
+        if(child.Path.extension() == ".hyscene") {
 
-            static const std::regex imageRegex(".jpeg|.png|.jpg|.tga|.bmp|.psd|.gif|.hdr|.pic|.pnm");
-            static const std::regex meshRegex(".obj");
-            if(child.Path.extension() == ".hyscene") {
+            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf0ad %s", std::filesystem::relative(child.Path, parentPath).c_str());
 
+            if( ImGui::IsItemActive()) {
                 if(ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
                     ProjectManager::OpenScene(child.Path);
                 }
+            }
 
-            } else if(std::regex_match(child.Path.extension().c_str(), imageRegex)) { // Supported Texture Files
+        } else if(std::regex_match(child.Path.extension().c_str(), imageRegex)) { // Supported Texture Files
+
+            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf1c5 %s", std::filesystem::relative(child.Path, parentPath).c_str());
+
+            if( ImGui::IsItemActive()) {
 
                 ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
 
@@ -88,8 +91,12 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                     ImGui::SetDragDropPayload(AssetsEditorPanel::TextureDragDropID, &textureHandle, sizeof(textureHandle));
                     ImGui::EndDragDropSource();
                 }
+            }
+        } else if(std::regex_match(child.Path.extension().c_str(), meshRegex)) { // Supported Mesh File
 
-            } else if(std::regex_match(child.Path.extension().c_str(), meshRegex)) {
+            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf1b2 %s", std::filesystem::relative(child.Path, parentPath).c_str());
+
+            if( ImGui::IsItemActive()) {
 
                 ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
 
@@ -101,8 +108,8 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                     ImGui::SetDragDropPayload(AssetsEditorPanel::MeshDragDropID, &meshHandle, sizeof(meshHandle));
                     ImGui::EndDragDropSource();
                 }
-
             }
+
         }
 
         if(ImGui::BeginPopupContextItem(child.Path.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
@@ -152,6 +159,5 @@ void AssetsEditorPanel::OnUpdate() {
         }
     }
 
-    ImGui::End();
-
+    ImGui::End();  
 }

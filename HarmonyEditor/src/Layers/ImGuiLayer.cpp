@@ -35,8 +35,6 @@ static AssetsEditorPanel       s_AssetsEditorPanel;
 bool ImGuiLayer::GetIsEditorSelected() { return s_IsEditorSelected; }
 Entity& ImGuiLayer::GetSelectedEntity() { return s_SelectedEntity; }
 
-ImFont* ImGuiLayer::GetFontAwesome() { return s_FontAwesomePtr; }
-
 void ImGuiLayer::SetSelectedEntity(Entity& entity) { s_SelectedEntity = entity; }
 
 static void SetDarkThemeColors() {
@@ -100,9 +98,11 @@ void ImGuiLayer::OnCreate(EditorScene* editorScenePtr, Settings* settings) {
     io.FontDefault = io.Fonts->AddFontFromFileTTF("engineAssets/fonts/segoe-ui.ttf", 18.0f, &config);
 
     // Font Awesome
+    ImFontConfig faConfig;
+    faConfig.MergeMode = true;
+    faConfig.GlyphMinAdvanceX = 13.0f;
     static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-    ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-    s_FontAwesomePtr = io.Fonts->AddFontFromFileTTF( "engineAssets/fonts/font-awesome/Font-Awesome-Solid-900.otf", 16.0f, &icons_config, icons_ranges );
+    io.Fonts->AddFontFromFileTTF( "engineAssets/fonts/font-awesome/Font-Awesome-Solid-900.otf", 16.0f, &faConfig, icons_ranges );
 
     ImGuiStyle& style = ImGui::GetStyle();
     if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
@@ -216,6 +216,34 @@ void ImGuiLayer::ShowGameViewport() {
     ImGui::End();
 }
 
+static void DrawAssetsStats() {
+    ImGui::Begin("Assets Stats");
+
+    if(ImGui::TreeNode("Currently Loaded Assets")) {
+
+        static constexpr ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Leaf;
+
+        if(ImGui::TreeNode("Textures")) {
+            for(auto& texture : AssetManager::GetTextureRegistry())
+                ImGui::TreeNodeEx(texture.GetFilepath().c_str(), flags);
+
+            ImGui::TreePop();
+        }
+
+        if(ImGui::TreeNode("Meshes")) {
+
+            for(auto& mesh : AssetManager::GetMeshRegistry())
+                ImGui::TreeNodeEx(mesh.Filepath.c_str(), flags);
+
+            ImGui::TreePop();
+        }
+
+        ImGui::TreePop();
+    }
+
+    ImGui::End();
+}
+
 void ImGuiLayer::OnUpdate() {
 
     HARMONY_PROFILE_FUNCTION();
@@ -247,7 +275,7 @@ void ImGuiLayer::OnUpdate() {
 
     ProjectManager::OnImGuiRender();
 
-    // ImGui::ShowDemoWindow();
+    DrawAssetsStats();
 
     EndFrame();
 }
@@ -435,8 +463,8 @@ void ImGuiLayer::DrawColorControl(const std::string& label, glm::vec4& values, f
     ImGui::SameLine();
 
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.1f, 0.1f, 1.0f });
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f });
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.1f, 0.1f, 1.0f });
     // ImGui::PushFont(boldFont);
     if (ImGui::Button("A", buttonSize))
         tempColor.a = resetValue;
@@ -492,15 +520,12 @@ void ImGuiLayer::DrawTextureInputControl(const std::string& label, AssetHandle<T
 
     ImGui::SameLine();
 
-    ImGui::PushFont(ImGuiLayer::GetFontAwesome());
-
     if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
         if(assetHandle.IsAssigned()) {
             assetHandle = AssetHandle<Texture>(nullptr);
         }
     }
 
-    ImGui::PopFont();
     ImGui::Columns(1);
 
     ImGui::PopID();
@@ -531,15 +556,12 @@ void ImGuiLayer::DrawMeshInputControl(const std::string& label, AssetHandle<Mesh
 
     ImGui::SameLine();
 
-    ImGui::PushFont(ImGuiLayer::GetFontAwesome());
-
     if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
         if(assetHandle.IsAssigned()) {
             assetHandle = AssetHandle<Mesh>(nullptr);
         }    
     }
 
-    ImGui::PopFont();
     ImGui::Columns(1);
 
     ImGui::PopID();
