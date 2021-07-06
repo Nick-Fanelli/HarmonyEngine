@@ -165,6 +165,8 @@ void Renderer::Render() {
     glDisableVertexAttribArray(5);
 
     glBindVertexArray(0);
+
+    s_Shader.Unbind();
 #endif
 }
 
