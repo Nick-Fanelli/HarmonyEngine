@@ -145,6 +145,12 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
     }
 
     if(ImGui::BeginPopupContextItem(child.Path.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+
+        if(ImGui::Selectable("Rename")) {
+            // TODO: Create
+            Log::Warn("Rename!");
+        }
+
         if(ImGui::Selectable("Delete")) {
             if(remove(child.Path)) {
                 child.ShouldDraw = false;
@@ -188,6 +194,33 @@ void AssetsEditorPanel::OnUpdate() {
         for(auto& child : s_RootFile.Children) {
             DrawFileImGui(ProjectManager::GetCurrentProject().GetAssetsPath(), child);
         }
+
+        ImGui::BeginChild("Right Click Area", ImGui::GetContentRegionAvail(), false);
+
+        if(ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+            ImGui::OpenPopup("Right Click Popup Assets Manager");
+
+        if(ImGui::BeginPopup("Right Click Popup Assets Manager")) {
+
+            if(ImGui::Selectable("Create Directory")) {
+
+                std::filesystem::path path = ProjectManager::GetCurrentProject().GetAssetsPath().string() + "/Unassigned Directory";
+
+                uint32_t increment = 1;
+
+                while(std::filesystem::exists(path)) {
+                    path = ProjectManager::GetCurrentProject().GetAssetsPath().string() + "/Unassigned Directory [" + std::to_string(increment) + "]";
+                    increment++;
+                }
+
+                std::filesystem::create_directories(path);
+                s_RootFile.Children.push_back(AssetFile(path, true, AssetTypeDirectory));
+            }
+
+            ImGui::EndPopup();
+        }
+
+        ImGui::EndChild();
     }
 
     ImGui::End();  

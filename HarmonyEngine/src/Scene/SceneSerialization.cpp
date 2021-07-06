@@ -177,10 +177,15 @@ void SceneSerializer::SerializeYAML() {
     out << YAML::Key << "Scene" << YAML::Value << m_ScenePtr->m_SceneName;
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
+    std::vector<Entity> entities;
+
     m_ScenePtr->m_Registry.each([&](auto entityID) {
-        Entity entity = { m_ScenePtr, entityID };
-        SerializeEntityYAML(out, entity);
+        entities.emplace_back(m_ScenePtr, entityID);
     });
+
+    for(uint32_t i = entities.size(); i --> 0;) {
+        SerializeEntityYAML(out, entities[i]);
+    }
 
     out << YAML::EndSeq;
     out << YAML::EndMap;
