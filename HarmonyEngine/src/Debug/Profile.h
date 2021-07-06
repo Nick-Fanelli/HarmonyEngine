@@ -4,9 +4,11 @@
 
 // @author TheCherno
 
+#define HARMONY_PROFILE_OVERRIDE 1
+
 namespace HarmonyEngine {
 
-#if HARMONY_PROFILE
+#if HARMONY_PROFILE || HARMONY_PROFILE_OVERRIDE
 
 	using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
 
@@ -197,7 +199,7 @@ namespace HarmonyEngine {
 #endif
 }
 
-#if HARMONY_PROFILE
+#if HARMONY_PROFILE || HARMONY_PROFILE_OVERRIDE
 	#ifndef __FUNCSIG__
 		#define __FUNCSIG__ __PRETTY_FUNCTION__
 	#endif

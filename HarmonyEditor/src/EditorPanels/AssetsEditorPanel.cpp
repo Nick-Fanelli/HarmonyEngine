@@ -16,6 +16,7 @@ const char* AssetsEditorPanel::MeshDragDropID = "ASSET_MESH";
 static time_t s_Timer = time(0);
 
 enum AssetType {
+    AssetTypeUnknown,
     AssetTypeDirectory, 
     AssetTypeImage, 
     AssetTypeObject, 
@@ -61,6 +62,8 @@ static void LoadFile(AssetFile& parent) {
                 parent.Children.emplace_back(childEntry.path(), false, AssetTypeObject);
             } else if(std::regex_match(childEntry.path().c_str(), imageRegex)) {
                 parent.Children.emplace_back(childEntry.path(), false, AssetTypeImage);
+            } else {
+                parent.Children.emplace_back(childEntry.path(), false, AssetTypeUnknown);
             }
         }
     }
@@ -91,7 +94,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
             break;
         case AssetTypeHarmonyScene:
-            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf0ad %s", child.GetRelativePath(parentPath).c_str());
+            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf466 %s", child.GetRelativePath(parentPath).c_str());
 
             if( ImGui::IsItemActive()) {
                 if(ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
@@ -135,7 +138,9 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                     ImGui::EndDragDropSource();
                 }
             }
-
+            break;
+        case AssetTypeUnknown:
+            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf15b %s", child.GetRelativePath(parentPath).c_str());
             break;
     }
 
