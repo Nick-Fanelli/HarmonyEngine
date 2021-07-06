@@ -15,16 +15,32 @@ const char* AssetsEditorPanel::MeshDragDropID = "ASSET_MESH";
 
 static time_t s_Timer = time(0);
 
+enum AssetType {
+    AssetTypeDirectory, 
+    AssetTypeImage, 
+    AssetTypeObject, 
+    AssetTypeHarmonyScene
+};
+
 struct AssetFile {
 
     std::filesystem::path Path;
     std::vector<AssetFile> Children;
+    AssetType AssetType;
     bool IsDirectory = false;
     bool ShouldDraw = true;
 
-    AssetFile() = default;
-    AssetFile(const std::filesystem::path& path, bool isDirectory) : Path(path), IsDirectory(isDirectory) {}
+    AssetFile() : AssetType(AssetTypeDirectory) {}
+    AssetFile(const std::filesystem::path& path, bool isDirectory, enum AssetType assetType) : Path(path),  AssetType(assetType), IsDirectory(isDirectory) {}
 
+    const std::filesystem::path& GetRelativePath(const std::filesystem::path& parentPath) {
+        if(m_RelativePath.empty())
+            m_RelativePath = std::filesystem::relative(Path, parentPath);
+        return m_RelativePath;
+    }
+
+private:
+    std::filesystem::path m_RelativePath = "";
 };
 
 static AssetFile s_RootFile;
@@ -32,9 +48,21 @@ static std::filesystem::path s_SelectedPath;
 
 static void LoadFile(AssetFile& parent) {
     for(const auto& childEntry : std::filesystem::directory_iterator(parent.Path)) {
-        auto& childAssetFile = parent.Children.emplace_back(childEntry.path(), childEntry.is_directory());
-        if(childAssetFile.IsDirectory)
+        if(childEntry.is_directory()) {
+            auto& childAssetFile = parent.Children.emplace_back(childEntry.path(), true, AssetTypeDirectory);
             LoadFile(childAssetFile);
+        }
+        else {
+            static const std::regex imageRegex("[^\\s]+(.*?)\\.(jpg|jpeg|png|gif|bmp|tga|psd|hdr|pic|pnm|JPG|JPEG|PNG|GIF|BMP|TGA|PSD|HDR|PIC|PNM)$");
+
+            if(childEntry.path().extension() == ".hyscene") {
+                parent.Children.emplace_back(childEntry.path(), false, AssetTypeHarmonyScene);
+            } else if(childEntry.path().extension() == ".obj") {
+                parent.Children.emplace_back(childEntry.path(), false, AssetTypeObject);
+            } else if(std::regex_match(childEntry.path().c_str(), imageRegex)) {
+                parent.Children.emplace_back(childEntry.path(), false, AssetTypeImage);
+            }
+        }
     }
 }
 
@@ -45,29 +73,25 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
     if(!child.ShouldDraw)
         return;
 
-    if(child.IsDirectory) {
-        if(ImGui::TreeNode(child.Path.c_str(), "\uf07b %s", std::filesystem::relative(child.Path, parentPath).c_str())) {
-            for(auto& file : child.Children) 
-                DrawFileImGui(child.Path, file);
+    static ImGuiIO& io = ImGui::GetIO();
 
-            ImGui::TreePop();
-        }
-    } else {
-        HARMONY_PROFILE_SCOPE("DrawFileImGUI - Draw Non-Directory");
+    ImGui::PushStyleColor(ImGuiCol_Button, ImGuiCol_ChildBg);
+    ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f)); // Align Button Text
 
-        static ImGuiIO& io = ImGui::GetIO();
+    static constexpr ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Leaf;
 
-        ImGui::PushStyleColor(ImGuiCol_Button, ImGuiCol_ChildBg);
-        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f)); // Align Button Text
+    switch(child.AssetType) {
+        case AssetTypeDirectory:
+            if(ImGui::TreeNode(child.Path.c_str(), "\uf07b %s", child.GetRelativePath(parentPath).c_str())) {
+                for(auto& file : child.Children) 
+                    DrawFileImGui(child.Path, file);
 
-        static constexpr ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Leaf;
+                ImGui::TreePop();
+            }
 
-        static const std::regex imageRegex(".jpeg|.png|.jpg|.tga|.bmp|.psd|.gif|.hdr|.pic|.pnm");
-        static const std::regex meshRegex(".obj");
-        
-        if(child.Path.extension() == ".hyscene") {
-
-            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf0ad %s", std::filesystem::relative(child.Path, parentPath).c_str());
+            break;
+        case AssetTypeHarmonyScene:
+            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf0ad %s", child.GetRelativePath(parentPath).c_str());
 
             if( ImGui::IsItemActive()) {
                 if(ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
@@ -75,11 +99,11 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                 }
             }
 
-        } else if(std::regex_match(child.Path.extension().c_str(), imageRegex)) { // Supported Texture Files
+            break;
+        case AssetTypeImage:
+            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf1c5 %s", child.GetRelativePath(parentPath).c_str());
 
-            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf1c5 %s", std::filesystem::relative(child.Path, parentPath).c_str());
-
-            if( ImGui::IsItemActive()) {
+            if(ImGui::IsItemActive()) {
 
                 ImGui::GetForegroundDrawList()->AddLine(io.MouseClickedPos[0], io.MousePos, ImGui::GetColorU32(ImGuiCol_DockingPreview), 4.0f);
 
@@ -92,9 +116,11 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                     ImGui::EndDragDropSource();
                 }
             }
-        } else if(std::regex_match(child.Path.extension().c_str(), meshRegex)) { // Supported Mesh File
 
-            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf1b2 %s", std::filesystem::relative(child.Path, parentPath).c_str());
+            break;
+        case AssetTypeObject:
+
+            ImGui::TreeNodeEx(child.Path.c_str(), flags, "\uf1b2 %s", child.GetRelativePath(parentPath).c_str());
 
             if( ImGui::IsItemActive()) {
 
@@ -110,30 +136,30 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                 }
             }
 
-        }
-
-        if(ImGui::BeginPopupContextItem(child.Path.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
-            if(ImGui::Selectable("Delete")) {
-                if(remove(child.Path)) {
-                    child.ShouldDraw = false;
-                } else {
-                    Log::FormatWarn("File at: %s, not deleted", child.Path.c_str());
-                }
-            }
-
-            ImGui::EndPopup();
-        }
-
-        ImGui::PopStyleVar(); // Align Button Text
-        ImGui::PopStyleColor();
+            break;
     }
+
+    if(ImGui::BeginPopupContextItem(child.Path.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+        if(ImGui::Selectable("Delete")) {
+            if(remove(child.Path)) {
+                child.ShouldDraw = false;
+            } else {
+                Log::FormatWarn("File at: %s, not deleted", child.Path.c_str());
+            }
+        }
+
+        ImGui::EndPopup();
+    }
+
+    ImGui::PopStyleVar(); // Align Button Text
+    ImGui::PopStyleColor();
 
 }
 
 void AssetsEditorPanel::OnCreate(EditorScene* scene) {
     m_ScenePtr = scene;
     if(ProjectManager::GetCurrentProject().IsAssigned()) {
-        s_RootFile = { ProjectManager::GetCurrentProject().GetAssetsPath(), true };
+        s_RootFile = { ProjectManager::GetCurrentProject().GetAssetsPath(), true, AssetTypeDirectory };
         LoadFile(s_RootFile);
     }
 }
@@ -148,7 +174,7 @@ void AssetsEditorPanel::OnUpdate() {
         if(difftime(time(0), s_Timer) >= Settings::GetAssetsUpdateSecond()) {
             s_RootFile.Children.clear();
 
-            s_RootFile = { ProjectManager::GetCurrentProject().GetAssetsPath(), true };
+            s_RootFile = { ProjectManager::GetCurrentProject().GetAssetsPath(), true, AssetTypeDirectory };
             LoadFile(s_RootFile);
 
             s_Timer = time(0);
