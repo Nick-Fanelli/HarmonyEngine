@@ -13,3 +13,6 @@
 [submodule "HarmonyEngine/vendor/nativefiledialog"]
 	path = HarmonyEngine/vendor/nativefiledialog
 	url = git@github.com:Nick-Fanelli/nativefiledialog.git
+[submodule "HarmonyEngine/vendor/ImGuizmo"]
+	path = HarmonyEngine/vendor/ImGuizmo
+	url = git@github.com:Nick-Fanelli/ImGuizmo.git
