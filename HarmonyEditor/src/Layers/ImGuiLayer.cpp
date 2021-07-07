@@ -5,6 +5,8 @@
 
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
+#include <ImGuizmo.h>
+
 #include <Core/Display.h>
 #include <Render/Renderer2D.h>
 
@@ -175,6 +177,7 @@ static void StartFrame() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    ImGuizmo::BeginFrame();
 }
 
 static void EndFrame() {
@@ -209,6 +212,32 @@ void ImGuiLayer::ShowGameViewport() {
         s_EditorScenePtr->GetEditorCamera().SetViewportSize(wsize.x, wsize.y);
 
         ImGui::Image((void*)(intptr_t) *s_EditorScenePtr->GetRenderTexture(), wsize, ImVec2(0, 1), ImVec2(1, 0));
+
+        if(s_SelectedEntity.IsCreated() && s_SelectedEntity.ContainsComponent<TransformComponent>()) {
+
+            ImGuizmo::SetOrthographic(false);
+            ImGuizmo::SetDrawlist();
+
+            float windowWidth = (float) ImGui::GetWindowWidth();
+            float windowHeight = (float) ImGui::GetWindowHeight();
+
+            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+            auto& camera = s_EditorScenePtr->GetEditorCamera();
+            const glm::mat4& cameraProjection = camera.GetProjctionMatrix();
+            glm::mat4 cameraView = camera.GetViewMatrix();
+
+            auto& transformComponent = s_SelectedEntity.GetComponent<TransformComponent>();
+
+            glm::mat4 transform = transformComponent.Transform.GetTransformationMatrix();
+
+            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), 
+                ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform));
+
+            if(ImGuizmo::IsUsing()) {
+                transformComponent.Transform.Position = transform[3];
+            }
+        }
 
         ImGui::EndChild();
     }
@@ -342,7 +371,7 @@ void ImGuiLayer::DrawInput(const std::string& label, std::string& value) {
 void ImGuiLayer::DrawVector3(const std::string& label, glm::vec3& values, float resetValue, float columnWidth) {
     ImGui::PushID(label.c_str());
 
-    ImGui::Columns(2);
+    ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnWidth(0, ColumnWidth);
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
@@ -410,7 +439,7 @@ void ImGuiLayer::DrawColorControl(const std::string& label, glm::vec4& values, f
     // glm::vec4 tempColor = { values.r * 255.0f, values.g * 255.0f, values.b * 255.0f, values.a * 255.0f };
     glm::vec4 tempColor = glm::vec4(values) * 255.0f;
 
-    ImGui::Columns(2);
+    ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnWidth(0, ColumnWidth);
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
@@ -499,7 +528,7 @@ void ImGuiLayer::DrawColorControl(const std::string& label, glm::vec4& values, f
 void ImGuiLayer::DrawTextureInputControl(const std::string& label, AssetHandle<Texture>& assetHandle) {
     ImGui::PushID(label.c_str());
 
-    ImGui::Columns(2);
+    ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnWidth(0, ColumnWidth);
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
@@ -535,7 +564,7 @@ void ImGuiLayer::DrawTextureInputControl(const std::string& label, AssetHandle<T
 void ImGuiLayer::DrawMeshInputControl(const std::string& label, AssetHandle<Mesh>& assetHandle) {
     ImGui::PushID(label.c_str());
 
-    ImGui::Columns(2);
+    ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnWidth(0, ColumnWidth);
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();

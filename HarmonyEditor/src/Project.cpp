@@ -264,6 +264,9 @@ void ProjectManager::OpenScene(const std::filesystem::path& path) {
         serializer.SerializeYAML();
     }
 
+    Entity nullEntity{};
+    ImGuiLayer::SetSelectedEntity(nullEntity);
+
     AssetManager::DestroyAll();
 
     m_ScenePtr->m_Registry.clear();

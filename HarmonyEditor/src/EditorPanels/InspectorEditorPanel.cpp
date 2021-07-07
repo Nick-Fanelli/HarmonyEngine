@@ -88,6 +88,7 @@ void InspectorEditorPanel::OnUpdate() {
             ImGuiLayer::DrawVector3("Position", component.Transform.Position);
             ImGuiLayer::DrawVector3("Rotation", component.Transform.Rotation);
             ImGuiLayer::DrawVector3("Scale", component.Transform.Scale, 1.0f);
+            ImGui::Spacing();
         });
 
         DrawComponent<QuadRendererComponent>("Quad Renderer", selectedEntity, [](QuadRendererComponent& component) {

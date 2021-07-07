@@ -58,7 +58,7 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
     ImGuiTreeNodeFlags flags = ((ImGuiLayer::GetSelectedEntity() == entity) ?   ImGuiTreeNodeFlags_Selected : 0) | 
                                                                                 ImGuiTreeNodeFlags_OpenOnArrow | 
                                                                                 ImGuiTreeNodeFlags_SpanAvailWidth;
-    bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t) entity, flags, "%s", entityName.c_str());
+    bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t) entity, flags | ImGuiTreeNodeFlags_Leaf, "%s", entityName.c_str());
     if(ImGui::IsItemClicked()) {
         ImGuiLayer::SetSelectedEntity(entity);
     }
