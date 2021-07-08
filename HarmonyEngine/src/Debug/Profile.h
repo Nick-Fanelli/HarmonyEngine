@@ -4,7 +4,7 @@
 
 // @author TheCherno
 
-#define HARMONY_PROFILE_OVERRIDE 1
+#define HARMONY_PROFILE_OVERRIDE false
 
 namespace HarmonyEngine {
 

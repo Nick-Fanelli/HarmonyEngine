@@ -5,7 +5,12 @@
 #include <filesystem>
 
 #include <glad/glad.h>
+
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+
+#include "../Render/Transform.h"
 
 namespace HarmonyEngine {
 
@@ -26,6 +31,12 @@ namespace HarmonyEngine {
     namespace OpenGLUtils {
 
         int GetGUPMaxTextureSlots();
+
+    }
+
+    namespace MathUtils {
+
+        bool DecomposeMatrix(const glm::mat4& matrix, glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale);
 
     }
 
