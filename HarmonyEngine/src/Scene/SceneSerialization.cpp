@@ -133,7 +133,7 @@ static void DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, E
     }
 }
 
-static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const std::string& name) {
+static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const std::string& name, const std::filesystem::path& filepath) {
 
     auto transformComponentNode = entityNode["TransformComponent"];
 
@@ -160,12 +160,14 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
 
         if(auto textureNode = node["Texture"]) {
             auto textureFilepath = textureNode.as<std::string>();
-            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath);;
+            auto assetName = std::filesystem::relative(textureFilepath, filepath);
+            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath, assetName);
         }
 
         if(auto meshNode = node["Mesh"]) {
             auto meshFilepath = meshNode.as<std::string>();
-            component.MeshHandle = AssetManager::QueueOrGetMesh(meshFilepath);
+            auto assetName = std::filesystem::relative(meshFilepath, filepath);
+            component.MeshHandle = AssetManager::QueueOrGetMesh(meshFilepath, assetName);
         }
     });
 }
@@ -198,7 +200,7 @@ void SceneSerializer::SerializerBinary() {
     HARMONY_ASSERT(true);
 }
 
-void SceneSerializer::DeserializeYAML() {
+void SceneSerializer::DeserializeYAML(const std::filesystem::path& filepath) {
 
     std::ifstream in(m_Filepath);
     std::stringstream stream;
@@ -225,7 +227,7 @@ void SceneSerializer::DeserializeYAML() {
 
             Entity deserializedEntity = m_ScenePtr->CreateEntity(name);
 
-            DeserializeEntityYAML(entity, deserializedEntity, name);
+            DeserializeEntityYAML(entity, deserializedEntity, name, filepath);
         }   
     }
 }

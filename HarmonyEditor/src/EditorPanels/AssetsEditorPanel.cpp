@@ -113,7 +113,8 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                 static constexpr ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoHoldToOpenOthers | ImGuiDragDropFlags_SourceNoPreviewTooltip;
                 if(ImGui::BeginDragDropSource(flags)) {
 
-                    auto textureHandle = AssetHandle<Texture>(AssetManager::QueueOrGetTexture(child.Path));
+                    auto textureHandle = AssetManager::QueueOrGetTexture(child.Path);
+                    textureHandle.GetAssetBinding().AssetName = child.GetRelativePath(parentPath);
 
                     ImGui::SetDragDropPayload(AssetsEditorPanel::TextureDragDropID, &textureHandle, sizeof(textureHandle));
                     ImGui::EndDragDropSource();
@@ -132,7 +133,8 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                 static constexpr ImGuiDragDropFlags flags = ImGuiDragDropFlags_SourceNoDisableHover | ImGuiDragDropFlags_SourceNoHoldToOpenOthers | ImGuiDragDropFlags_SourceNoPreviewTooltip;
                 if(ImGui::BeginDragDropSource(flags)) {
                     
-                    auto meshHandle = AssetHandle<Mesh>(AssetManager::QueueOrGetMesh(child.Path));
+                    auto meshHandle = AssetManager::QueueOrGetMesh(child.Path);
+                    meshHandle.GetAssetBinding().AssetName = child.GetRelativePath(parentPath);
 
                     ImGui::SetDragDropPayload(AssetsEditorPanel::MeshDragDropID, &meshHandle, sizeof(meshHandle));
                     ImGui::EndDragDropSource();

@@ -11,12 +11,21 @@ std::list<Texture> AssetManager::s_TextureRegistry;
 std::list<Mesh> AssetManager::s_MeshRegistry;
 
 AssetHandle<Texture> AssetManager::QueueTexture(const std::string& filepath) {
-    return AssetHandle<Texture>(&s_TextureRegistry.emplace_back(filepath));
+    return AssetHandle<Texture>(&s_TextureRegistry.emplace_back(filepath), filepath);
 }
 
 AssetHandle<Mesh> AssetManager::QueueMesh(const std::string& filepath) {
-    return AssetHandle<Mesh>(&s_MeshRegistry.emplace_back(filepath));
+    return AssetHandle<Mesh>(&s_MeshRegistry.emplace_back(filepath), filepath);
 }
+
+AssetHandle<Texture> AssetManager::QueueTexture(const std::string& filepath, const std::string& assetName) {
+    return AssetHandle<Texture>(&s_TextureRegistry.emplace_back(filepath), assetName);
+}
+
+AssetHandle<Mesh> AssetManager::QueueMesh(const std::string& filepath, const std::string& assetName) {
+    return AssetHandle<Mesh>(&s_MeshRegistry.emplace_back(filepath), assetName);
+}
+
 
 AssetHandle<Texture> AssetManager::QueueOrGetTexture(const std::string& filepath) {
     for(auto& texture : s_TextureRegistry) {
@@ -35,6 +44,25 @@ AssetHandle<Mesh> AssetManager::QueueOrGetMesh(const std::string& filepath) {
 
     return AssetManager::QueueMesh(filepath);
 }
+
+AssetHandle<Texture> AssetManager::QueueOrGetTexture(const std::string& filepath, const std::string& assetName) {
+    for(auto& texture : s_TextureRegistry) {
+        if(texture.GetFilepath() == filepath)
+            return AssetHandle<Texture>(&texture);
+    }
+
+    return AssetManager::QueueTexture(filepath, assetName);
+}
+
+AssetHandle<Mesh> AssetManager::QueueOrGetMesh(const std::string& filepath, const std::string& assetName) {
+    for(auto& mesh : s_MeshRegistry) {
+        if(mesh.Filepath == filepath)
+            return AssetHandle<Mesh>(&mesh);
+    }
+
+    return AssetManager::QueueMesh(filepath, assetName);
+}
+
 
 void AssetManager::UpdateTextureRegistry(const std::string& filepath) {
     for(auto& texture : s_TextureRegistry) {

@@ -273,7 +273,7 @@ void ProjectManager::OpenScene(const std::filesystem::path& path) {
     m_ScenePtr->m_CurrentSceneFile = path;
 
     SceneSerializer serializer = SceneSerializer(m_ScenePtr, path);
-    serializer.DeserializeYAML();
+    serializer.DeserializeYAML(m_CurrentProject.GetAssetsPath());
 
     AssetManager::CreateAll();
 }

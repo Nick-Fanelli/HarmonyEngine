@@ -533,7 +533,7 @@ void ImGuiLayer::DrawTextureInputControl(const std::string& label, AssetHandle<T
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
 
-    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->GetFilepath().c_str() : "[Unattached]");
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle.GetAssetBinding().AssetName.c_str() : "[Unattached]");
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::TextureDragDropID)) {
             AssetHandle<Texture> texture = *(const AssetHandle<Texture>*) payload->Data;
@@ -569,7 +569,7 @@ void ImGuiLayer::DrawMeshInputControl(const std::string& label, AssetHandle<Mesh
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
 
-    ImGui::Button(assetHandle.IsAssigned() ? assetHandle->Filepath.c_str() : "[Unattached]");
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle.GetAssetBinding().AssetName.c_str() : "[Unattached]");
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::MeshDragDropID)) {
             AssetHandle<Mesh> mesh = *(const AssetHandle<Mesh>*) payload->Data;
