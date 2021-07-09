@@ -38,6 +38,6 @@ namespace ImGuiLayer {
     void DrawMeshInputControl(const std::string& label, AssetHandle<Mesh>& assetHandle);
 
     // TODO: to be removed
-    void ShowGameViewport();
+    void DrawGameViewport();
 
 };

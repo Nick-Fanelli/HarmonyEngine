@@ -8,6 +8,7 @@
 #include <ImGuizmo.h>
 
 #include <Core/Display.h>
+#include <Core/Input.h>
 #include <Render/Renderer2D.h>
 
 #include "MenuBarLayer.h"
@@ -33,6 +34,8 @@ static std::string s_SaveFilename;
 static HierarchyEditorPanel s_HierarchyEditorPanel;
 static InspectorEditorPanel s_InspectorEditorPanel;
 static AssetsEditorPanel       s_AssetsEditorPanel;
+
+static ImGuizmo::OPERATION s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 
 bool ImGuiLayer::GetIsEditorSelected() { return s_IsEditorSelected; }
 Entity& ImGuiLayer::GetSelectedEntity() { return s_SelectedEntity; }
@@ -198,7 +201,7 @@ static void EndFrame() {
     }
 }
 
-void ImGuiLayer::ShowGameViewport() {
+void ImGuiLayer::DrawGameViewport() {
 
     HARMONY_PROFILE_FUNCTION();
 
@@ -232,7 +235,7 @@ void ImGuiLayer::ShowGameViewport() {
             glm::mat4 transform = transformComponent.Transform.GetTransformationMatrix();
 
             ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), 
-                ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform));
+                s_CurrentImGuizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform));
 
             if(ImGuizmo::IsUsing()) {
 
@@ -278,6 +281,16 @@ static void DrawAssetsStats() {
     ImGui::End();
 }
 
+static void HandleImGuizmoInput() {
+    if(Input::IsKeyDown(HARMONY_KEY_G)) { // Move
+        s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+    } else if(Input::IsKeyDown(HARMONY_KEY_S)) { // Scale
+        s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::SCALE;
+    } else if(Input::IsKeyDown(HARMONY_KEY_R)) { // Rotate
+        s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::ROTATE;
+    }   
+}
+
 void ImGuiLayer::OnUpdate() {
 
     HARMONY_PROFILE_FUNCTION();
@@ -290,6 +303,8 @@ void ImGuiLayer::OnUpdate() {
     style.WindowMinSize.x = 370.0f;
     DrawDockspace();
     style.WindowMinSize.x = minWindowSizeX;
+    
+    HandleImGuizmoInput();
 
     MenuBarLayer::OnUpdate();
 
@@ -297,7 +312,7 @@ void ImGuiLayer::OnUpdate() {
     s_InspectorEditorPanel.OnUpdate();
     s_AssetsEditorPanel.OnUpdate();
 
-    ShowGameViewport();
+    DrawGameViewport();
 
     if(Settings::ShouldShowRendererStats())
         RendererStats::DrawImGUIStats(Settings::GetShowRendererStatsPtr());
