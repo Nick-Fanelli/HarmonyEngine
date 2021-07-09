@@ -29,7 +29,7 @@ namespace HarmonyEngine {
         bool operator!=(const Transform& other) { return !operator==(other); }
 
         glm::mat4 GetTransformationMatrix() const {
-            glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+            glm::mat4 rotation = glm::toMat4(glm::quat(glm::radians(Rotation)));
 
             return glm::translate(glm::mat4(1.0f), Position)
                         * rotation
@@ -37,7 +37,7 @@ namespace HarmonyEngine {
         }
 
         void GetTransformationMatrix(glm::mat4* out) const {
-            glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+            glm::mat4 rotation = glm::toMat4(glm::quat(glm::radians(Rotation)));
 
             *out = glm::translate(glm::mat4(1.0f), Position)
                         * rotation

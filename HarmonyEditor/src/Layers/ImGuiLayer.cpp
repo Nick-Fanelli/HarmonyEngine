@@ -239,11 +239,8 @@ void ImGuiLayer::DrawGameViewport() {
 
             if(ImGuizmo::IsUsing()) {
 
-                glm::vec3 rotation;
-                MathUtils::DecomposeMatrix(transform, transformComponent.Transform.Position, rotation, transformComponent.Transform.Scale);
-
-                glm::vec3 deltaRotation = rotation - transformComponent.Transform.Rotation;
-                transformComponent.Transform.Rotation += deltaRotation;
+                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(transformComponent.Transform.Position),
+                    glm::value_ptr(transformComponent.Transform.Rotation), glm::value_ptr(transformComponent.Transform.Scale));
             }
         }
 
