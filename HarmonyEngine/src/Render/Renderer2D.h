@@ -149,6 +149,7 @@ namespace HarmonyEngine {
 
         static void DrawQuad(Transform& transform, const glm::vec4& color);
         static void DrawQuad(Transform& transform, const glm::vec4& color, AssetHandle<Texture>& texture);
+        static void DrawQuad(Transform& transform, const glm::vec4& color, AssetHandle<Texture>& texture, const glm::vec2& topLeftCoord, const glm::vec2& bottomRightCoord);
     };
 
 }

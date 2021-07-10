@@ -40,6 +40,18 @@ void RenderLayer::OnUpdate() {
             Renderer2D::DrawQuad(transform.Transform, renderer.Color);
     }
 
+    // Sprite Renderer
+
+    auto spriteRendererGroup = s_EditorScenePtr->GetRegistry().group<SpriteRendererComponent>(entt::get<TransformComponent>);
+    for(auto& entity : spriteRendererGroup) {
+        auto[renderer, transform] = spriteRendererGroup.get<SpriteRendererComponent, TransformComponent>(entity);
+        // TODO: Remove/Find better solution
+        if(renderer.TextureHandle.IsAssigned())
+            Renderer2D::DrawQuad(transform.Transform, renderer.Color, renderer.TextureHandle, renderer.TopLeftCoord, renderer.BottomRightCoord);
+        else
+            Renderer2D::DrawQuad(transform.Transform, renderer.Color);
+    }
+
     Renderer2D::EndBatch();
 
     Renderer::StartBatch();

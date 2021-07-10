@@ -10,6 +10,7 @@ namespace HarmonyEngine {
 
         GLuint m_TextureID = 0;
 
+    protected:
         std::string m_Filepath = nullptr;
         int m_Width, m_Height;
 
@@ -47,5 +48,4 @@ namespace HarmonyEngine {
         const int GetWidth() const { return m_Width; }
         const int GetHeight() const { return m_Height; }
     };
-
 }

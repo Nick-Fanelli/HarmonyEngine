@@ -12,6 +12,25 @@ using namespace HarmonyEngine;
 // YAML Overloads
 namespace YAML {
     template<>
+    struct convert<glm::vec2> {
+        static Node encode(const glm::vec2& rhs) {
+            Node node;
+            node.push_back(rhs.x);
+            node.push_back(rhs.y);
+            return node;
+        }
+
+        static bool decode(const Node& node, glm::vec2& rhs) {
+            if(!node.IsSequence() || node.size() != 2)
+                return false;
+
+            rhs.x = node[0].as<float>();
+            rhs.y = node[1].as<float>();
+            return true;
+        }
+    };
+
+    template<>
     struct convert<glm::vec3> {
         static Node encode(const glm::vec3& rhs) {
             Node node;
@@ -54,6 +73,12 @@ namespace YAML {
             return true;
         }
     };
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& vec) {
+    out << YAML::Flow;
+    out << YAML::BeginSeq << vec.x << vec.y << YAML::EndSeq;
+    return out;
 }
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& vec) {
@@ -119,6 +144,14 @@ static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity) {
             out << YAML::Key << "Mesh" << YAML::Value << component.MeshHandle->Filepath;
     });
 
+    SerializeComponenetYAML<SpriteRendererComponent>(out, entity, "SpriteRendererComponent", [&](SpriteRendererComponent& component) {
+        out << YAML::Key << "Color" << YAML::Value << component.Color;
+        if(component.TextureHandle.IsAssigned())
+            out << YAML::Key << "Texture" << YAML::Value << component.TextureHandle->GetFilepath();
+        out << YAML::Key << "TopLeftCoord" << YAML::Value << component.TopLeftCoord;
+        out << YAML::Key << "BottomRightCoord" << YAML::Value << component.BottomRightCoord;
+    });
+
     // End Entity Map
     out << YAML::EndMap;
 }
@@ -153,6 +186,18 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
             auto textureFilepath = textureNode.as<std::string>();
             component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath);;
         }
+    });
+
+    DeserializeComponentYAML<SpriteRendererComponent>(entityNode, entity, "SpriteRendererComponent", [&](SpriteRendererComponent& component, YAML::Node& node) {
+        component.Color = node["Color"].as<glm::vec4>();
+
+        if(auto textureNode = node["Texture"]) {
+            auto textureFilepath = textureNode.as<std::string>();
+            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath);;
+        }
+
+        component.TopLeftCoord = node["TopLeftCoord"].as<glm::vec2>();
+        component.BottomRightCoord = node["BottomRightCoord"].as<glm::vec2>();
     });
 
     DeserializeComponentYAML<MeshRendererComponent>(entityNode, entity, "MeshRendererComponent", [&](MeshRendererComponent& component, YAML::Node& node) {

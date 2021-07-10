@@ -64,6 +64,7 @@ static void DrawAddComponentButton(Entity& entity) {
         DrawAddComponentMenuItem<TransformComponent>("Transform", entity);
         DrawAddComponentMenuItem<QuadRendererComponent>("Quad Renderer", entity);
         DrawAddComponentMenuItem<MeshRendererComponent>("Mesh Renderer", entity);
+        DrawAddComponentMenuItem<SpriteRendererComponent>("Sprite Renderer", entity);
 
         ImGui::EndPopup();
     }
@@ -101,6 +102,14 @@ void InspectorEditorPanel::OnUpdate() {
             ImGuiLayer::DrawMeshInputControl("Mesh", component.MeshHandle);
             ImGuiLayer::DrawTextureInputControl("Texture", component.TextureHandle);
         });
+
+        DrawComponent<SpriteRendererComponent>("Sprite Renderer", selectedEntity, [](SpriteRendererComponent& component) {
+            ImGuiLayer::DrawColorControl("Tint", component.Color);
+            ImGuiLayer::DrawTextureInputControl("Texture", component.TextureHandle);
+            ImGui::DragFloat2("Top Left Coords", glm::value_ptr(component.TopLeftCoord));
+            ImGui::DragFloat2("Bottom Right Coords", glm::value_ptr(component.BottomRightCoord));
+        });
+
 
         DrawAddComponentButton(selectedEntity);
 

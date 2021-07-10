@@ -48,7 +48,7 @@ namespace HarmonyEngine {
         glm::vec4 Color;
         AssetHandle<Texture> TextureHandle;
 
-        QuadRendererComponent() : Color(1.0f) {}
+        QuadRendererComponent() : Color(1.0f) {};
 
         QuadRendererComponent(const QuadRendererComponent&) = default;
 
@@ -56,4 +56,20 @@ namespace HarmonyEngine {
         QuadRendererComponent(const glm::vec4& color, const AssetHandle<Texture>& texture) : Color(color), TextureHandle(texture) {}
     };
 
+    struct SpriteRendererComponent {
+
+        glm::vec4 Color;
+        AssetHandle<Texture> TextureHandle;
+        glm::vec2 TopLeftCoord = { 0.0f, 0.0f };
+        glm::vec2 BottomRightCoord = { 1.0f, 1.0f }; 
+
+        SpriteRendererComponent() : Color(1.0f) {};
+        SpriteRendererComponent(const SpriteRendererComponent&) = default;
+
+        SpriteRendererComponent(const glm::vec4& color) : Color(color) {}
+        SpriteRendererComponent(const glm::vec4& color, AssetHandle<Texture> textureHandle) : Color(color), TextureHandle(textureHandle) {}
+        SpriteRendererComponent(const glm::vec4& color, AssetHandle<Texture> textureHandle, const glm::vec2& topLeft, const glm::vec2& bottomRight) 
+            : Color(color), TextureHandle(textureHandle), TopLeftCoord(topLeft), BottomRightCoord(bottomRight) {}
+
+    };
 }

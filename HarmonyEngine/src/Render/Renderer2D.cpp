@@ -284,3 +284,40 @@ void Renderer2D::DrawQuad(Transform& transform, const glm::vec4& color, AssetHan
     s_Batch.IndexCount += 6; // Six vertices per quad
     RendererStats::CurrentIndexCount += 6;
 }
+
+void Renderer2D::DrawQuad(Transform& transform, const glm::vec4& color, AssetHandle<Texture>& texture, const glm::vec2& topLeftCoord, const glm::vec2& bottomRightCoord) {
+    constexpr uint32_t quadVertexCount = 4; // Four Vertices Per Quad
+    // glm::vec2 textureCoords[] = { topLeftCoord, { bottomRightCoord.x, topLeftCoord.y}, bottomRightCoord, { topLeftCoord.x, bottomRightCoord.y } };
+    glm::vec2 textureCoords[] = { topLeftCoord, { bottomRightCoord.x, topLeftCoord.y }, bottomRightCoord, { topLeftCoord.x, bottomRightCoord.y }};
+
+    AllocateTexture();
+    AllocateVertices(quadVertexCount);
+
+    float textureIndex = 0.0f;
+
+    for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
+        if(s_Batch.Textures[i] == texture->GetTextureID()) {
+            textureIndex = (float) i;
+            break;
+        }
+    }
+
+    if(textureIndex == 0.0f) {
+        textureIndex = (float) s_Batch.TextureIndex;
+        s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
+        s_Batch.TextureIndex++;
+    }
+
+    glm::mat4 solvedTransform = transform.GetTransformationMatrix();
+
+    for(uint32_t i = 0; i < quadVertexCount; i++) {
+        s_Batch.VertexPtr->Position = solvedTransform * s_QuadVertexPositions[i];
+        s_Batch.VertexPtr->Color = color;
+        s_Batch.VertexPtr->TextureCoord = textureCoords[i];
+        s_Batch.VertexPtr->TextureID = textureIndex;
+        s_Batch.VertexPtr++;
+    }
+    
+    s_Batch.IndexCount += 6; // Six vertices per quad
+    RendererStats::CurrentIndexCount += 6;
+}
