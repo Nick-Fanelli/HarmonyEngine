@@ -57,13 +57,10 @@ static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity) {
 
 template<typename ComponenetType>
 static bool DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const char* componentName) {
-    if(entity.ContainsComponent<ComponenetType>())
-        return true;
-
     auto componentNode = entityNode[componentName];
 
     if(componentNode) {
-        auto& rawComponent = entity.AddComponent<ComponenetType>();
+        auto& rawComponent = entity.ContainsComponent<ComponenetType>() ? entity.GetComponent<ComponenetType>() : entity.AddComponent<ComponenetType>();
 
         if(std::is_base_of<Component, ComponenetType>()) {
             auto component = dynamic_cast<Component*>(&rawComponent);
