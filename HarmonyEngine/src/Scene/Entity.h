@@ -47,7 +47,7 @@ namespace HarmonyEngine {
         }
 
         template<typename T>
-        void RemoveComponenet() {
+        void RemoveComponent() {
             if(!ContainsComponent<T>()) {
                 Log::Warn("Entity does not contain the requested component to be removed!\n\tStatus: Returning");
                 return;

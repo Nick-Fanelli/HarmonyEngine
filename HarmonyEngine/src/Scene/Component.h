@@ -9,39 +9,12 @@
 
 namespace HarmonyEngine {
 
-    static YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& vec) {
-        out << YAML::Flow;
-        out << YAML::BeginSeq << vec.x << vec.y << YAML::EndSeq;
-        return out;
-    }
-
-    static YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& vec) {
-        out << YAML::Flow;
-        out << YAML::BeginSeq << vec.x << vec.y << vec.z << YAML::EndSeq;
-        return out;
-    }
-
-    static YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& vec) {
-        out << YAML::Flow;
-        out << YAML::BeginSeq << vec.x << vec.y << vec.z << vec.w << YAML::EndSeq;
-        return out;
-    }
-
     class Component {
-
-    protected:
-        void SerializeTexture(YAML::Emitter& out, AssetHandle<Texture>& textureHandle) {
-            if(textureHandle.IsAssigned())
-                out << YAML::Key << "Texture" << YAML::Value << textureHandle->GetFilepath();
-        }
-
-        void SerializeMesh(YAML::Emitter& out, AssetHandle<Mesh>& meshHandle) {
-            if(meshHandle.IsAssigned())
-                out << YAML::Key << "Mesh" << YAML::Value << meshHandle->Filepath;
-        }
 
     public:
         virtual void Serialize(YAML::Emitter& out) {}
+        virtual void Deserialize(YAML::Node& node) {}
+
         virtual ~Component() {}
     };
 
@@ -54,9 +27,8 @@ namespace HarmonyEngine {
 
         TagComponent(const std::string& name) : Name(name) {}
 
-        void Serialize(YAML::Emitter& out) override {
-            out << YAML::Key << "Name" << YAML::Value << Name;
-        }
+        void Serialize(YAML::Emitter& out) override;
+        void Deserialize(YAML::Node& node) override;
     };
 
     struct TransformComponent : public Component {
@@ -68,11 +40,8 @@ namespace HarmonyEngine {
 
         TransformComponent(const struct Transform& transform) : Transform(transform) {}
 
-        void Serialize(YAML::Emitter& out) override {
-            out << YAML::Key << "Position" << YAML::Value << Transform.Position;
-            out << YAML::Key << "Rotation" << YAML::Value << Transform.Rotation;
-            out << YAML::Key << "Scale" << YAML::Value << Transform.Scale;
-        }
+        void Serialize(YAML::Emitter& out) override;
+        void Deserialize(YAML::Node& node) override;
     };
 
     struct MeshRendererComponent : public Component {
@@ -88,11 +57,8 @@ namespace HarmonyEngine {
         MeshRendererComponent(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture) : MeshHandle(mesh), TextureHandle(texture) {}
         MeshRendererComponent(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture, const glm::vec4& color) : MeshHandle(mesh), TextureHandle(texture), Color(color) {}
 
-        void Serialize(YAML::Emitter& out) override {
-            out << YAML::Key << "Color" << YAML::Value << Color;
-            SerializeTexture(out, TextureHandle);
-            SerializeMesh(out, MeshHandle);
-        }
+        void Serialize(YAML::Emitter& out) override;
+        void Deserialize(YAML::Node& node) override;
 
     };
 
@@ -108,10 +74,8 @@ namespace HarmonyEngine {
         QuadRendererComponent(const glm::vec4& color) : Color(color) {}
         QuadRendererComponent(const glm::vec4& color, const AssetHandle<Texture>& texture) : Color(color), TextureHandle(texture) {}
 
-        void Serialize(YAML::Emitter& out) override {
-            out << YAML::Key << "Color" << YAML::Value << Color;
-            SerializeTexture(out, TextureHandle);
-        }
+        void Serialize(YAML::Emitter& out) override;
+        void Deserialize(YAML::Node& node) override;
     };
 
     struct SpriteRendererComponent : public Component {
@@ -129,11 +93,8 @@ namespace HarmonyEngine {
         SpriteRendererComponent(const glm::vec4& color, AssetHandle<Texture> textureHandle, const glm::vec2& topLeft, const glm::vec2& bottomRight) 
             : Color(color), TextureHandle(textureHandle), TopLeftCoord(topLeft), BottomRightCoord(bottomRight) {}
 
-        void Serialize(YAML::Emitter& out) override {
-        out << YAML::Key << "Color" << YAML::Value << Color;
-        SerializeTexture(out, TextureHandle);
-        out << YAML::Key << "TopLeftCoord" << YAML::Value << TopLeftCoord;
-        out << YAML::Key << "BottomRightCoord" << YAML::Value << BottomRightCoord;
-        }
+        void Serialize(YAML::Emitter& out) override;
+        void Deserialize(YAML::Node& node) override;
+        
     };
 }

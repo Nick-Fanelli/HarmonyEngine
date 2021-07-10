@@ -9,71 +9,11 @@
 
 using namespace HarmonyEngine;
 
-// YAML Overloads
-namespace YAML {
-    template<>
-    struct convert<glm::vec2> {
-        static Node encode(const glm::vec2& rhs) {
-            Node node;
-            node.push_back(rhs.x);
-            node.push_back(rhs.y);
-            return node;
-        }
-
-        static bool decode(const Node& node, glm::vec2& rhs) {
-            if(!node.IsSequence() || node.size() != 2)
-                return false;
-
-            rhs.x = node[0].as<float>();
-            rhs.y = node[1].as<float>();
-            return true;
-        }
-    };
-
-    template<>
-    struct convert<glm::vec3> {
-        static Node encode(const glm::vec3& rhs) {
-            Node node;
-            node.push_back(rhs.x);
-            node.push_back(rhs.y);
-            node.push_back(rhs.z);
-            return node;
-        }
-
-        static bool decode(const Node& node, glm::vec3& rhs) {
-            if(!node.IsSequence() || node.size() != 3)
-                return false;
-
-            rhs.x = node[0].as<float>();
-            rhs.y = node[1].as<float>();
-            rhs.z = node[2].as<float>();
-            return true;
-        }
-    };
-
-    template<>
-    struct convert<glm::vec4> {
-        static Node encode(const glm::vec4& rhs) {
-            Node node;
-            node.push_back(rhs.x);
-            node.push_back(rhs.y);
-            node.push_back(rhs.z);
-            node.push_back(rhs.w);
-            return node;
-        }
-
-        static bool decode(const Node& node, glm::vec4& rhs) {
-            if(!node.IsSequence() || node.size() != 4) 
-                return false;
-
-            rhs.x = node[0].as<float>();
-            rhs.y = node[1].as<float>();
-            rhs.z = node[2].as<float>();
-            rhs.w = node[3].as<float>();
-            return true;
-        }
-    };
-}
+static const char* TagComponentID = "TagComponent";
+static const char* TransformComponentID = "TransformComponent";
+static const char* QuadRendererComponentID = "QuadRendererComponent";
+static const char* MeshRendererComponentID = "MeshRendererComponent";
+static const char* SpriteRendererComponentID = "SpriteRendererComponent";
 
 // ======================================================================================================
 // Scene Serialization
@@ -92,7 +32,7 @@ static void SerializeComponenetYAML(YAML::Emitter& out, Entity& entity, const ch
         auto& rawComponent = entity.GetComponent<ComponentType>();
 
         if(std::is_base_of<Component, ComponentType>()) {
-            Component* component = &rawComponent;
+            auto component = dynamic_cast<Component*>(&rawComponent);
             component->Serialize(out);
         }
 
@@ -105,73 +45,48 @@ static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity) {
     out << YAML::BeginMap;
     out << YAML::Key << "Entity" << YAML::Value << entity;
     
-    SerializeComponenetYAML<TagComponent>(out, entity, "TagComponent");
-    SerializeComponenetYAML<TransformComponent>(out, entity, "TransformComponent");
-    SerializeComponenetYAML<QuadRendererComponent>(out, entity, "QuadRendererComponent");
-    SerializeComponenetYAML<MeshRendererComponent>(out, entity, "MeshRendererComponent");
-    SerializeComponenetYAML<SpriteRendererComponent>(out, entity, "SpriteRendererComponent");
+    SerializeComponenetYAML<TagComponent>(out, entity, TagComponentID);
+    SerializeComponenetYAML<TransformComponent>(out, entity, TransformComponentID);
+    SerializeComponenetYAML<QuadRendererComponent>(out, entity, QuadRendererComponentID);
+    SerializeComponenetYAML<MeshRendererComponent>(out, entity, MeshRendererComponentID);
+    SerializeComponenetYAML<SpriteRendererComponent>(out, entity, SpriteRendererComponentID);
 
     // End Entity Map
     out << YAML::EndMap;
 }
 
-template<typename ComponenetType, typename DeserializeFunction>
-static void DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const char* componentName, DeserializeFunction function) {
+template<typename ComponenetType>
+static bool DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const char* componentName) {
+    if(entity.ContainsComponent<ComponenetType>())
+        return true;
+
     auto componentNode = entityNode[componentName];
 
     if(componentNode) {
-        auto& component = entity.AddComponent<ComponenetType>();
-        function(component, componentNode);
+        auto& rawComponent = entity.AddComponent<ComponenetType>();
+
+        if(std::is_base_of<Component, ComponenetType>()) {
+            auto component = dynamic_cast<Component*>(&rawComponent);
+            component->Deserialize(componentNode);
+            return true;
+        }
+
     }
+
+    return false;
 }
 
 static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const std::string& name, const std::filesystem::path& filepath) {
 
-    auto transformComponentNode = entityNode["TransformComponent"];
-
-    if(transformComponentNode) {
-        auto& transformComponent = entity.GetComponent<TransformComponent>();
-        transformComponent.Transform.Position = transformComponentNode["Position"].as<glm::vec3>();
-        transformComponent.Transform.Rotation = transformComponentNode["Rotation"].as<glm::vec3>();
-        transformComponent.Transform.Scale = transformComponentNode["Scale"].as<glm::vec3>();
-    } else {
-        entity.RemoveComponenet<TransformComponent>();
+    if(!DeserializeComponentYAML<TransformComponent>(entityNode, entity, TransformComponentID)) {
+        entity.RemoveComponent<TransformComponent>();
+        return;
     }
 
-    DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, "QuadRendererComponent", [&](QuadRendererComponent& component, YAML::Node& node) {
-        component.Color = node["Color"].as<glm::vec4>();
-
-        if(auto textureNode = node["Texture"]) {
-            auto textureFilepath = textureNode.as<std::string>();
-            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath, std::filesystem::relative(textureFilepath, filepath).string());
-        }
-    });
-
-    DeserializeComponentYAML<SpriteRendererComponent>(entityNode, entity, "SpriteRendererComponent", [&](SpriteRendererComponent& component, YAML::Node& node) {
-        component.Color = node["Color"].as<glm::vec4>();
-
-        if(auto textureNode = node["Texture"]) {
-            auto textureFilepath = textureNode.as<std::string>();
-            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath, std::filesystem::relative(textureFilepath, filepath).string());
-        }
-
-        component.TopLeftCoord = node["TopLeftCoord"].as<glm::vec2>();
-        component.BottomRightCoord = node["BottomRightCoord"].as<glm::vec2>();
-    });
-
-    DeserializeComponentYAML<MeshRendererComponent>(entityNode, entity, "MeshRendererComponent", [&](MeshRendererComponent& component, YAML::Node& node) {
-        component.Color = node["Color"].as<glm::vec4>();
-
-        if(auto textureNode = node["Texture"]) {
-            auto textureFilepath = textureNode.as<std::string>();
-            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath, std::filesystem::relative(textureFilepath, filepath).string());
-        }
-
-        if(auto meshNode = node["Mesh"]) {
-            auto meshFilepath = meshNode.as<std::string>();
-            component.MeshHandle = AssetManager::QueueOrGetMesh(meshFilepath, std::filesystem::relative(meshFilepath, filepath).string());
-        }
-    });
+    DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, QuadRendererComponentID);
+    DeserializeComponentYAML<SpriteRendererComponent>(entityNode, entity, SpriteRendererComponentID);
+    DeserializeComponentYAML<MeshRendererComponent>(entityNode, entity, MeshRendererComponentID);
+    DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, QuadRendererComponentID);
 }
 
 void SceneSerializer::SerializeYAML() {
@@ -221,7 +136,7 @@ void SceneSerializer::DeserializeYAML(const std::filesystem::path& filepath) {
     if(entities) {
         for(auto entity : entities) {
             std::string name;
-            auto tagComponent = entity["TagComponent"];
+            auto tagComponent = entity[TagComponentID];
             if(tagComponent)
                 name = tagComponent["Name"].as<std::string>();
             else

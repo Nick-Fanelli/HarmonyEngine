@@ -32,7 +32,7 @@ static void DrawComponent(const char* label, Entity& selectedEntity, UIFunction 
             ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
 
             if(ImGui::Button("\uf068", ImVec2{ lineHeight, lineHeight })) {
-                selectedEntity.RemoveComponenet<ComponentType>();
+                selectedEntity.RemoveComponent<ComponentType>();
             }
         }
 
