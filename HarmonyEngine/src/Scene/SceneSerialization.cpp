@@ -75,24 +75,6 @@ namespace YAML {
     };
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& vec) {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << vec.x << vec.y << YAML::EndSeq;
-    return out;
-}
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& vec) {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << vec.x << vec.y << vec.z << YAML::EndSeq;
-    return out;
-}
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& vec) {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << vec.x << vec.y << vec.z << vec.w << YAML::EndSeq;
-    return out;
-}
-
 // ======================================================================================================
 // Scene Serialization
 // ======================================================================================================
@@ -101,17 +83,20 @@ SceneSerializer::SceneSerializer(Scene* scenePtr, const std::string& filepath) :
 
 }
 
-template<typename ComponentType, typename SerializeFunction>
-static void SerializeComponenetYAML(YAML::Emitter& out, Entity& entity, const char* componentName, SerializeFunction function) {
+template<typename ComponentType>
+static void SerializeComponenetYAML(YAML::Emitter& out, Entity& entity, const char* componentName) {
     if(entity.ContainsComponent<ComponentType>()) {
         out << YAML::Key << componentName;
         out << YAML::BeginMap; // Component Map
 
-        auto& component = entity.GetComponent<ComponentType>();
+        auto& rawComponent = entity.GetComponent<ComponentType>();
 
-        function(component);
+        if(std::is_base_of<Component, ComponentType>()) {
+            Component* component = &rawComponent;
+            component->Serialize(out);
+        }
 
-        out << YAML::EndMap; // Component Map
+        out << YAML::EndMap; // Component Map   
     }
 }
 
@@ -120,37 +105,11 @@ static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity) {
     out << YAML::BeginMap;
     out << YAML::Key << "Entity" << YAML::Value << entity;
     
-    SerializeComponenetYAML<TagComponent>(out, entity, "TagComponent", [&](TagComponent& component) {
-        out << YAML::Key << "Name" << YAML::Value << component.Name;
-    });
-
-    SerializeComponenetYAML<TransformComponent>(out, entity, "TransformComponent", [&](TransformComponent& component) {
-        out << YAML::Key << "Position" << YAML::Value << component.Transform.Position;
-        out << YAML::Key << "Rotation" << YAML::Value << component.Transform.Rotation;
-        out << YAML::Key << "Scale" << YAML::Value << component.Transform.Scale;
-    });
-
-    SerializeComponenetYAML<QuadRendererComponent>(out, entity, "QuadRendererComponent", [&](QuadRendererComponent& component) {
-        out << YAML::Key << "Color" << YAML::Value << component.Color;
-        if(component.TextureHandle.IsAssigned())
-            out << YAML::Key << "Texture" << YAML::Value << component.TextureHandle->GetFilepath();
-    });
-
-    SerializeComponenetYAML<MeshRendererComponent>(out, entity, "MeshRendererComponent", [&](MeshRendererComponent& component) {
-        out << YAML::Key << "Color" << YAML::Value << component.Color;
-        if(component.TextureHandle.IsAssigned())
-            out << YAML::Key << "Texture" << YAML::Value << component.TextureHandle->GetFilepath();
-        if(component.MeshHandle.IsAssigned())
-            out << YAML::Key << "Mesh" << YAML::Value << component.MeshHandle->Filepath;
-    });
-
-    SerializeComponenetYAML<SpriteRendererComponent>(out, entity, "SpriteRendererComponent", [&](SpriteRendererComponent& component) {
-        out << YAML::Key << "Color" << YAML::Value << component.Color;
-        if(component.TextureHandle.IsAssigned())
-            out << YAML::Key << "Texture" << YAML::Value << component.TextureHandle->GetFilepath();
-        out << YAML::Key << "TopLeftCoord" << YAML::Value << component.TopLeftCoord;
-        out << YAML::Key << "BottomRightCoord" << YAML::Value << component.BottomRightCoord;
-    });
+    SerializeComponenetYAML<TagComponent>(out, entity, "TagComponent");
+    SerializeComponenetYAML<TransformComponent>(out, entity, "TransformComponent");
+    SerializeComponenetYAML<QuadRendererComponent>(out, entity, "QuadRendererComponent");
+    SerializeComponenetYAML<MeshRendererComponent>(out, entity, "MeshRendererComponent");
+    SerializeComponenetYAML<SpriteRendererComponent>(out, entity, "SpriteRendererComponent");
 
     // End Entity Map
     out << YAML::EndMap;
