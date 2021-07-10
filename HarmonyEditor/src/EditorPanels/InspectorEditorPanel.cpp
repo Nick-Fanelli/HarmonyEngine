@@ -106,8 +106,8 @@ void InspectorEditorPanel::OnUpdate() {
         DrawComponent<SpriteRendererComponent>("Sprite Renderer", selectedEntity, [](SpriteRendererComponent& component) {
             ImGuiLayer::DrawColorControl("Tint", component.Color);
             ImGuiLayer::DrawTextureInputControl("Texture", component.TextureHandle);
-            ImGui::DragFloat2("Top Left Coords", glm::value_ptr(component.TopLeftCoord));
-            ImGui::DragFloat2("Bottom Right Coords", glm::value_ptr(component.BottomRightCoord));
+            ImGuiLayer::DrawVector2("Top Left Coords", component.TopLeftCoord, 0.0f, 0.0f, 1.0f, 150.0f);
+            ImGuiLayer::DrawVector2("Bottom Right Coords", component.BottomRightCoord, 1.0f, 0.0f, 1.0f, 150.0f);
         });
 
 
