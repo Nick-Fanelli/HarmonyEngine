@@ -16,14 +16,19 @@ namespace HarmonyEngine {
     template<typename T>
     struct Asset {
 
-        T* AssetPtr = nullptr;
+        T RawAsset;
         std::string AssetName;
 
         Asset() = default;
-        Asset(T* assetPtr) : AssetPtr(assetPtr) {} 
-        Asset(T* assetPtr, const std::string& assetName) : AssetPtr(assetPtr), AssetName(assetName) {}
 
-        operator T*() const { return AssetPtr; }
+        template<typename... Args>
+        Asset(const std::string& assetName, Args&&... args) : RawAsset(std::forward<Args>(args)...), AssetName(assetName) {}
+
+        operator T*() const { return &RawAsset; }
+
+        const T* operator->() const { return &RawAsset; }
+        T* operator->() { return &RawAsset; }
+        T* GetRawAsset() { return &RawAsset; }
     };
 
     // ==========================================================================================
@@ -32,22 +37,22 @@ namespace HarmonyEngine {
     template<typename T>
     class AssetHandle {
 
-        Asset<T> m_Asset;
+        Asset<T>* m_Asset = nullptr;
 
     public:
 
         AssetHandle() = default;
-        AssetHandle(const Asset<T>& assetPtr) : m_Asset(assetPtr) {}
+        AssetHandle(Asset<T>* assetPtr) : m_Asset(assetPtr) {}
         AssetHandle(T* assetPtr) : m_Asset(Asset<T>(assetPtr)) {}
         AssetHandle(T* assetPtr, const std::string& assetName) : m_Asset(Asset<T>(assetPtr, assetName)) {}
 
-        const T* operator->() const { return m_Asset; }
-        T* operator->() { return m_Asset; }
+        const T* operator->() const { return m_Asset->GetRawAsset(); }
+        T* operator->() { return m_Asset->GetRawAsset(); }
 
-        T* GetAsset() const { return m_Asset; }
+        T* GetAsset() { return m_Asset->GetRawAsset(); }
 
-        const Asset<T>& GetAssetBinding() const { return m_Asset; }
-        Asset<T>& GetAssetBinding() { return m_Asset; }
+        const Asset<T>* GetAssetBinding() const { return m_Asset; }
+        Asset<T>* GetAssetBinding() { return m_Asset; }
  
         bool IsAssigned() { return m_Asset != nullptr; }
     };
@@ -57,8 +62,8 @@ namespace HarmonyEngine {
     // ==========================================================================================
     class AssetManager {
 
-        static std::list<Texture> s_TextureRegistry;
-        static std::list<Mesh> s_MeshRegistry;
+        static std::list<Asset<Texture>> s_TextureRegistry;
+        static std::list<Asset<Mesh>> s_MeshRegistry;
 
     public:
 
@@ -80,8 +85,8 @@ namespace HarmonyEngine {
         static void CreateAll();
         static void DestroyAll();
 
-        static std::list<Texture>& GetTextureRegistry() { return s_TextureRegistry; }
-        static std::list<Mesh>& GetMeshRegistry() { return s_MeshRegistry; }
+        static std::list<Asset<Texture>>& GetTextureRegistry() { return s_TextureRegistry; }
+        static std::list<Asset<Mesh>>& GetMeshRegistry() { return s_MeshRegistry; }
     };
 
 }

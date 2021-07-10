@@ -257,7 +257,7 @@ static void DrawAssetsStats() {
 
         if(ImGui::TreeNode("Textures")) {
             for(auto& texture : AssetManager::GetTextureRegistry())
-                ImGui::TreeNodeEx(texture.GetFilepath().c_str(), flags);
+                ImGui::TreeNodeEx(texture->GetFilepath().c_str(), flags);
 
             ImGui::TreePop();
         }
@@ -265,7 +265,7 @@ static void DrawAssetsStats() {
         if(ImGui::TreeNode("Meshes")) {
 
             for(auto& mesh : AssetManager::GetMeshRegistry())
-                ImGui::TreeNodeEx(mesh.Filepath.c_str(), flags);
+                ImGui::TreeNodeEx(mesh->Filepath.c_str(), flags);
 
             ImGui::TreePop();
         }
@@ -597,7 +597,8 @@ void ImGuiLayer::DrawTextureInputControl(const std::string& label, AssetHandle<T
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
 
-    ImGui::Button(assetHandle.IsAssigned() ? assetHandle.GetAssetBinding().AssetName.c_str() : "[Unattached]");
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle.GetAssetBinding()->AssetName.c_str() : "[Unattached]");
+    
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::TextureDragDropID)) {
             AssetHandle<Texture> texture = *(const AssetHandle<Texture>*) payload->Data;
@@ -616,7 +617,7 @@ void ImGuiLayer::DrawTextureInputControl(const std::string& label, AssetHandle<T
 
     if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
         if(assetHandle.IsAssigned()) {
-            assetHandle = AssetHandle<Texture>(nullptr);
+            assetHandle = AssetHandle<Texture>();
         }
     }
 
@@ -633,7 +634,7 @@ void ImGuiLayer::DrawMeshInputControl(const std::string& label, AssetHandle<Mesh
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
 
-    ImGui::Button(assetHandle.IsAssigned() ? assetHandle.GetAssetBinding().AssetName.c_str() : "[Unattached]");
+    ImGui::Button(assetHandle.IsAssigned() ? assetHandle.GetAssetBinding()->AssetName.c_str() : "[Unattached]");
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(AssetsEditorPanel::MeshDragDropID)) {
             AssetHandle<Mesh> mesh = *(const AssetHandle<Mesh>*) payload->Data;
@@ -652,7 +653,7 @@ void ImGuiLayer::DrawMeshInputControl(const std::string& label, AssetHandle<Mesh
 
     if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
         if(assetHandle.IsAssigned()) {
-            assetHandle = AssetHandle<Mesh>(nullptr);
+            assetHandle = AssetHandle<Mesh>();
         }    
     }
 

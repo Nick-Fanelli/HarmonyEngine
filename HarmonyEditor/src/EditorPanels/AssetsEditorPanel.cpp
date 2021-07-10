@@ -114,7 +114,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                 if(ImGui::BeginDragDropSource(flags)) {
 
                     auto textureHandle = AssetManager::QueueOrGetTexture(child.Path);
-                    textureHandle.GetAssetBinding().AssetName = child.GetRelativePath(parentPath);
+                    textureHandle.GetAssetBinding()->AssetName = std::filesystem::relative(child.Path, s_RootFile.Path).string();
 
                     ImGui::SetDragDropPayload(AssetsEditorPanel::TextureDragDropID, &textureHandle, sizeof(textureHandle));
                     ImGui::EndDragDropSource();
@@ -134,7 +134,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                 if(ImGui::BeginDragDropSource(flags)) {
                     
                     auto meshHandle = AssetManager::QueueOrGetMesh(child.Path);
-                    meshHandle.GetAssetBinding().AssetName = child.GetRelativePath(parentPath);
+                    meshHandle.GetAssetBinding()->AssetName = std::filesystem::relative(child.Path, s_RootFile.Path).string();
 
                     ImGui::SetDragDropPayload(AssetsEditorPanel::MeshDragDropID, &meshHandle, sizeof(meshHandle));
                     ImGui::EndDragDropSource();

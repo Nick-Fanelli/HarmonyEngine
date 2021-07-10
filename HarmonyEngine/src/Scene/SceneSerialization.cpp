@@ -184,7 +184,7 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
 
         if(auto textureNode = node["Texture"]) {
             auto textureFilepath = textureNode.as<std::string>();
-            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath);;
+            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath, std::filesystem::relative(textureFilepath, filepath).string());
         }
     });
 
@@ -193,7 +193,7 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
 
         if(auto textureNode = node["Texture"]) {
             auto textureFilepath = textureNode.as<std::string>();
-            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath);;
+            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath, std::filesystem::relative(textureFilepath, filepath).string());
         }
 
         component.TopLeftCoord = node["TopLeftCoord"].as<glm::vec2>();
@@ -205,14 +205,12 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
 
         if(auto textureNode = node["Texture"]) {
             auto textureFilepath = textureNode.as<std::string>();
-            auto assetName = std::filesystem::relative(textureFilepath, filepath);
-            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath, assetName);
+            component.TextureHandle = AssetManager::QueueOrGetTexture(textureFilepath, std::filesystem::relative(textureFilepath, filepath).string());
         }
 
         if(auto meshNode = node["Mesh"]) {
             auto meshFilepath = meshNode.as<std::string>();
-            auto assetName = std::filesystem::relative(meshFilepath, filepath);
-            component.MeshHandle = AssetManager::QueueOrGetMesh(meshFilepath, assetName);
+            component.MeshHandle = AssetManager::QueueOrGetMesh(meshFilepath, std::filesystem::relative(meshFilepath, filepath).string());
         }
     });
 }
