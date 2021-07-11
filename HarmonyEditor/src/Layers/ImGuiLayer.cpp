@@ -277,7 +277,7 @@ static void DrawAssetsStats() {
 }
 
 static void HandleImGuizmoInput() {
-    if(Input::IsKeyDown(HARMONY_KEY_G)) { // Move
+    if(Input::IsKeyDown(HARMONY_KEY_T)) { // Move
         s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
     } else if(Input::IsKeyDown(HARMONY_KEY_S)) { // Scale
         s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::SCALE;
