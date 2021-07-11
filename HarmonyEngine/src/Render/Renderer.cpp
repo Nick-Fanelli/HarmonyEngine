@@ -455,13 +455,11 @@ void Renderer::LoadOBJFile(const std::string& filepath, Mesh* mesh, float textur
             tempNormals.push_back(normal);
         } else if(strcmp(lineHeader, "f") == 0) {
             uint32_t vertexIndex[3], uvIndex[3], normalIndex[3];
-            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
+            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
             if(matches != 9) {
-                Log::Info(vertexIndex[0]);
                 int newMatches = fscanf(file, "%d//%d %d//%d %d//%d\n", &vertexIndex[0], &normalIndex[0], &vertexIndex[1], &normalIndex[1], &vertexIndex[2], &normalIndex[2]);
-                Log::Info(vertexIndex[0]);
 
-                if(newMatches != 9) {
+                if(newMatches != 0) {
                     Log::Error("Could not load obj file format!");
                     return;
                 }
