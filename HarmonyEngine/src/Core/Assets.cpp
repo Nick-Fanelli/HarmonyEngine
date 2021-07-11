@@ -1,6 +1,7 @@
 #include "Assets.h"
 
 #include "Render/Renderer.h"
+#include "Render/ObjectLoader.h"
 
 using namespace HarmonyEngine;
 
@@ -89,7 +90,7 @@ void AssetManager::CreateAll() {
         texture->Create();
 
     for(auto& mesh : s_MeshRegistry)
-        Renderer::LoadOBJFile(mesh->Filepath, mesh.GetRawAsset());
+        OBJLoader::LoadOBJFile(mesh->Filepath, mesh.GetRawAsset());
 }
 
 void AssetManager::DestroyAll() {

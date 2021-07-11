@@ -1,6 +1,7 @@
 #include "EditorScene.h"
 
 #include <Render/Renderer2D.h>
+#include <Render/ObjectLoader.h>
 
 #include <Scene/Entity.h>
 #include <Scene/Component.h>
@@ -31,6 +32,8 @@ void EditorScene::OnCreate() {
     s_Settings = Settings();
     s_Settings.LoadSettings();
     s_Settings.LoadCacheData();
+
+    FBXLoader::LoadFBXFile("");
 
     AssetManager::CreateAll();
 

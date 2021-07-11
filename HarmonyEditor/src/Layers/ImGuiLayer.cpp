@@ -10,6 +10,7 @@
 #include <Core/Display.h>
 #include <Core/Input.h>
 #include <Render/Renderer2D.h>
+#include <Render/ObjectLoader.h>
 
 #include "MenuBarLayer.h"
 
@@ -640,7 +641,7 @@ void ImGuiLayer::DrawMeshInputControl(const std::string& label, AssetHandle<Mesh
             AssetHandle<Mesh> mesh = *(const AssetHandle<Mesh>*) payload->Data;
             assetHandle = mesh;
             if(!assetHandle->IsCreated()) {
-                Renderer::LoadOBJFile(assetHandle->Filepath, assetHandle.GetAsset());
+                OBJLoader::LoadOBJFile(assetHandle->Filepath, assetHandle.GetAsset());
             }
         }
 

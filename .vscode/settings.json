@@ -11,7 +11,8 @@
         "entt",
         "glew",
         "harmonyengine",
-        "harmonypch"
+        "harmonypch",
+        "segoe"
     ],
     "files.associations": {
         "iosfwd": "cpp",
