@@ -5,6 +5,8 @@
 #include <filesystem>
 
 #include <Core/Assets.h>
+#include <Core/EventSystem.h>
+
 #include <Scene/Scene.h>
 #include <Render/Camera.h>
 

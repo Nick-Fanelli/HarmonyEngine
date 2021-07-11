@@ -10,20 +10,20 @@ namespace HarmonyEngine {
     public:
         EventSystem() = default;
 
-        void PushBackCallback(std::function<void(const EventType&)>& function) {
+        void PushBackCallback(std::function<void(const EventType&)> function) {
             m_Callbacks.push_back(function);
         }
 
         void Call(const EventType& event) {
             for(auto& callback : m_Callbacks) {
-                *callback(event);
+                callback(event);
             }
         }
 
     private:
 
     private:
-        std::vector<std::function<void(const EventType&)>*> m_Callbacks;
+        std::vector<std::function<void(const EventType&)>> m_Callbacks;
 
     };  
 
