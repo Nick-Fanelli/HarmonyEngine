@@ -33,7 +33,7 @@ void EditorScene::OnCreate() {
     s_Settings.LoadSettings();
     s_Settings.LoadCacheData();
 
-    FBXLoader::LoadFBXFile("");
+    // FBXLoader::LoadFBXFile("");
 
     AssetManager::CreateAll();
 

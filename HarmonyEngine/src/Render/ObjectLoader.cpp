@@ -90,8 +90,3 @@ void OBJLoader::LoadOBJFile(const std::filesystem::path& filepath, Mesh* mesh, f
         }
     }
 }
-
-
-void FBXLoader::LoadFBXFile(const std::filesystem::path& filepath) {
-    
-}
