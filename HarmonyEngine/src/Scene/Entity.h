@@ -57,6 +57,7 @@ namespace HarmonyEngine {
         bool IsCreated() { return m_ScenePtr != nullptr; }
 
         operator uint32_t() const { return (uint32_t) m_EntityID; }
+        operator bool() const { return m_ScenePtr != nullptr; }
 
         bool operator==(const Entity& other) const { return m_EntityID == other.m_EntityID && m_ScenePtr == other.m_ScenePtr; }
         bool operator!=(const Entity& other) const { return !operator==(other); }

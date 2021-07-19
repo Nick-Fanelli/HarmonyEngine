@@ -18,6 +18,9 @@ namespace HarmonyEditor {
 
         void OnImGuiRender();
 
+        const Entity& GetSelectedEntity() const { return m_SelectedEntity; }
+        Entity& GetSelectedEntity() { return m_SelectedEntity; }
+
     private:
         void AddToHierarchy(Entity& entity);
 

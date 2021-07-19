@@ -36,7 +36,7 @@ void HierarchyEditorPanel::OnImGuiRender() {
 
     ImGui::Begin("Hierarchy");
 
-    static float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+    // static float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 
     m_EditorScenePtr->GetSelectedScene().GetRegistry().each([&](auto entityID) {
         Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };

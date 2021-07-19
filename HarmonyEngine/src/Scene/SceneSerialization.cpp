@@ -43,7 +43,7 @@ static void SerializeComponenetYAML(YAML::Emitter& out, Entity& entity, const ch
 static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity) {
     // Begin Entity Map
     out << YAML::BeginMap;
-    out << YAML::Key << "Entity" << YAML::Value << entity;
+    out << YAML::Key << "Entity" << YAML::Value << (uint32_t) entity.GetEntityID();
     
     SerializeComponenetYAML<TagComponent>(out, entity, TagComponentID);
     SerializeComponenetYAML<TransformComponent>(out, entity, TransformComponentID);

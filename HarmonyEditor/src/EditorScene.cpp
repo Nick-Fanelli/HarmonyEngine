@@ -1,5 +1,6 @@
 #include "EditorScene.h"
 
+#include <glm/gtc/type_ptr.hpp>
 #include <ImGuizmo.h>
 
 #include <Scene/Component.h>
@@ -97,7 +98,33 @@ static void DrawGameViewport() {
 
         ImGui::Image((void*)(intptr_t) *s_RenderLayer.GetRenderTexture(), wsize, { 0.0, 1.0 }, { 1.0, 0.0 });
 
-        // TODO: ImGuizmo
+        // ImGuizmo
+        if(s_HierarchyEditorPanel.GetSelectedEntity() && s_HierarchyEditorPanel.GetSelectedEntity().ContainsComponent<TransformComponent>()) {
+
+            ImGuizmo::SetOrthographic(false);
+            ImGuizmo::SetDrawlist();
+
+            float windowWidth   = (float) ImGui::GetWindowWidth();
+            float windowHeight  = (float) ImGui::GetWindowHeight();
+
+            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+            const glm::mat4& cameraProjection = s_Camera.GetProjctionMatrix();
+            glm::mat4 cameraView = s_Camera.GetViewMatrix();
+
+            auto& transformComponent = s_HierarchyEditorPanel.GetSelectedEntity().GetComponent<TransformComponent>();
+
+            glm::mat4 transform = transformComponent.Transform.GetTransformationMatrix();
+
+            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+                ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform));
+
+            if(ImGuizmo::IsUsing()) {
+                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(transformComponent.Transform.Position),
+                    glm::value_ptr(transformComponent.Transform.Rotation), glm::value_ptr(transformComponent.Transform.Scale));
+            }
+
+        }
 
     } ImGui::EndChild();
 
