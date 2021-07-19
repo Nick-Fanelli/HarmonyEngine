@@ -19,7 +19,7 @@
 
 **1. Clone the Repository**
 ```shell
-git clone https://github.com/Nick-Fanelli/HarmonyEngine --recursive
+git clone git@github.com:Nick-Fanelli/HarmonyEngine.git --recursive
 ```
 ***Note: Use flag --recursive to get access to the submodules***
 
