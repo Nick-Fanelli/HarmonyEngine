@@ -10,13 +10,13 @@ using namespace HarmonyEditor;
 
 int main() {
 
-    Log::SetLogLevel(Log::LogLevelWarn);
-
 #if HARMONY_DEBUG
     Log::Info("Running Harmony Engine in DEBUG mode!");
 #else
     Log::Info("Running Harmony Engine in RELEASE mode!");
 #endif
+
+    Log::SetLogLevel(Log::LogLevel::LogLevelWarn);
 
     // Startup
     HARMONY_PROFILE_BEGIN_SESSION("Startup", "HarmonyProfile-Startup.json");

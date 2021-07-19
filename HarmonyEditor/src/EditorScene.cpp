@@ -1,5 +1,7 @@
 #include "EditorScene.h"
 
+#include <ImGuizmo.h>
+
 #include <Scene/Component.h>
 
 #include <Layers/ImGuiLayer.h>
@@ -9,6 +11,8 @@
 
 #include "EditorCamera.h"
 
+#include "Panels/HierarchyEditorPanel.h"
+
 #include "Application.h"
 
 using namespace HarmonyEditor;
@@ -17,6 +21,8 @@ using namespace HarmonyEngine;
 static ImGuiLayer s_ImGuiLayer;
 static RenderLayer s_RenderLayer;
 
+static HierarchyEditorPanel s_HierarchyEditorPanel;
+
 static EditorCamera s_Camera{};
 
 static bool s_IsViewportSelected = false;
@@ -24,8 +30,9 @@ static bool s_IsViewportSelected = false;
 void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
 
-    s_ImGuiLayer = { this };
+    s_ImGuiLayer = this;
     s_RenderLayer = { &s_Camera, &m_SelectedScene };
+    s_HierarchyEditorPanel = this;
 
     std::string iniSaveLocation = Application::GetApplicationSupportDirectory() + "/window-layout.ini";
 
@@ -89,7 +96,9 @@ static void DrawGameViewport() {
         s_Camera.SetViewportSize(wsize.x, wsize.y);
 
         ImGui::Image((void*)(intptr_t) *s_RenderLayer.GetRenderTexture(), wsize, { 0.0, 1.0 }, { 1.0, 0.0 });
-        
+
+        // TODO: ImGuizmo
+
     } ImGui::EndChild();
 
     ImGui::End();
@@ -105,9 +114,11 @@ void EditorScene::OnUpdate(float deltaTime) {
 
     // ImGui Layer
     s_ImGuiLayer.Begin();
+    ImGuizmo::BeginFrame();
 
     DrawDockspace(); // Draw the dockspace environment
     DrawGameViewport(); // Draw the game viewport
+    s_HierarchyEditorPanel.OnImGuiRender();
 
     s_ImGuiLayer.End();
 

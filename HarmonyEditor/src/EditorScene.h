@@ -10,8 +10,6 @@ namespace HarmonyEditor {
 
     class EditorScene : public Scene {
 
-        Scene m_SelectedScene;
-
     public:
         void OnCreate() override;
         void OnUpdate(float deltaTime) override;
@@ -19,5 +17,9 @@ namespace HarmonyEditor {
 
         const Scene& GetSelectedScene() const { return m_SelectedScene; }
         Scene& GetSelectedScene() { return m_SelectedScene; }
+
+    private:
+        Scene m_SelectedScene;
+
     };
 }
