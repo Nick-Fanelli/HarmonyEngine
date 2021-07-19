@@ -8,8 +8,8 @@
 
 namespace HarmonyEngine {
 
-    class Entity;
     class SceneSerializer;
+    class Entity;
 
     class Scene {
 

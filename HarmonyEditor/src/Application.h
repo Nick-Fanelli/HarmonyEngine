@@ -4,14 +4,9 @@
 
 #include <filesystem>
 
-#include "Project.h"
-
 using namespace HarmonyEngine;
 
 class Application {
-
-	friend class ProjectManager;
-	Project m_Project;
 
 public:
 
@@ -39,10 +34,5 @@ public:
 			std::filesystem::create_directories(path.parent_path());
 
 		return path;
-	}
-
-	const Project& GetCurrentProject() const { return m_Project; }
-
-	static void OpenFolderDialog(const char* rootDirectory, const std::function<void(const char*)>& function);
-	static void OpenFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const char*)>& function);
+    }
 };

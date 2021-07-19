@@ -9,8 +9,6 @@
 
 namespace HarmonyEngine {
 
-    class Scene;
-
     class Entity {
 
         friend class Scene;
