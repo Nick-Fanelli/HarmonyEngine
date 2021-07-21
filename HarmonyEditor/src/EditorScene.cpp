@@ -24,7 +24,7 @@ static RenderLayer s_RenderLayer;
 
 static HierarchyEditorPanel s_HierarchyEditorPanel;
 
-static EditorCamera s_Camera{};
+static EditorCamera s_Camera;
 
 static bool s_IsViewportSelected = false;
 
@@ -39,9 +39,6 @@ void EditorScene::OnCreate() {
 
     s_ImGuiLayer.OnCreate(iniSaveLocation);
     s_RenderLayer.OnCreate();
-
-    Entity entity = m_SelectedScene.CreateEntity("Some Entity");
-    entity.AddComponent<QuadRendererComponent>(glm::vec4{1, 0, 0, 1});
 }
 
 static void DrawDockspace() {
@@ -104,10 +101,7 @@ static void DrawGameViewport() {
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
 
-            float windowWidth   = (float) ImGui::GetWindowWidth();
-            float windowHeight  = (float) ImGui::GetWindowHeight();
-
-            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float) ImGui::GetWindowWidth(), (float) ImGui::GetWindowHeight());
 
             const glm::mat4& cameraProjection = s_Camera.GetProjctionMatrix();
             glm::mat4 cameraView = s_Camera.GetViewMatrix();
