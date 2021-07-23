@@ -101,6 +101,10 @@ void HierarchyEditorPanel::OnImGuiRender() {
 
     ImGui::Begin("Hierarchy");
 
+    if(ImGui::Button("New Entity")) {
+        m_EditorScenePtr->GetSelectedScene().CreateEntity("Untitled Entity");
+    }
+
     m_EditorScenePtr->GetSelectedScene().GetRegistry().each([&](auto entityID) {
         Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };
         AddToHierarchy(entity);

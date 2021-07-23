@@ -4,6 +4,7 @@
 #include <ImGuizmo.h>
 
 #include <Scene/Component.h>
+#include <Scene/SceneSerialization.h>
 
 #include <Layers/ImGuiLayer.h>
 #include <Layers/RenderLayer.h>
@@ -11,6 +12,7 @@
 #include <Scene/Entity.h>
 
 #include "EditorCamera.h"
+#include "MenuBar.h"
 
 #include "Panels/HierarchyEditorPanel.h"
 
@@ -24,7 +26,11 @@ static RenderLayer s_RenderLayer;
 
 static HierarchyEditorPanel s_HierarchyEditorPanel;
 
+static MenuBar s_MenuBar;
+
 static EditorCamera s_Camera;
+
+static SceneSerializer s_SceneSerializer;
 
 static bool s_IsViewportSelected = false;
 
@@ -32,13 +38,28 @@ void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
 
     s_ImGuiLayer = this;
+    s_MenuBar = this;
     s_RenderLayer = { &s_Camera, &m_SelectedScene };
     s_HierarchyEditorPanel = this;
 
-    std::string iniSaveLocation = Application::GetApplicationSupportDirectory() + "/window-layout.ini";
+    std::string iniSaveLocation = std::filesystem::path(Application::GetApplicationSupportDirectory()) / "window-layout.ini";
 
     s_ImGuiLayer.OnCreate(iniSaveLocation);
     s_RenderLayer.OnCreate();
+}
+
+void EditorScene::OpenScene(const std::filesystem::path& filepath) {
+
+    m_SelectedScene.GetRegistry().clear();
+
+    s_SceneSerializer = SceneSerializer(&m_SelectedScene, filepath);
+    s_SceneSerializer.DeserializeYAML();
+
+}
+
+void EditorScene::SaveScene() {
+    if(s_SceneSerializer)
+        s_SceneSerializer.SerializeYAML();
 }
 
 static void DrawDockspace() {
@@ -136,6 +157,8 @@ void EditorScene::OnUpdate(float deltaTime) {
     // ImGui Layer
     s_ImGuiLayer.Begin();
     ImGuizmo::BeginFrame();
+
+    s_MenuBar.OnImGuiRender();
 
     DrawDockspace(); // Draw the dockspace environment
     DrawGameViewport(); // Draw the game viewport

@@ -2,8 +2,6 @@
 
 #include <harmonypch.h>
 
-#include <filesystem>
-
 #include "Scene.h"
 
 namespace HarmonyEngine {
@@ -23,13 +21,15 @@ namespace HarmonyEngine {
         void SerializeYAML();
         void SerializerBinary();
 
-        void DeserializeYAML(const std::filesystem::path& filepath = "");
+        void DeserializeYAML();
         void DeserializeBinary();
 
-    private:
-        Scene* m_ScenePtr;
-        std::string m_Filepath; 
+        operator bool() const { return m_ScenePtr != nullptr; }
+        bool IsAssigned() const { return m_ScenePtr != nullptr; }
 
+    private:
+        Scene* m_ScenePtr = nullptr;
+        std::string m_Filepath;
     };
 
 };

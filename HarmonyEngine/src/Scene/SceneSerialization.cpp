@@ -73,7 +73,7 @@ static bool DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, E
     return false;
 }
 
-static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const std::string& name, const std::filesystem::path& filepath) {
+static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const std::string& name) {
 
     if(!DeserializeComponentYAML<TransformComponent>(entityNode, entity, TransformComponentID)) {
         entity.RemoveComponent<TransformComponent>();
@@ -114,7 +114,7 @@ void SceneSerializer::SerializerBinary() {
     HARMONY_ASSERT(true);
 }
 
-void SceneSerializer::DeserializeYAML(const std::filesystem::path& filepath) {
+void SceneSerializer::DeserializeYAML() {
 
     std::ifstream in(m_Filepath);
     std::stringstream stream;
@@ -141,7 +141,7 @@ void SceneSerializer::DeserializeYAML(const std::filesystem::path& filepath) {
 
             Entity deserializedEntity = m_ScenePtr->CreateEntity(name);
 
-            DeserializeEntityYAML(entity, deserializedEntity, name, filepath);
+            DeserializeEntityYAML(entity, deserializedEntity, name);
         }   
     }
 }

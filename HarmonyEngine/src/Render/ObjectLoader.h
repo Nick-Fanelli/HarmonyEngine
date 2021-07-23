@@ -2,8 +2,6 @@
 
 #include "harmonypch.h"
 
-#include <filesystem>
-
 #include "Render/Mesh.h"
 
 namespace HarmonyEngine::OBJLoader {

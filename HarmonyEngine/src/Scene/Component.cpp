@@ -1,7 +1,5 @@
 #include "Component.h"
 
-#include <filesystem>
-
 #include "../Core/Assets.h"
 
 using namespace HarmonyEngine;

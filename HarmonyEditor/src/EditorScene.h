@@ -15,6 +15,9 @@ namespace HarmonyEditor {
         void OnUpdate(float deltaTime) override;
         void OnDestroy() override;  
 
+        void OpenScene(const std::filesystem::path& filepath);
+        void SaveScene();
+
         const Scene& GetSelectedScene() const { return m_SelectedScene; }
         Scene& GetSelectedScene() { return m_SelectedScene; }
 

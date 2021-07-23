@@ -2,8 +2,6 @@
 
 #include "harmonypch.h"
 
-#include <filesystem>
-
 #include <glad/glad.h>
 
 #define GLM_ENABLE_EXPERIMENTAL

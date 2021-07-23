@@ -12,6 +12,10 @@
         "glew",
         "harmonyengine",
         "harmonypch",
+        "hyscene",
+        "nfdchar",
+        "nfdfilteritem",
+        "nfdresult",
         "segoe"
     ],
     "files.associations": {

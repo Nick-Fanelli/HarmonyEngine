@@ -21,6 +21,8 @@
 #include <unordered_set>
 #include <unordered_map>
 
+#include <filesystem>
+
 #include "Core/Log.h"
 #include "Core/Assert.h"
 #include "Debug/Profile.h"
