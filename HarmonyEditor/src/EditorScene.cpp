@@ -49,12 +49,8 @@ void EditorScene::OnCreate() {
 }
 
 void EditorScene::OpenScene(const std::filesystem::path& filepath) {
-
-    m_SelectedScene.GetRegistry().clear();
-
     s_SceneSerializer = SceneSerializer(&m_SelectedScene, filepath);
     s_SceneSerializer.DeserializeYAML();
-
 }
 
 void EditorScene::SaveScene() {
@@ -160,7 +156,12 @@ void EditorScene::OnUpdate(float deltaTime) {
 
     s_MenuBar.OnImGuiRender();
 
+    static ImGuiStyle& style = ImGui::GetStyle();
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 370.0f, style.WindowMinSize.y });
     DrawDockspace(); // Draw the dockspace environment
+    ImGui::PopStyleVar();
+
     DrawGameViewport(); // Draw the game viewport
     s_HierarchyEditorPanel.OnImGuiRender();
 

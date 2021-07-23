@@ -22,6 +22,8 @@ namespace HarmonyEngine {
     public:
         const std::string& GetSceneName() const { return m_SceneName; }
 
+        void SetSceneName(const std::string& name) { m_SceneName = name; }
+
         Scene() = default;
         Scene(const std::string& sceneName) : m_SceneName(std::move(sceneName)) {}
 

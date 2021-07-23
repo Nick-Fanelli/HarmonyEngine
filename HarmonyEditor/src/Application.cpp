@@ -81,3 +81,20 @@ void Application::OpenFileDialog(const std::pair<const char*, const char*>& filt
 
     NFD_Quit();
 }
+
+void Application::SaveFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const std::filesystem::path&)>& function) {
+    NFD_Init();
+
+    nfdchar_t* outPath;
+    nfdfilteritem_t nfdFilterItems[1] = { { filterItems.first, filterItems.second } };
+    nfdresult_t result = NFD_SaveDialog(&outPath, nfdFilterItems, 1, nullptr, nullptr);
+
+    if(result == NFD_OKAY) {
+        auto path = std::filesystem::path(outPath);
+
+        function(path);
+        NFD_FreePath(outPath);
+    }
+
+    NFD_Quit();
+}

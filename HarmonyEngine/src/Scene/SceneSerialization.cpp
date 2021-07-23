@@ -130,6 +130,8 @@ void SceneSerializer::DeserializeYAML() {
     m_ScenePtr->m_SceneName = sceneName;
     Log::FormatInfo("Deserializing scene '%s'", sceneName.c_str());
 
+    m_ScenePtr->m_Registry.clear();
+
     auto entities = root["Entities"];
     if(entities) {
         for(auto entity : entities) {

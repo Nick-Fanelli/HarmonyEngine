@@ -119,7 +119,7 @@ void HierarchyEditorPanel::OnImGuiRender() {
 
     ImGui::End();
 
-    ImGui::Begin("Component");
+    ImGui::Begin("Components");
 
     if(m_SelectedEntity)
         DisplayEntity(m_SelectedEntity);
