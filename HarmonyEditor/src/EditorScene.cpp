@@ -171,6 +171,8 @@ void EditorScene::OnUpdate(float deltaTime) {
 }   
 
 void EditorScene::OnDestroy() {
+    SaveScene();
+
     s_ImGuiLayer.OnDestroy();
     s_RenderLayer.OnDestroy();
 }

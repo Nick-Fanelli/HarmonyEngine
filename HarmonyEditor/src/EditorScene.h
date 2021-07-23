@@ -22,7 +22,7 @@ namespace HarmonyEditor {
         Scene& GetSelectedScene() { return m_SelectedScene; }
 
     private:
-        Scene m_SelectedScene;
+        Scene m_SelectedScene = Scene{"Untitled Scene"};
 
     };
 }

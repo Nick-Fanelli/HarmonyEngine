@@ -105,10 +105,17 @@ void HierarchyEditorPanel::OnImGuiRender() {
         m_EditorScenePtr->GetSelectedScene().CreateEntity("Untitled Entity");
     }
 
-    m_EditorScenePtr->GetSelectedScene().GetRegistry().each([&](auto entityID) {
-        Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };
-        AddToHierarchy(entity);
-    });
+    static constexpr auto flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen;
+
+    if(ImGui::TreeNodeEx(m_EditorScenePtr->GetSelectedScene().GetSceneName().c_str(), flags)) {
+
+        m_EditorScenePtr->GetSelectedScene().GetRegistry().each([&](auto entityID) {
+            Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };
+            AddToHierarchy(entity);
+        });
+
+        ImGui::TreePop();
+    }
 
     ImGui::End();
 
