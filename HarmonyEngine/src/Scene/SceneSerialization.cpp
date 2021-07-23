@@ -127,6 +127,7 @@ void SceneSerializer::DeserializeYAML() {
     }
 
     std::string sceneName = root["Scene"].as<std::string>();
+    m_ScenePtr->m_SceneName = sceneName;
     Log::FormatInfo("Deserializing scene '%s'", sceneName.c_str());
 
     auto entities = root["Entities"];
