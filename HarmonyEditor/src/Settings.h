@@ -35,6 +35,13 @@ namespace HarmonyEditor {
         friend class SettingsManager;
 
     public:
+        // Not Displayed
+        static Setting<bool> ShowViewportPanel;
+        static Setting<bool> ShowSettingsPanel;
+        static Setting<bool> ShowHierarchyPanel;
+        static Setting<bool> ShowComponentsPanel;
+
+        // Displayed
         static Setting<float> EditorMovementSensitivity;
     };
 

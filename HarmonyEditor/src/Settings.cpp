@@ -8,6 +8,22 @@
 
 using namespace HarmonyEditor;
 
+// Non-Displayed
+Setting<bool> Settings::ShowViewportPanel = true;
+Setting<bool> Settings::ShowSettingsPanel = true;
+Setting<bool> Settings::ShowHierarchyPanel = true;
+Setting<bool> Settings::ShowComponentsPanel = true;
+
+static std::unordered_map<std::string, Setting<bool>*> s_ShowPanelsSettings = {
+
+    { "ShowViewportPanel", &Settings::ShowViewportPanel },
+    { "ShowSettingsPanel", &Settings::ShowSettingsPanel },
+    { "ShowHierarchyPanel", &Settings::ShowHierarchyPanel },
+    { "ShowComponentsPanel", &Settings::ShowComponentsPanel }
+
+};
+
+// Displayed
 Setting<float> Settings::EditorMovementSensitivity = 0.003;
 
 static const std::filesystem::path& GetSettingsFilepath() {
@@ -16,14 +32,14 @@ static const std::filesystem::path& GetSettingsFilepath() {
 }
 
 template<typename T>
-static void SerializeSetting(YAML::Emitter& out, const Setting<T>& setting) {
-    out << YAML::Key << typeid(setting).name() << YAML::Value << setting;
+static void SerializeSetting(YAML::Emitter& out, const Setting<T>& setting, const char* id) {
+    out << YAML::Key << id << YAML::Value << setting;
 }
 
 template<typename T>
-static void DeserializeSetting(YAML::Node& node, const Setting<T>& setting) {
-    if(node[typeid(setting).name()]) 
-        setting.CurrentValue = node[typeid(setting).name()].as<T>();
+static void DeserializeSetting(YAML::Node& node, const Setting<T>& setting, const char* id) {
+    if(node[id]) 
+        setting.CurrentValue = node[id].as<T>();
 }
 
 void SettingsManager::LoadSettings() {
@@ -33,7 +49,10 @@ void SettingsManager::LoadSettings() {
 
     YAML::Node root = YAML::Load(stream.str());
 
-    DeserializeSetting(root, Settings::EditorMovementSensitivity);
+    for(auto& entry : s_ShowPanelsSettings)
+        DeserializeSetting(root, *entry.second, entry.first.c_str());
+
+    DeserializeSetting(root, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");
 }
 
 void SettingsManager::SaveSettings() {
@@ -41,7 +60,10 @@ void SettingsManager::SaveSettings() {
 
     out << YAML::BeginMap; // Root
 
-    SerializeSetting(out, Settings::EditorMovementSensitivity);
+    for(auto& entry : s_ShowPanelsSettings)
+        SerializeSetting(out, *entry.second, entry.first.c_str());
+
+    SerializeSetting(out, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");
 
     out << YAML::EndMap; // Root
 
@@ -63,18 +85,20 @@ static void DrawSetting(const Setting<T>& setting, UIFunction uiFunction) {
 }
 
 void SettingsManager::OnImGuiRender() {
-    ImGui::Begin("Settings");
+    if(Settings::ShowSettingsPanel) {
+        ImGui::Begin("Settings");
 
-    if(ImGui::CollapsingHeader("General")) {
-        if(ImGui::TreeNodeEx("Viewport Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+        if(ImGui::CollapsingHeader("General")) {
+            if(ImGui::TreeNodeEx("Viewport Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
 
-            DrawSetting(Settings::EditorMovementSensitivity, []() {
-                ImGuiDefaults::DrawFloat("Editor Movement Sensitivity", Settings::EditorMovementSensitivity.CurrentValue, 0.001f, 0.0f);
-            });
+                DrawSetting(Settings::EditorMovementSensitivity, []() {
+                    ImGuiDefaults::DrawFloat("Editor Movement Sensitivity", Settings::EditorMovementSensitivity.CurrentValue, 0.001f, 0.0f);
+                });
 
-            ImGui::TreePop();
+                ImGui::TreePop();
+            }
         }
-    }
 
-    ImGui::End();
+        ImGui::End();
+    }
 }

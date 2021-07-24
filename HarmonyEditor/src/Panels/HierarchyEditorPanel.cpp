@@ -4,6 +4,7 @@
 
 #include <Scene/Entity.h>
 
+#include "../Settings.h"
 #include "../ImGuiDefaults.h"
 
 using namespace HarmonyEditor;
@@ -99,31 +100,38 @@ static void DisplayEntity(Entity& entity) {
 void HierarchyEditorPanel::OnImGuiRender() {
     HARMONY_PROFILE_FUNCTION();
 
-    ImGui::Begin("Hierarchy");
+    if(Settings::ShowHierarchyPanel) {
 
-    if(ImGui::Button("New Entity")) {
-        m_EditorScenePtr->GetSelectedScene().CreateEntity("Untitled Entity");
+        ImGui::Begin("Hierarchy");
+
+        if(ImGui::Button("New Entity")) {
+            m_EditorScenePtr->GetSelectedScene().CreateEntity("Untitled Entity");
+        }
+
+        static constexpr auto flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen;
+
+        if(ImGui::TreeNodeEx(m_EditorScenePtr->GetSelectedScene().GetSceneName().c_str(), flags)) {
+
+            m_EditorScenePtr->GetSelectedScene().GetRegistry().each([&](auto entityID) {
+                Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };
+                AddToHierarchy(entity);
+            });
+
+            ImGui::TreePop();
+        }
+
+        ImGui::End();
     }
 
-    static constexpr auto flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen;
+    if(Settings::ShowComponentsPanel) {
 
-    if(ImGui::TreeNodeEx(m_EditorScenePtr->GetSelectedScene().GetSceneName().c_str(), flags)) {
+        ImGui::Begin("Components");
 
-        m_EditorScenePtr->GetSelectedScene().GetRegistry().each([&](auto entityID) {
-            Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };
-            AddToHierarchy(entity);
-        });
+        if(m_SelectedEntity)
+            DisplayEntity(m_SelectedEntity);
 
-        ImGui::TreePop();
+        ImGui::End();
+        
     }
-
-    ImGui::End();
-
-    ImGui::Begin("Components");
-
-    if(m_SelectedEntity)
-        DisplayEntity(m_SelectedEntity);
-
-    ImGui::End();
 
 }

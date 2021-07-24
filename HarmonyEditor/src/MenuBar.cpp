@@ -2,14 +2,42 @@
 
 #include <imguipch.h>
 
+#include <Core/Input.h>
 #include <Scene/SceneSerialization.h>
 
 #include "Application.h"
 #include "EditorScene.h"
+#include "Settings.h"
 
 using namespace HarmonyEditor;
 
+static std::string GetCommandString(const std::string& identifiers) {
+#ifdef HARMONY_PLATFORM_MACOS
+    static const std::string metaIdentifer = "Command+";
+#else
+    static const std::string metaIdentifer = "Ctrl+";
+#endif
+
+    return std::string(metaIdentifer) + identifiers;
+}
+
+static void HandleKeyboardShortcuts() {
+    if(Input::IsCommandDown(HARMONY_KEY_1)) 
+        Settings::ShowViewportPanel.CurrentValue = !Settings::ShowViewportPanel.CurrentValue;
+        
+    if(Input::IsCommandDown(HARMONY_KEY_2)) 
+        Settings::ShowSettingsPanel.CurrentValue = !Settings::ShowSettingsPanel.CurrentValue;
+
+    if(Input::IsCommandDown(HARMONY_KEY_LEFT_SHIFT, HARMONY_KEY_LEFT_BRACKET))
+        Settings::ShowHierarchyPanel.CurrentValue = !Settings::ShowHierarchyPanel.CurrentValue; 
+        
+    if(Input::IsCommandDown(HARMONY_KEY_LEFT_SHIFT, HARMONY_KEY_RIGHT_BRACKET))
+        Settings::ShowComponentsPanel.CurrentValue = !Settings::ShowComponentsPanel.CurrentValue;
+}
+
 void MenuBar::OnImGuiRender() {
+
+    HandleKeyboardShortcuts();
 
     if(ImGui::BeginMainMenuBar()) {
 
@@ -38,6 +66,28 @@ void MenuBar::OnImGuiRender() {
 
                     m_EditorScenePtr->OpenScene(path);
                 });
+            }
+
+            ImGui::EndMenu();
+        }
+
+        if(ImGui::BeginMenu("Window")) {
+
+            if(ImGui::BeginMenu("Editor Panels")) {
+
+                static const std::string gameViewportCmd = GetCommandString("1");
+                ImGui::MenuItem("Game Viewport", gameViewportCmd.c_str(), &Settings::ShowViewportPanel.CurrentValue);
+
+                static const std::string settingsCmd = GetCommandString("2");
+                ImGui::MenuItem("Game Viewport", settingsCmd.c_str(), &Settings::ShowSettingsPanel.CurrentValue);
+
+                static const std::string hierarchyCmd = GetCommandString("Shift+[");
+                ImGui::MenuItem("Hierarchy", hierarchyCmd.c_str(), &Settings::ShowHierarchyPanel.CurrentValue);
+                
+                static const std::string componentsCmd = GetCommandString("Shift+]");
+                ImGui::MenuItem("Components", componentsCmd.c_str(), &Settings::ShowComponentsPanel.CurrentValue);
+
+                ImGui::EndMenu();
             }
 
             ImGui::EndMenu();

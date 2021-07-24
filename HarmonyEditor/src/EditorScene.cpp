@@ -104,6 +104,9 @@ static void DrawDockspace() {
 static void DrawGameViewport() {
     HARMONY_PROFILE_FUNCTION();
 
+    if(!Settings::ShowViewportPanel)
+        return;
+
     ImGui::Begin("Game Viewport");
     s_IsViewportSelected = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
 
@@ -164,7 +167,9 @@ void EditorScene::OnUpdate(float deltaTime) {
     DrawDockspace(); // Draw the dockspace environment
     ImGui::PopStyleVar(); // Pop dockspace window min size
 
+    // Game Viewport
     DrawGameViewport(); // Draw the game viewport
+
     s_HierarchyEditorPanel.OnImGuiRender();
 
     SettingsManager::OnImGuiRender();

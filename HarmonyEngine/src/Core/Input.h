@@ -9,6 +9,8 @@
 
 #include "Display.h"
 
+namespace HarmonyEngine {
+
 // Taken from glfw.h
 #define HARMONY_KEY_SPACE              32
 #define HARMONY_KEY_APOSTROPHE         39  /* ' */
@@ -145,12 +147,20 @@
 #define HARMONY_MOUSE_BUTTON_RIGHT     HARMONY_MOUSE_BUTTON_2
 #define HARMONY_MOUSE_BUTTON_MIDDLE    HARMONY_MOUSE_BUTTON_3
 
-namespace HarmonyEngine {
+#ifdef HARMONY_PLATFORM_MACOS
+    #define HARMONY_MODIFIER_KEY HARMONY_KEY_LEFT_SUPER
+#else
+    #define HARMONY_MODIFIER_KEY HARMONY_KEY_LEFT_CONTROL
+#endif
+
+    class Display;
 
     class Input {
 
+        friend class Display;
+
         static const size_t NUM_KEYS = 348; // Amount of keys that GLFW can handle
-        static const size_t NUM_MOUSE_BUTTONS = 9; // Amount of mouse buttons that GLFW can handle
+        static const size_t NUM_MOUSE_BUTTONS = 7; // Amount of mouse buttons that GLFW can handle
 
         static bool s_Keys[NUM_KEYS];
         static bool s_KeysLast[NUM_KEYS];
@@ -163,8 +173,6 @@ namespace HarmonyEngine {
 
         static glm::vec2 s_AbsScrollPosition;
         static glm::vec2 s_ScrollPosition;
-    
-    public:
 
         static void Update();
 
@@ -172,6 +180,8 @@ namespace HarmonyEngine {
         static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
         static void MousePositionCallback(GLFWwindow* window, double xPos, double yPos);
         static void MouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+    
+    public:
 
         static bool IsKey(int keycode) { return s_Keys[keycode]; }
         static bool IsKeyUp(int keycode) { return !s_Keys[keycode] && s_KeysLast[keycode]; }
@@ -180,6 +190,18 @@ namespace HarmonyEngine {
         static bool IsMouseButton(int button) { return s_MouseButtons[button]; }
         static bool IsMouseButtonUp(int button) { return !s_MouseButtons[button] && s_MouseButtonsLast[button]; }
         static bool IsMouseButtonDown(int button) { return s_MouseButtons[button] && !s_MouseButtonsLast[button]; }
+
+        static bool IsCommand(int button) {
+            return s_Keys[HARMONY_MODIFIER_KEY] && s_Keys[button];
+        }
+
+        static bool IsCommandDown(int button) {
+            return IsKey(HARMONY_MODIFIER_KEY) && IsKeyDown(button);
+        }
+
+        static bool IsCommandDown(int modifier, int button) {
+            return IsKey(HARMONY_MODIFIER_KEY) && IsKey(modifier) && IsKeyDown(button);
+        }
 
         static const glm::vec2& GetMousePosition() { return s_MousePosition; }
         static const glm::vec2& GetScrollPosition() { return s_ScrollPosition; }
