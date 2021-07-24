@@ -1,7 +1,6 @@
 #include "EditorScene.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <ImGuizmo.h>
 
 #include <Core/Input.h>
 
@@ -33,10 +32,15 @@ static EditorCamera s_Camera;
 
 static SceneSerializer s_SceneSerializer;
 
+static ImGuizmo::OPERATION s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+
 static bool s_IsViewportSelected = false;
 static bool s_IsTabToggled = false;
 
 static std::vector<Setting<bool>*> s_TabPointers;
+
+const ImGuizmo::OPERATION& EditorScene::GetCurrentOperation() { return s_CurrentImGuizmoOperation; }
+void EditorScene::SetCurrentOperation(const ImGuizmo::OPERATION& operation) { s_CurrentImGuizmoOperation = operation; }
 
 void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
@@ -137,7 +141,7 @@ static void DrawGameViewport() {
             glm::mat4 transform = transformComponent.Transform.GetTransformationMatrix();
 
             ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-                ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform));
+                s_CurrentImGuizmoOperation, ImGuizmo::LOCAL, glm::value_ptr(transform));
 
             if(ImGuizmo::IsUsing()) {
                 ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(transformComponent.Transform.Position),
@@ -181,6 +185,13 @@ void EditorScene::OnUpdate(float deltaTime) {
 
         s_IsTabToggled = !s_IsTabToggled;
     }
+
+    if(Input::IsKeyDown(HARMONY_KEY_T))
+        s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+    if(Input::IsKeyDown(HARMONY_KEY_R))
+        s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::ROTATE;
+    if(Input::IsKeyDown(HARMONY_KEY_S))
+        s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::SCALE;
 
     // ImGui Layer
     s_ImGuiLayer.Begin();

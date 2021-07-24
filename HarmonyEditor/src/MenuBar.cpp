@@ -41,6 +41,11 @@ void MenuBar::OnImGuiRender() {
 
     if(ImGui::BeginMainMenuBar()) {
 
+        static const float menuBarHeight = ImGui::GetWindowHeight();
+
+        ImGui::Columns(2, nullptr, false);
+        ImGui::SetColumnWidth(0, ImGui::GetWindowWidth() - menuBarHeight * 5.0f);
+
         if(ImGui::BeginMenu("File")) {
 
             if(ImGui::MenuItem("Open Scene")) {
@@ -99,6 +104,38 @@ void MenuBar::OnImGuiRender() {
 
             ImGui::EndMenu();
         }
+
+        ImGui::NextColumn();
+
+
+        const ImGuizmo::OPERATION& currentOperation = m_EditorScenePtr->GetCurrentOperation();
+
+        ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
+
+        if(currentOperation == ImGuizmo::OPERATION::TRANSLATE)
+            ImGui::PopStyleColor();
+        if(ImGui::Button("T", { menuBarHeight, menuBarHeight }))
+            m_EditorScenePtr->SetCurrentOperation(ImGuizmo::OPERATION::TRANSLATE);
+        else if(currentOperation == ImGuizmo::OPERATION::TRANSLATE)
+            ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
+
+        if(currentOperation == ImGuizmo::OPERATION::ROTATE)
+            ImGui::PopStyleColor();
+        if(ImGui::Button("R", { menuBarHeight, menuBarHeight }))
+            m_EditorScenePtr->SetCurrentOperation(ImGuizmo::OPERATION::ROTATE);
+        else if(currentOperation == ImGuizmo::OPERATION::ROTATE)
+            ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
+
+        if(currentOperation == ImGuizmo::OPERATION::SCALE)
+            ImGui::PopStyleColor();
+        if(ImGui::Button("S", { menuBarHeight, menuBarHeight }))
+            m_EditorScenePtr->SetCurrentOperation(ImGuizmo::OPERATION::SCALE);
+        else if(currentOperation == ImGuizmo::OPERATION::SCALE)
+            ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
+
+        ImGui::PopStyleColor();
+
+        ImGui::Columns(1);
 
         ImGui::EndMainMenuBar();
     }
