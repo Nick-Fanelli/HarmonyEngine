@@ -79,7 +79,7 @@ void MenuBar::OnImGuiRender() {
                 ImGui::MenuItem("Game Viewport", gameViewportCmd.c_str(), &Settings::ShowViewportPanel.CurrentValue);
 
                 static const std::string settingsCmd = GetCommandString("2");
-                ImGui::MenuItem("Game Viewport", settingsCmd.c_str(), &Settings::ShowSettingsPanel.CurrentValue);
+                ImGui::MenuItem("Settings", settingsCmd.c_str(), &Settings::ShowSettingsPanel.CurrentValue);
 
                 static const std::string hierarchyCmd = GetCommandString("Shift+[");
                 ImGui::MenuItem("Hierarchy", hierarchyCmd.c_str(), &Settings::ShowHierarchyPanel.CurrentValue);

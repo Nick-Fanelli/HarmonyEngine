@@ -14,7 +14,7 @@ Setting<bool> Settings::ShowSettingsPanel = true;
 Setting<bool> Settings::ShowHierarchyPanel = true;
 Setting<bool> Settings::ShowComponentsPanel = true;
 
-static std::unordered_map<std::string, Setting<bool>*> s_ShowPanelsSettings = {
+std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings = {
 
     { "ShowViewportPanel", &Settings::ShowViewportPanel },
     { "ShowSettingsPanel", &Settings::ShowSettingsPanel },
@@ -49,7 +49,7 @@ void SettingsManager::LoadSettings() {
 
     YAML::Node root = YAML::Load(stream.str());
 
-    for(auto& entry : s_ShowPanelsSettings)
+    for(auto& entry : Settings::AllShowPanelSettings)
         DeserializeSetting(root, *entry.second, entry.first.c_str());
 
     DeserializeSetting(root, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");
@@ -60,7 +60,7 @@ void SettingsManager::SaveSettings() {
 
     out << YAML::BeginMap; // Root
 
-    for(auto& entry : s_ShowPanelsSettings)
+    for(auto& entry : Settings::AllShowPanelSettings)
         SerializeSetting(out, *entry.second, entry.first.c_str());
 
     SerializeSetting(out, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");

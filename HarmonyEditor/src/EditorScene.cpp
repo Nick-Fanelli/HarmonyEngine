@@ -3,13 +3,14 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <ImGuizmo.h>
 
+#include <Core/Input.h>
+
 #include <Scene/Component.h>
 #include <Scene/SceneSerialization.h>
+#include <Scene/Entity.h>
 
 #include <Layers/ImGuiLayer.h>
 #include <Layers/RenderLayer.h>
-
-#include <Scene/Entity.h>
 
 #include "Application.h"
 #include "EditorCamera.h"
@@ -33,6 +34,9 @@ static EditorCamera s_Camera;
 static SceneSerializer s_SceneSerializer;
 
 static bool s_IsViewportSelected = false;
+static bool s_IsTabToggled = false;
+
+static std::vector<Setting<bool>*> s_TabPointers;
 
 void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
@@ -154,6 +158,29 @@ void EditorScene::OnUpdate(float deltaTime) {
     // Camera Update
     if(s_IsViewportSelected)
         s_Camera.OnUpdate(deltaTime);
+
+    if(Input::IsKeyDown(HARMONY_KEY_TAB)) {
+
+        if(s_IsTabToggled) {
+            s_TabPointers.clear();
+
+            for(auto& entry : Settings::AllShowPanelSettings) {
+                if(entry.second == &Settings::ShowViewportPanel)
+                    continue;
+
+                if(entry.second->CurrentValue) {
+                    s_TabPointers.push_back(entry.second);
+                    entry.second->CurrentValue = false;
+                }
+            }
+        } else {
+            for(auto& ptr : s_TabPointers) {
+                ptr->CurrentValue = true;
+            }
+        }
+
+        s_IsTabToggled = !s_IsTabToggled;
+    }
 
     // ImGui Layer
     s_ImGuiLayer.Begin();
