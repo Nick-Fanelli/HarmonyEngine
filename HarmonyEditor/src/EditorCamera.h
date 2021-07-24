@@ -31,6 +31,11 @@ namespace HarmonyEditor {
 
         float GetPitch() const { return m_Pitch; }
         float GetYaw() const { return m_Yaw; }
+
+        enum InputStyle {
+            InputStyleDefault, InputStyleReversed, InputStyleModern
+        };
+
     private:
         void UpdateProjection();
         void UpdateView();

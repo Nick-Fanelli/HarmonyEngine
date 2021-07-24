@@ -181,3 +181,16 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
 
     ImGui::PopID();
 }
+
+void ImGuiDefaults::DrawComboSelection(const std::string& label, int& value, const char* items[], uint32_t itemCount) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Columns(2, nullptr, false);
+    ImGui::SetColumnWidth(0, ColumnWidth);
+    ImGui::Text("%s", label.c_str());
+    ImGui::NextColumn();
+    ImGui::Combo("", &value, items, itemCount);
+    ImGui::Columns(1);
+
+    ImGui::PopID();
+}

@@ -24,6 +24,7 @@ std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings =
 };
 
 // Displayed
+Setting<int> Settings::EditorInputStyle = EditorCamera::InputStyle::InputStyleDefault;
 Setting<float> Settings::EditorMovementSensitivity = 0.003;
 
 static const std::filesystem::path& GetSettingsFilepath() {
@@ -52,6 +53,7 @@ void SettingsManager::LoadSettings() {
     for(auto& entry : Settings::AllShowPanelSettings)
         DeserializeSetting(root, *entry.second, entry.first.c_str());
 
+    DeserializeSetting(root, Settings::EditorInputStyle, "EditorInputStyle");
     DeserializeSetting(root, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");
 }
 
@@ -63,6 +65,7 @@ void SettingsManager::SaveSettings() {
     for(auto& entry : Settings::AllShowPanelSettings)
         SerializeSetting(out, *entry.second, entry.first.c_str());
 
+    SerializeSetting(out, Settings::EditorInputStyle, "EditorInputStyle");
     SerializeSetting(out, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");
 
     out << YAML::EndMap; // Root
@@ -79,9 +82,14 @@ static void DrawSetting(const Setting<T>& setting, UIFunction uiFunction) {
     ImGui::SameLine();
 
     float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+    ImGui::PushID(&setting);
+
     if(ImGui::ButtonEx("\uf0e2", { lineHeight, lineHeight })) {
         setting.Reset();
     }
+
+    ImGui::PopID();
 }
 
 void SettingsManager::OnImGuiRender() {
@@ -91,8 +99,13 @@ void SettingsManager::OnImGuiRender() {
         if(ImGui::CollapsingHeader("General")) {
             if(ImGui::TreeNodeEx("Viewport Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
 
+                DrawSetting(Settings::EditorInputStyle, []() {
+                    static const char* items[] = { "Default", "Reversed", "Modern" };
+                    ImGuiDefaults::DrawComboSelection("Input Style", Settings::EditorInputStyle.CurrentValue, items, 3);
+                });
+
                 DrawSetting(Settings::EditorMovementSensitivity, []() {
-                    ImGuiDefaults::DrawFloat("Editor Movement Sensitivity", Settings::EditorMovementSensitivity.CurrentValue, 0.001f, 0.0f);
+                    ImGuiDefaults::DrawFloat("Movement Sensitivity", Settings::EditorMovementSensitivity.CurrentValue, 0.001f, 0.0f);
                 });
 
                 ImGui::TreePop();

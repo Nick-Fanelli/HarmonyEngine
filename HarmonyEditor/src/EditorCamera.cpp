@@ -55,58 +55,62 @@ void EditorCamera::OnUpdate(float deltaTime) {
 
     HARMONY_PROFILE_FUNCTION();
 
-    // TODO: Re-implement the following as another option
-    
-    // Default
-    // Rotate on default pan on shift
-    if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
-        const glm::vec2& delta = Input::GetDeltaMousePosition() * Settings::EditorMovementSensitivity.CurrentValue;
+    switch(Settings::EditorInputStyle.CurrentValue) {
+        case InputStyleDefault:
+            // Rotate on default pan on shift
+            if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
+                const glm::vec2& delta = Input::GetDeltaMousePosition() * Settings::EditorMovementSensitivity.CurrentValue;
 
-        if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
-            MousePan(delta);
-        } else if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
-            MouseZoom(delta.y);
-        } else {
-            MouseRotate(delta);
-        }
+                if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
+                    MousePan(delta);
+                } else if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
+                    MouseZoom(delta.y);
+                } else {
+                    MouseRotate(delta);
+                }
 
-        UpdateView();
+                UpdateView();
+            }
+            break;
+
+        case InputStyleReversed:
+            // Pan as default rotate on shift
+            if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
+                const glm::vec2& delta = Input::GetDeltaMousePosition() * Settings::EditorMovementSensitivity.CurrentValue;
+
+                if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
+                    MouseRotate(delta);
+                } else if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
+                    MouseZoom(delta.y);
+                } else {
+                    MousePan(delta);
+                }
+
+                UpdateView();
+            }
+            break;
+        case InputStyleModern:
+            // Rotate on right click pan on middle mouse
+            if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_RIGHT)) {
+                const glm::vec2& delta = Input::GetDeltaMousePosition() * Settings::EditorMovementSensitivity.CurrentValue;
+
+                MouseRotate(delta);
+                UpdateView();
+            }
+
+            if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
+                const glm::vec2& delta = Input::GetDeltaMousePosition() * Settings::EditorMovementSensitivity.CurrentValue;
+
+                if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
+                    MouseZoom(delta.y);
+                } else {
+                    MousePan(delta);
+                }
+
+                UpdateView();
+            }
+            break;
     }
-
-    // Rotate on right click pan on middle mouse
-    // if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_RIGHT)) {
-    //     const glm::vec2& delta = Input::GetDeltaMousePosition() * sensitivity;
-
-    //     MouseRotate(delta);
-    //     UpdateView();
-    // }
-
-    // if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
-    //     const glm::vec2& delta = Input::GetDeltaMousePosition() * sensitivity;
-
-    //     if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
-    //         MouseZoom(delta.y);
-    //     } else {
-    //         MousePan(delta);
-    //     }
-
-    //     UpdateView();
-    // }
-
-    // Pan as default rotate on shift
-    // if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
-    //     const glm::vec2& delta = Input::GetDeltaMousePosition() * sensitivity;
-
-    //     if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
-    //         MouseRotate(delta);
-    //     } else if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
-    //         MouseZoom(delta.y);
-    //     } else {
-    //         MousePan(delta);
-    //     }
-
-    //     UpdateView();
-    // }
 
     if(Input::GetScrollPosition().y != 0.0f) {
         MouseZoom(Input::GetScrollPosition().y * 0.1f);

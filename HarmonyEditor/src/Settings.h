@@ -2,6 +2,8 @@
 
 #include <harmonypch.h>
 
+#include "EditorCamera.h"
+
 using namespace HarmonyEngine;
 
 namespace HarmonyEditor {
@@ -44,6 +46,7 @@ namespace HarmonyEditor {
         static std::unordered_map<std::string, Setting<bool>*> AllShowPanelSettings;
 
         // Displayed
+        static Setting<int> EditorInputStyle;
         static Setting<float> EditorMovementSensitivity;
     };
 
