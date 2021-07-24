@@ -111,7 +111,7 @@ static void DrawGameViewport() {
     if(!Settings::ShowViewportPanel)
         return;
 
-    ImGui::Begin("Game Viewport");
+    ImGui::Begin("Game Viewport", &Settings::ShowViewportPanel.CurrentValue);
     s_IsViewportSelected = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
 
     ImGui::BeginChild("Render"); {

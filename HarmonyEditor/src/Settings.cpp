@@ -86,7 +86,7 @@ static void DrawSetting(const Setting<T>& setting, UIFunction uiFunction) {
 
 void SettingsManager::OnImGuiRender() {
     if(Settings::ShowSettingsPanel) {
-        ImGui::Begin("Settings");
+        ImGui::Begin("Settings", &Settings::ShowSettingsPanel.CurrentValue);
 
         if(ImGui::CollapsingHeader("General")) {
             if(ImGui::TreeNodeEx("Viewport Settings", ImGuiTreeNodeFlags_DefaultOpen)) {

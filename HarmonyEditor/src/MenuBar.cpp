@@ -71,6 +71,13 @@ void MenuBar::OnImGuiRender() {
             ImGui::EndMenu();
         }
 
+        if(ImGui::BeginMenu("Edit")) {
+            if(ImGui::MenuItem("Open Settings"))
+                Settings::ShowSettingsPanel.CurrentValue = true; 
+
+            ImGui::EndMenu();
+        }
+
         if(ImGui::BeginMenu("Window")) {
 
             if(ImGui::BeginMenu("Editor Panels")) {

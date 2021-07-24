@@ -102,7 +102,7 @@ void HierarchyEditorPanel::OnImGuiRender() {
 
     if(Settings::ShowHierarchyPanel) {
 
-        ImGui::Begin("Hierarchy");
+        ImGui::Begin("Hierarchy", &Settings::ShowHierarchyPanel.CurrentValue);
 
         if(ImGui::Button("New Entity")) {
             m_EditorScenePtr->GetSelectedScene().CreateEntity("Untitled Entity");
@@ -125,13 +125,13 @@ void HierarchyEditorPanel::OnImGuiRender() {
 
     if(Settings::ShowComponentsPanel) {
 
-        ImGui::Begin("Components");
+        ImGui::Begin("Components", &Settings::ShowComponentsPanel.CurrentValue);
 
         if(m_SelectedEntity)
             DisplayEntity(m_SelectedEntity);
 
         ImGui::End();
-        
+
     }
 
 }
