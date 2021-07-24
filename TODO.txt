@@ -1,0 +1,2 @@
+- editor: window system (some system that allows me to open and close all ImGui windows)
+- safety: save check dialogs (eg. if someone goes to close the currents scene, prompt to save)
