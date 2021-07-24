@@ -6,51 +6,54 @@
 
 using namespace HarmonyEngine;
 
-class EditorCamera : public PerspectiveCamera {
+namespace HarmonyEditor {
 
-public:
-    EditorCamera();
+    class EditorCamera : public PerspectiveCamera {
 
-    void OnUpdate(float deltaTime);
+    public:
+        EditorCamera();
 
-    inline float GetDistance() const { return m_Distance; }
-    inline void SetDistance(float distance) { m_Distance = distance; }
+        void OnUpdate(float deltaTime);
 
-    inline void SetViewportSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; UpdateProjection(); }
+        inline float GetDistance() const { return m_Distance; }
+        inline void SetDistance(float distance) { m_Distance = distance; }
 
-    const glm::mat4& GetViewMatrix() const { return m_View; }
-    glm::mat4 GetViewProjection() const { return m_Projection * m_View; }
+        inline void SetViewportSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; UpdateProjection(); }
 
-    glm::vec3 GetUpDirection() const;
-    glm::vec3 GetRightDirection() const;
-    glm::vec3 GetForwardDirection() const;
-    const glm::vec3& GetPosition() const { return m_Position; }
-    glm::quat GetOrientation() const;
+        const glm::mat4& GetViewMatrix() const { return m_View; }
+        glm::mat4 GetViewProjection() const { return m_Projection * m_View; }
 
-    float GetPitch() const { return m_Pitch; }
-    float GetYaw() const { return m_Yaw; }
-private:
-    void UpdateProjection();
-    void UpdateView();
+        glm::vec3 GetUpDirection() const;
+        glm::vec3 GetRightDirection() const;
+        glm::vec3 GetForwardDirection() const;
+        const glm::vec3& GetPosition() const { return m_Position; }
+        glm::quat GetOrientation() const;
 
-    void MousePan(const glm::vec2& delta);
-    void MouseRotate(const glm::vec2& delta);
-    void MouseZoom(float delta);
+        float GetPitch() const { return m_Pitch; }
+        float GetYaw() const { return m_Yaw; }
+    private:
+        void UpdateProjection();
+        void UpdateView();
 
-    glm::vec3 CalculatePosition() const;
+        void MousePan(const glm::vec2& delta);
+        void MouseRotate(const glm::vec2& delta);
+        void MouseZoom(float delta);
 
-    std::pair<float, float> PanSpeed() const;
-    float RotationSpeed() const;
-    float ZoomSpeed() const;
-private:
-    float m_ViewportWidth = 1280, m_ViewportHeight = 720;
-    float m_FOV = 45.0f, m_AspectRatio = m_ViewportWidth / m_ViewportHeight, m_NearClip = 0.1f, m_FarClip = 2500.0f;
+        glm::vec3 CalculatePosition() const;
 
-    glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
-    glm::vec3 m_FocalPoint = { 0.0f, 0.0f, 0.0f };
+        std::pair<float, float> PanSpeed() const;
+        float RotationSpeed() const;
+        float ZoomSpeed() const;
+    private:
+        float m_ViewportWidth = 1280, m_ViewportHeight = 720;
+        float m_FOV = 45.0f, m_AspectRatio = m_ViewportWidth / m_ViewportHeight, m_NearClip = 0.1f, m_FarClip = 2500.0f;
 
-    glm::vec2 m_InitialMousePosition = { 0.0f, 0.0f };
+        glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
+        glm::vec3 m_FocalPoint = { 0.0f, 0.0f, 0.0f };
 
-    float m_Distance = 10.0f;
-    float m_Pitch = 0.0f, m_Yaw = 0.0f;
-};
+        glm::vec2 m_InitialMousePosition = { 0.0f, 0.0f };
+
+        float m_Distance = 10.0f;
+        float m_Pitch = 0.0f, m_Yaw = 0.0f;
+    };
+}

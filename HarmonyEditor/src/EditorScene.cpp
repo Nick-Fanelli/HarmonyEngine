@@ -11,12 +11,12 @@
 
 #include <Scene/Entity.h>
 
+#include "Application.h"
 #include "EditorCamera.h"
 #include "MenuBar.h"
+#include "Settings.h"
 
 #include "Panels/HierarchyEditorPanel.h"
-
-#include "Application.h"
 
 using namespace HarmonyEditor;
 using namespace HarmonyEngine;
@@ -36,6 +36,8 @@ static bool s_IsViewportSelected = false;
 
 void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
+
+    SettingsManager::LoadSettings();
 
     s_ImGuiLayer = this;
     s_MenuBar = this;
@@ -158,12 +160,14 @@ void EditorScene::OnUpdate(float deltaTime) {
 
     static ImGuiStyle& style = ImGui::GetStyle();
 
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 370.0f, style.WindowMinSize.y });
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, { 370.0f, style.WindowMinSize.y }); // Set minimum window size for dockspace windows
     DrawDockspace(); // Draw the dockspace environment
-    ImGui::PopStyleVar();
+    ImGui::PopStyleVar(); // Pop dockspace window min size
 
     DrawGameViewport(); // Draw the game viewport
     s_HierarchyEditorPanel.OnImGuiRender();
+
+    SettingsManager::OnImGuiRender();
 
     s_ImGuiLayer.End();
 
@@ -173,6 +177,8 @@ void EditorScene::OnUpdate(float deltaTime) {
 
 void EditorScene::OnDestroy() {
     SaveScene();
+
+    SettingsManager::SaveSettings();
 
     s_ImGuiLayer.OnDestroy();
     s_RenderLayer.OnDestroy();
