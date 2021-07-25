@@ -29,6 +29,9 @@ static void HandleKeyboardShortcuts() {
     if(Input::IsCommandDown(HARMONY_KEY_2)) 
         Settings::ShowSettingsPanel.CurrentValue = !Settings::ShowSettingsPanel.CurrentValue;
 
+    if(Input::IsCommandDown(HARMONY_KEY_3)) 
+        Settings::ShowAssetsPanel.CurrentValue = !Settings::ShowAssetsPanel.CurrentValue;
+
     if(Input::IsCommandDown(HARMONY_KEY_LEFT_SHIFT, HARMONY_KEY_LEFT_BRACKET))
         Settings::ShowHierarchyPanel.CurrentValue = !Settings::ShowHierarchyPanel.CurrentValue; 
         
@@ -113,6 +116,9 @@ void MenuBar::OnImGuiRender() {
 
                 static const std::string settingsCmd = GetCommandString("2");
                 ImGui::MenuItem("Settings", settingsCmd.c_str(), &Settings::ShowSettingsPanel.CurrentValue);
+
+                static const std::string assetsCmd = GetCommandString("3");
+                ImGui::MenuItem("Assets", assetsCmd.c_str(), &Settings::ShowAssetsPanel.CurrentValue);
 
                 static const std::string hierarchyCmd = GetCommandString("Shift+[");
                 ImGui::MenuItem("Hierarchy", hierarchyCmd.c_str(), &Settings::ShowHierarchyPanel.CurrentValue);

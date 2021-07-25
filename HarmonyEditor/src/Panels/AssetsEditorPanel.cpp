@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include "../EditorScene.h"
+#include "../Settings.h"
 
 using namespace HarmonyEditor;
 
@@ -127,18 +128,21 @@ void AssetsEditorPanel::SyncAssets() {
 void AssetsEditorPanel::OnImGuiRender() {
     HARMONY_PROFILE_FUNCTION();
 
-    if(m_EditorScenePtr->GetActiveProject().IsAssigned()) {
-        if(difftime(time(0), s_Timer) >= 1) { // TODO: Configure as setting
-            SyncAssets();
-            s_Timer = time(0);
+    if(Settings::ShowAssetsPanel) {
+
+        if(m_EditorScenePtr->GetActiveProject().IsAssigned()) {
+            if(difftime(time(0), s_Timer) >= 1) { // TODO: Configure as setting
+                SyncAssets();
+                s_Timer = time(0);
+            }
         }
+
+        ImGui::Begin("Assets Browser", &Settings::ShowAssetsPanel.CurrentValue);
+
+        for(auto& child : s_RootFile.Children) {
+            DrawFileImGui(m_EditorScenePtr->GetActiveProject().GetProjectAssetsDirectory(), child);
+        }
+
+        ImGui::End();
     }
-
-    ImGui::Begin("Assets Browser");
-
-    for(auto& child : s_RootFile.Children) {
-        DrawFileImGui(m_EditorScenePtr->GetActiveProject().GetProjectAssetsDirectory(), child);
-    }
-
-    ImGui::End();
 }

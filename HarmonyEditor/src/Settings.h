@@ -52,6 +52,7 @@ namespace HarmonyEditor {
         static Setting<bool> ShowSettingsPanel;
         static Setting<bool> ShowHierarchyPanel;
         static Setting<bool> ShowComponentsPanel;
+        static Setting<bool> ShowAssetsPanel;
 
         static std::unordered_map<std::string, Setting<bool>*> AllShowPanelSettings;
 

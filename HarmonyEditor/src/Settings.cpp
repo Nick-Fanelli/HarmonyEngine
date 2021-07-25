@@ -13,13 +13,15 @@ Setting<bool> Settings::ShowViewportPanel = true;
 Setting<bool> Settings::ShowSettingsPanel = true;
 Setting<bool> Settings::ShowHierarchyPanel = true;
 Setting<bool> Settings::ShowComponentsPanel = true;
+Setting<bool> Settings::ShowAssetsPanel = true;
 
 std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings = {
 
     { "ShowViewportPanel", &Settings::ShowViewportPanel },
     { "ShowSettingsPanel", &Settings::ShowSettingsPanel },
     { "ShowHierarchyPanel", &Settings::ShowHierarchyPanel },
-    { "ShowComponentsPanel", &Settings::ShowComponentsPanel }
+    { "ShowComponentsPanel", &Settings::ShowComponentsPanel },
+    { "ShowAssetsPanel", &Settings::ShowAssetsPanel }
 
 };
 
