@@ -10,6 +10,11 @@ namespace HarmonyEditor {
 
 	public:
 
+		static const std::string& GetDisplayTitle() {
+			static const std::string title = "Harmony Engine"; // TODO: Add version or some other information
+			return title;
+		}
+
 		static const std::filesystem::path& GetApplicationSupportDirectory();
 		static const std::filesystem::path& GetApplicationCacheFilepath();
 

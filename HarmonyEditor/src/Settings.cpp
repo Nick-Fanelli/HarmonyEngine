@@ -117,3 +117,36 @@ void SettingsManager::OnImGuiRender() {
         ImGui::End();
     }
 }
+
+// Cache Manager
+
+std::string CacheManager::LastOpenProject;
+
+template<typename T>
+static void DeserializeValue(YAML::Node& node, T& value, const char* id) {
+    if(node[id])
+        value = node[id].as<T>();
+}
+
+void CacheManager::LoadCache() {
+    std::ifstream in(Application::GetApplicationCacheFilepath());
+    std::stringstream stream;
+    stream << in.rdbuf();
+
+    YAML::Node root = YAML::Load(stream.str());
+
+    DeserializeValue(root, CacheManager::LastOpenProject, "LastOpenedProject");
+}
+
+void CacheManager::SaveCache() {
+    YAML::Emitter out;
+
+    out << YAML::BeginMap; // Root
+
+    out << YAML::Key << "LastOpenedProject" << YAML::Value << CacheManager::LastOpenProject;
+
+    out << YAML::EndMap; // Root
+
+    std::ofstream outStream(Application::GetApplicationCacheFilepath());
+    outStream << out.c_str();
+}

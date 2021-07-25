@@ -46,13 +46,18 @@ void EditorScene::SetCurrentOperation(const ImGuizmo::OPERATION& operation) { s_
 
 void EditorScene::SetActiveProject(const Project& project) { 
     m_ActiveProject = project; 
-    s_AssetsEditorPanel.SyncAssets();   
+    CacheManager::LastOpenProject = project.GetProjectDirectory().string();
+    s_AssetsEditorPanel.SyncAssets();
+
+    std::string title = std::string(Application::GetDisplayTitle() + " | ") + project.GetProjectDirectory().stem().string();
+    glfwSetWindowTitle(Display::GetWindowPtr(), title.c_str());
 }
 
 void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
 
     SettingsManager::LoadSettings();
+    CacheManager::LoadCache();
 
     s_ImGuiLayer = this;
     s_MenuBar = this;
@@ -64,6 +69,10 @@ void EditorScene::OnCreate() {
 
     s_ImGuiLayer.OnCreate(iniSaveLocation);
     s_RenderLayer.OnCreate();
+
+    if(FileUtils::FileExists(CacheManager::LastOpenProject)) {
+        SetActiveProject({CacheManager::LastOpenProject});
+    }
 }
 
 void EditorScene::OpenScene(const std::filesystem::path& filepath) {
@@ -231,6 +240,7 @@ void EditorScene::OnDestroy() {
     SaveScene();
 
     SettingsManager::SaveSettings();
+    CacheManager::SaveCache();
 
     s_ImGuiLayer.OnDestroy();
     s_RenderLayer.OnDestroy();

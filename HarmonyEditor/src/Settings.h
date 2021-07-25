@@ -32,6 +32,16 @@ namespace HarmonyEditor {
 
     }; 
 
+    class CacheManager {
+
+    public: 
+        static std::string LastOpenProject;
+
+        static void LoadCache();
+        static void SaveCache();
+
+    };
+
     class Settings {
 
         friend class SettingsManager;
