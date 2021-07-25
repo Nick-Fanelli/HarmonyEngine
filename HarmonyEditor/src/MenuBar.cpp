@@ -8,6 +8,7 @@
 #include "Application.h"
 #include "EditorScene.h"
 #include "Settings.h"
+#include "Project.h"
 
 using namespace HarmonyEditor;
 
@@ -58,6 +59,10 @@ void MenuBar::OnImGuiRender() {
 
             if(ImGui::MenuItem("Open Project")) {
                 Application::OpenFolderDialog([&](const std::filesystem::path& path) {
+                    if(!Project::IsProject(path)) {
+                        Log::Warn("Warning not a project; Status: returning!"); // TODO: Display with ImGui or some kind-of popup
+                        return;
+                    }
                     m_EditorScenePtr->SetActiveProject({ path });
                 });
             }

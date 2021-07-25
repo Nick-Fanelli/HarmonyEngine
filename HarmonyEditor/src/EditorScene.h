@@ -31,7 +31,7 @@ namespace HarmonyEditor {
         const Project& GetActiveProject() const { return m_ActiveProject; }
         Project& GetActiveProject() { return m_ActiveProject; }
 
-        void SetActiveProject(const Project& project) { m_ActiveProject = project; }
+        void SetActiveProject(const Project& project);
 
     private:
         Project m_ActiveProject = {};

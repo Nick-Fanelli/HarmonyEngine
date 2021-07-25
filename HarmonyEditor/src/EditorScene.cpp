@@ -17,6 +17,7 @@
 #include "Settings.h"
 
 #include "Panels/HierarchyEditorPanel.h"
+#include "Panels/AssetsEditorPanel.h"
 
 using namespace HarmonyEditor;
 using namespace HarmonyEngine;
@@ -25,6 +26,7 @@ static ImGuiLayer s_ImGuiLayer;
 static RenderLayer s_RenderLayer;
 
 static HierarchyEditorPanel s_HierarchyEditorPanel;
+static AssetsEditorPanel s_AssetsEditorPanel;
 
 static MenuBar s_MenuBar;
 
@@ -42,6 +44,11 @@ static std::vector<Setting<bool>*> s_TabPointers;
 const ImGuizmo::OPERATION& EditorScene::GetCurrentOperation() { return s_CurrentImGuizmoOperation; }
 void EditorScene::SetCurrentOperation(const ImGuizmo::OPERATION& operation) { s_CurrentImGuizmoOperation = operation; }
 
+void EditorScene::SetActiveProject(const Project& project) { 
+    m_ActiveProject = project; 
+    s_AssetsEditorPanel.SyncAssets();   
+}
+
 void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
 
@@ -51,6 +58,7 @@ void EditorScene::OnCreate() {
     s_MenuBar = this;
     s_RenderLayer = { &s_Camera, &m_SelectedScene };
     s_HierarchyEditorPanel = this;
+    s_AssetsEditorPanel = this;
 
     std::string iniSaveLocation = std::filesystem::path(Application::GetApplicationSupportDirectory()) / "window-layout.ini";
 
@@ -209,6 +217,7 @@ void EditorScene::OnUpdate(float deltaTime) {
     DrawGameViewport(); // Draw the game viewport
 
     s_HierarchyEditorPanel.OnImGuiRender();
+    s_AssetsEditorPanel.OnImGuiRender();
 
     SettingsManager::OnImGuiRender();
 
