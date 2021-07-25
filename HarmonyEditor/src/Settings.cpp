@@ -93,6 +93,8 @@ static void DrawSetting(const Setting<T>& setting, UIFunction uiFunction) {
 }
 
 void SettingsManager::OnImGuiRender() {
+    HARMONY_PROFILE_FUNCTION();
+
     if(Settings::ShowSettingsPanel) {
         ImGui::Begin("Settings", &Settings::ShowSettingsPanel.CurrentValue);
 

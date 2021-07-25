@@ -115,7 +115,7 @@ void AssetsEditorPanel::OnImGuiRender() {
     HARMONY_PROFILE_FUNCTION();
 
     if(m_EditorScenePtr->GetActiveProject().IsAssigned()) {
-        if(difftime(time(0), s_Timer) >= 2) { // TODO: Configure as setting
+        if(difftime(time(0), s_Timer) >= 2000) { // TODO: Configure as setting
             SyncAssets();
             s_Timer = 0;
         }

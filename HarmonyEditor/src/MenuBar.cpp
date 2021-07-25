@@ -38,6 +38,8 @@ static void HandleKeyboardShortcuts() {
 
 void MenuBar::OnImGuiRender() {
 
+    HARMONY_PROFILE_FUNCTION();
+
     HandleKeyboardShortcuts();
 
     if(ImGui::BeginMainMenuBar()) {
