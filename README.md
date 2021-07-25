@@ -3,7 +3,9 @@
 *Harmony Engine* is a **3D game engine** with a **basic 3D game editor** that can be used to **develop games**.
 
 ![Image of Harmony Engine v0.2.0 (Jul 25, 2021)](screenshots/harmony-engine-window-v0-2-0.png)
-<p style="text-align: center"><i>Image of Harmony Engine v0.2.0 (Jul 25, 2021)</i></p>
+<p align="center"><i>Image of Harmony Engine v0.2.0 (Jul 25, 2021)</i></p>
+
+<br />
 
 Currently *Harmony Engine* is begin developed on MacOS however, with a few quick adjustments it should be able to run on Windows 10 as well. *(Windows support coming soon)!!!*
 
