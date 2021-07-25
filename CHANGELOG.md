@@ -2,6 +2,64 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/Nick-Fanelli/HarmonyEngine/compare/v0.1.0...v0.2.0) (2021-07-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* optimize the assets dock to run much faster
+
+### Features
+
+* add ability to change to different transformation modes ([b847ccf](https://github.com/Nick-Fanelli/HarmonyEngine/commit/b847ccfb641c3c2843cfe6141954be0b7795f84c))
+* add ability to close all dynamic panels ([e4e7ef8](https://github.com/Nick-Fanelli/HarmonyEngine/commit/e4e7ef849fa97074c826ddc3b0a2b0ccde0b622b))
+* add ability to show or hide different editor panels from menu bar ([37ffd3b](https://github.com/Nick-Fanelli/HarmonyEngine/commit/37ffd3b6cfd07161a177a0b4403a2fbb4baf6b90))
+* add asset panel to panels menu item ([6c3afe5](https://github.com/Nick-Fanelli/HarmonyEngine/commit/6c3afe59ade817918fdf59310a70d7072d99bb69))
+* add cache system for last open project ([3602648](https://github.com/Nick-Fanelli/HarmonyEngine/commit/3602648fa50d71dcbbf5300297ecf05e952ed17b))
+* add close buttons on all editor panels ([0adfabe](https://github.com/Nick-Fanelli/HarmonyEngine/commit/0adfabe42ff035ad3bffcb1dfd08a1081ac8bed6))
+* add component panel ([f0eb377](https://github.com/Nick-Fanelli/HarmonyEngine/commit/f0eb377033aa8505e63005c3ef4d4ca4c0d1a18e))
+* add delete selectable in assets editor panel ([115e566](https://github.com/Nick-Fanelli/HarmonyEngine/commit/115e5667767376af5be2ab3c90940d36852807ea))
+* add draw vec2 support to ImGuiLayer ([843bba4](https://github.com/Nick-Fanelli/HarmonyEngine/commit/843bba478f970373222b9923f844478067d39053))
+* add event system ([3d3f4df](https://github.com/Nick-Fanelli/HarmonyEngine/commit/3d3f4dff7e5449f236f30a44b6fabc8bbcd8e2d7))
+* add gizmo to move object's transform ([75668dd](https://github.com/Nick-Fanelli/HarmonyEngine/commit/75668dd68b1176abd8e49be2757259137256d475))
+* add input style to settings ([b500650](https://github.com/Nick-Fanelli/HarmonyEngine/commit/b500650b332e73f2e56d8d51ca66e017e36c38bb))
+* add more specs to renderer stats ([028beef](https://github.com/Nick-Fanelli/HarmonyEngine/commit/028beef11eea74a012cf14de7355b0f576ee7016))
+* add panel configuration serializationg ([5f6a35e](https://github.com/Nick-Fanelli/HarmonyEngine/commit/5f6a35e32a97d6aedc4bf6981b1603b9f1eb3fd2))
+* add project system ([a87eb36](https://github.com/Nick-Fanelli/HarmonyEngine/commit/a87eb3687aae3c6cf02035c6a920fb4dc9fec23f))
+* add setting to toggle if current project gets cached ([6d511b8](https://github.com/Nick-Fanelli/HarmonyEngine/commit/6d511b80c73b3bc1271a1b651ae3cad51e12cce5))
+* add sprite renderer component ([9af389e](https://github.com/Nick-Fanelli/HarmonyEngine/commit/9af389e7c62dd1f8c62486abe01c8cbf41ab1de6))
+* add support for unknown filetype ([4aa8669](https://github.com/Nick-Fanelli/HarmonyEngine/commit/4aa866957d0eb428b2c0d88998daa08da131b660))
+* add support to toggle on and off most accessory panels ([68ebd78](https://github.com/Nick-Fanelli/HarmonyEngine/commit/68ebd7870d6341c495d889715c3012b3b9316588))
+* add translate, rotate, and scale buttons to change ImGuizmo operation mode ([bea136e](https://github.com/Nick-Fanelli/HarmonyEngine/commit/bea136e60b7f7fe9212e5f926bc0e68ac28e8dea))
+* allow for matrix to decompose into position, rotation, and scaleg ([4f6402f](https://github.com/Nick-Fanelli/HarmonyEngine/commit/4f6402fbf7b5e0916cf7a9f08e3d0663aa4a4468))
+* assets editor panel ([fd9ebff](https://github.com/Nick-Fanelli/HarmonyEngine/commit/fd9ebff9cd1622ac6ba3287adfe384cf595dfd7e))
+* cache current scene in project ([e6cd8b8](https://github.com/Nick-Fanelli/HarmonyEngine/commit/e6cd8b86ed9e29736d7ce904cbc1e01d7d1c11b5))
+* display only the shortened asset name instead of the entire absoule asset path ([c1a16a4](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c1a16a45cc7c8cebd5ce3d83e334b2557c6079b6))
+* game viewport ([329180d](https://github.com/Nick-Fanelli/HarmonyEngine/commit/329180d1d967c32dd520a9e675f70052b6d09961))
+* hide all other panels on tab ([4bbc8f5](https://github.com/Nick-Fanelli/HarmonyEngine/commit/4bbc8f5fd622c74c0a1f6e6bffb0691515f6b834))
+* hierarchy panel ([778c21a](https://github.com/Nick-Fanelli/HarmonyEngine/commit/778c21a6cc484c9698417c2d0f8fbc0af43c4adb))
+* ImGuizmo controls ([43241c7](https://github.com/Nick-Fanelli/HarmonyEngine/commit/43241c729e3be9cd1d7446b4da4382c62de7ba1b))
+* load scene support ([e1d8fde](https://github.com/Nick-Fanelli/HarmonyEngine/commit/e1d8fde2392593a420f84fe9f5ac57a20910e2fc))
+* redesign the hiearchy panel to have a search and plus button ([f2de67c](https://github.com/Nick-Fanelli/HarmonyEngine/commit/f2de67cb1008f3fd7d5a4b760af19db7d7509323))
+* save as menu button ([ec4f693](https://github.com/Nick-Fanelli/HarmonyEngine/commit/ec4f693128ddc3ddc842e4e3aa35f5b3c528468b))
+* save scene on close ([255d19a](https://github.com/Nick-Fanelli/HarmonyEngine/commit/255d19aa1773e644ae3ebdd619926c5d08d2506b))
+* scene serialization (load and save scene file into editor ([8a2dee3](https://github.com/Nick-Fanelli/HarmonyEngine/commit/8a2dee3d458a6ac03769172222865a0e451982b8))
+* settings system ([30cc0e5](https://github.com/Nick-Fanelli/HarmonyEngine/commit/30cc0e59c638e013a3891ecc276a6c73c7c385c0))
+* support more obj formats ([008ba59](https://github.com/Nick-Fanelli/HarmonyEngine/commit/008ba593ad5ffca98996fd78a501157e5555b3fb))
+
+
+### Bug Fixes
+
+* add shader unbind to the renderer's debug unbind section ([99916f7](https://github.com/Nick-Fanelli/HarmonyEngine/commit/99916f76ae50319054be98945672642cf60a8060))
+* fix the event system and make it work ([0d1389f](https://github.com/Nick-Fanelli/HarmonyEngine/commit/0d1389f99a017f4e7b0a7248aba91183dd0f2948))
+* force assets to be held in the registry instead of raw assets ([c795f83](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c795f831a83a3d04c14c325e88b60f6b8b4b4d2f))
+* load scene name on deserialize ([e9174c5](https://github.com/Nick-Fanelli/HarmonyEngine/commit/e9174c53ad4ca1e254213214362086c12967d5f9))
+* override already existant components during scene deserialiation instead of returning ([c037944](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c0379448ec4f6f8be20f4491ecb09f5205638076))
+* serialize all entities in the right order ([03256ac](https://github.com/Nick-Fanelli/HarmonyEngine/commit/03256acaa7d0503083dd6d58585a0fefc851ae4f))
+
+
+* optimize the assets dock to run much faster ([4bd6747](https://github.com/Nick-Fanelli/HarmonyEngine/commit/4bd6747e03a663a87d0628a3e2c4e48c70044ccb))
+
 ## 0.1.0 (2021-07-03)
 
 
