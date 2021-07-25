@@ -70,6 +70,8 @@ static void LoadFile(AssetFile& parent) {
     }
 }
 
+static std::filesystem::path s_TempPath;
+
 static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& child) {
     HARMONY_PROFILE_FUNCTION();
 
@@ -90,6 +92,14 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
             break;
         case AssetTypeHarmonyScene:
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf466 %s", child.GetRelativePath(parentPath).c_str());
+
+            if(ImGui::BeginDragDropSource()) {
+                s_TempPath = child.Filepath;
+
+                ImGui::SetDragDropPayload("HarmonyScenePath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
+                ImGui::EndDragDropSource();
+            }
+
             break;
         case AssetTypeImage:
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf1c5 %s", child.GetRelativePath(parentPath).c_str());

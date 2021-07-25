@@ -39,6 +39,8 @@ static ImGuizmo::OPERATION s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRA
 static bool s_IsViewportSelected = false;
 static bool s_IsTabToggled = false;
 
+static EditorScene* s_This;
+
 static std::vector<Setting<bool>*> s_TabPointers;
 
 const ImGuizmo::OPERATION& EditorScene::GetCurrentOperation() { return s_CurrentImGuizmoOperation; }
@@ -59,6 +61,8 @@ void EditorScene::OnCreate() {
     SettingsManager::LoadSettings();
     CacheManager::LoadCache();
 
+    s_This = this;
+
     s_ImGuiLayer = this;
     s_MenuBar = this;
     s_RenderLayer = { &s_Camera, &m_SelectedScene };
@@ -76,6 +80,7 @@ void EditorScene::OnCreate() {
 }
 
 void EditorScene::OpenScene(const std::filesystem::path& filepath) {
+
     s_SceneSerializer = SceneSerializer(&m_SelectedScene, filepath);
     s_SceneSerializer.DeserializeYAML();
 }
@@ -168,6 +173,16 @@ static void DrawGameViewport() {
         }
 
     } ImGui::EndChild();
+
+    if(ImGui::BeginDragDropTarget()) {
+
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("HarmonyScenePath")) {
+            auto path = *(const std::filesystem::path*) payload->Data;
+            s_This->OpenScene(path);
+        }
+
+        ImGui::EndDragDropTarget();
+    }
 
     ImGui::End();
 }
