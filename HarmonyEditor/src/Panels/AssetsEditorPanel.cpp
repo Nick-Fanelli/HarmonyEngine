@@ -21,6 +21,7 @@ struct AssetFile {
     std::filesystem::path Filepath;
     std::vector<AssetFile> Children;
     AssetType AssetType;
+    bool ShouldShow = true;
 
     AssetFile() = default;
     AssetFile(const std::filesystem::path& path, enum AssetType assetType) : Filepath(path), AssetType(assetType) {}
@@ -73,6 +74,9 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
     static constexpr auto flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
+    if(!child.ShouldShow)
+        return;
+
     switch(child.AssetType) {
         case AssetTypeDirectory:
             if(ImGui::TreeNode(child.Filepath.c_str(), "\uf07b %s", child.GetRelativePath(parentPath).c_str())) {
@@ -96,6 +100,15 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf15b %s", child.GetRelativePath(parentPath).c_str());
             break;
     }
+
+    if(ImGui::BeginPopupContextItem(child.Filepath.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+        if(ImGui::Selectable("Delete")) {
+            remove(child.Filepath);
+            child.ShouldShow = false;
+        }
+
+        ImGui::EndPopup();
+    }
 }
 
 void AssetsEditorPanel::SyncAssets() {
@@ -115,9 +128,9 @@ void AssetsEditorPanel::OnImGuiRender() {
     HARMONY_PROFILE_FUNCTION();
 
     if(m_EditorScenePtr->GetActiveProject().IsAssigned()) {
-        if(difftime(time(0), s_Timer) >= 2000) { // TODO: Configure as setting
+        if(difftime(time(0), s_Timer) >= 1) { // TODO: Configure as setting
             SyncAssets();
-            s_Timer = 0;
+            s_Timer = time(0);
         }
     }
 
