@@ -48,6 +48,20 @@ void MenuBar::OnImGuiRender() {
 
         if(ImGui::BeginMenu("File")) {
 
+            if(ImGui::MenuItem("New Project")) {
+                Application::OpenFolderDialog([&](const std::filesystem::path& path) {
+                    m_EditorScenePtr->SetActiveProject({ path });
+                });
+            }
+
+            ImGui::Separator();
+
+            if(ImGui::MenuItem("Open Project")) {
+                Application::OpenFolderDialog([&](const std::filesystem::path& path) {
+                    m_EditorScenePtr->SetActiveProject({ path });
+                });
+            }
+
             if(ImGui::MenuItem("Open Scene")) {
                 Application::OpenFileDialog({ "Harmony Scene File", "hyscene" }, [&](const std::filesystem::path& path) {
                     m_EditorScenePtr->OpenScene(path);

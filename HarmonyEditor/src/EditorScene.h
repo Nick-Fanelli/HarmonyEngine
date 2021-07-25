@@ -6,6 +6,8 @@
 
 #include <Scene/Scene.h>
 
+#include "Project.h"
+
 namespace HarmonyEditor {
 
     using namespace HarmonyEngine;
@@ -26,7 +28,13 @@ namespace HarmonyEditor {
         const ImGuizmo::OPERATION& GetCurrentOperation();
         void SetCurrentOperation(const ImGuizmo::OPERATION& operation);
 
+        const Project& GetActiveProject() const { return m_ActiveProject; }
+        Project& GetActiveProject() { return m_ActiveProject; }
+
+        void SetActiveProject(const Project& project) { m_ActiveProject = project; }
+
     private:
+        Project m_ActiveProject = {};
         Scene m_SelectedScene = Scene{"Untitled Scene"};
 
     };

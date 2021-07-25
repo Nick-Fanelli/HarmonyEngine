@@ -7,7 +7,6 @@
 
 #include "EditorScene.h"
 
-using namespace HarmonyEngine;
 using namespace HarmonyEditor;
 
 int main() {
@@ -22,6 +21,7 @@ int main() {
 
     // Startup
     HARMONY_PROFILE_BEGIN_SESSION("Startup", "HarmonyProfile-Startup.json");
+    NFD_Init();
     EditorScene editorScene{};
     Display::CreateDisplay("Harmony Engine");
     SceneManager::SetActiveScene(&editorScene);
@@ -36,6 +36,7 @@ int main() {
     // Shutdown
     HARMONY_PROFILE_BEGIN_SESSION("Shutdown", "HarmonyProfile-Shutdown.json");
     Display::CleanUp();
+    NFD_Quit();
     HARMONY_PROFILE_END_SESSION();
 }
 
@@ -66,8 +67,6 @@ const std::filesystem::path& Application::GetApplicationCacheFilepath() {
 }
 
 void Application::OpenFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const std::filesystem::path&)>& function) {
-    NFD_Init();
-
     nfdchar_t* outPath;
     nfdfilteritem_t nfdFilterItems[1] = { { filterItems.first, filterItems.second } };
     nfdresult_t result = NFD_OpenDialog(&outPath, nfdFilterItems, 1, nullptr);
@@ -78,13 +77,20 @@ void Application::OpenFileDialog(const std::pair<const char*, const char*>& filt
         function(path);
         NFD_FreePath(outPath);
     }
+}
 
-    NFD_Quit();
+void Application::OpenFolderDialog(const std::function<void(const std::filesystem::path&)>& function) {
+    nfdchar_t* outPath;
+    nfdresult_t result = NFD_PickFolder(&outPath, nullptr);
+    if(result == NFD_OKAY) {
+        auto path = std::filesystem::path(outPath);
+
+        function(path);
+        NFD_FreePath(outPath);
+    }
 }
 
 void Application::SaveFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const std::filesystem::path&)>& function) {
-    NFD_Init();
-
     nfdchar_t* outPath;
     nfdfilteritem_t nfdFilterItems[1] = { { filterItems.first, filterItems.second } };
     nfdresult_t result = NFD_SaveDialog(&outPath, nfdFilterItems, 1, nullptr, nullptr);
@@ -95,6 +101,4 @@ void Application::SaveFileDialog(const std::pair<const char*, const char*>& filt
         function(path);
         NFD_FreePath(outPath);
     }
-
-    NFD_Quit();
 }
