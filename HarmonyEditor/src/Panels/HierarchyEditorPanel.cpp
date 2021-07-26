@@ -78,6 +78,7 @@ static void DisplayEntity(Entity& entity) {
 
     DrawComponent<QuadRendererComponent>("Quad Renderer", entity, [&](QuadRendererComponent& component) {  
         ImGuiDefaults::DrawColorControl("Color", component.Color);
+        ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
     });
 
     // New Component Button

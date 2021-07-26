@@ -182,6 +182,28 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
     ImGui::PopID();
 }
 
+void ImGuiDefaults::DrawTextureControl(const std::string& label, AssetHandle<Texture>& textureHandle) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Columns(2, nullptr, false);
+    ImGui::SetColumnWidth(0, ColumnWidth);
+    ImGui::Text("%s", label.c_str());
+    ImGui::NextColumn();
+
+    ImGui::Button(textureHandle.IsAssigned() ? textureHandle.GetAssetBinding()->AssetName.c_str() : "[Unattached]");
+
+    if(ImGui::BeginDragDropTarget()) {
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ImagePath")) {
+            auto path = *(const std::filesystem::path*) payload->Data;
+            textureHandle = AssetManager::QueueOrGetTexture(path);
+            if(!textureHandle->IsCreated())
+                textureHandle->Create(); // Create texture
+        }
+    }
+
+    ImGui::PopID();
+}
+
 void ImGuiDefaults::DrawComboSelection(const std::string& label, int& value, const char* items[], uint32_t itemCount) {
     ImGui::PushID(label.c_str());
 

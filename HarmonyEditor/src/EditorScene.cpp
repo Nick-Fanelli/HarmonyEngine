@@ -80,9 +80,12 @@ void EditorScene::OnCreate() {
 }
 
 void EditorScene::OpenScene(const std::filesystem::path& filepath) {
+    AssetManager::DestroyAll(); // TODO: Reuse any assets that are shared!
 
     s_SceneSerializer = SceneSerializer(&m_SelectedScene, filepath);
     s_SceneSerializer.DeserializeYAML();
+
+    AssetManager::CreateAll();
 }
 
 void EditorScene::SaveScene() {
@@ -256,6 +259,8 @@ void EditorScene::OnDestroy() {
 
     SettingsManager::SaveSettings();
     CacheManager::SaveCache();
+
+    AssetManager::DestroyAll();
 
     s_ImGuiLayer.OnDestroy();
     s_RenderLayer.OnDestroy();

@@ -2,6 +2,8 @@
 
 #include <harmonypch.h>
 
+#include <Core/Assets.h>
+
 using namespace HarmonyEngine;
 
 namespace HarmonyEditor::ImGuiDefaults {
@@ -12,7 +14,9 @@ namespace HarmonyEditor::ImGuiDefaults {
 
     void DrawTextInput(const std::string& label, std::string& value);
     void DrawVector3(const std::string& label, glm::vec3& values, float resetValue = 0.0f);
+
     void DrawColorControl(const std::string& label, glm::vec4& values);
+    void DrawTextureControl(const std::string& label, AssetHandle<Texture>& textureHandle);
 
     void DrawComboSelection(const std::string& label, int& value, const char* items[], uint32_t itemCount);
 }

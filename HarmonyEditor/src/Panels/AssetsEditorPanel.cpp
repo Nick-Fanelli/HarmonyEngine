@@ -103,6 +103,14 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
             break;
         case AssetTypeImage:
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf1c5 %s", child.GetRelativePath(parentPath).c_str());
+
+            if(ImGui::BeginDragDropSource()) {
+                s_TempPath = child.Filepath;
+
+                ImGui::SetDragDropPayload("ImagePath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
+                ImGui::EndDragDropSource();
+            }
+
             break;
         case AssetTypeObject:   
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf1b2 %s", child.GetRelativePath(parentPath).c_str());
