@@ -28,7 +28,13 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
         m_SelectedEntity = entity; 
     }
 
-    // TODO: Context Popup
+    if(ImGui::BeginPopupContextItem(std::to_string((uint32_t) entity.GetEntityID()).c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+        if(ImGui::Selectable("Delete")) {
+            m_EditorScenePtr->GetSelectedScene().DeleteEntity(entity);
+        }
+
+        ImGui::EndPopup();
+    }
 
     if(open)
         ImGui::TreePop();

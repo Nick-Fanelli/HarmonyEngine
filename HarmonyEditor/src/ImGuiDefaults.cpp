@@ -201,6 +201,14 @@ void ImGuiDefaults::DrawTextureControl(const std::string& label, AssetHandle<Tex
         }
     }
 
+    const float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+    ImGui::SameLine();
+
+    if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
+        textureHandle = {};
+    }
+
     ImGui::PopID();
 }
 
