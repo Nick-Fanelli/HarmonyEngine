@@ -12,7 +12,7 @@ using namespace HarmonyEditor;
 enum AssetType {
     AssetTypeUnknown,
     AssetTypeDirectory,
-    AssetTypeImage,
+    AssetTypeTexture,
     AssetTypeObject,
     AssetTypeHarmonyScene
 };
@@ -62,7 +62,7 @@ static void LoadFile(AssetFile& parent) {
             } else if(childEntry.path().extension() == ".obj") {
                 parent.Children.emplace_back(childEntry.path(), AssetTypeObject);
             } else if(std::regex_match(childEntry.path().c_str(), imageRegex)) {
-                parent.Children.emplace_back(childEntry.path(), AssetTypeImage);
+                parent.Children.emplace_back(childEntry.path(), AssetTypeTexture);
             } else {
                 parent.Children.emplace_back(childEntry.path(), AssetTypeUnknown);
             }
@@ -97,17 +97,23 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
                 s_TempPath = child.Filepath;
 
                 ImGui::SetDragDropPayload("HarmonyScenePath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
+
+                ImGui::Text("%s Harmony Scene: %s", "\uf466", child.Filepath.stem().c_str());
+                
                 ImGui::EndDragDropSource();
             }
 
             break;
-        case AssetTypeImage:
+        case AssetTypeTexture:
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf1c5 %s", child.GetRelativePath(parentPath).c_str());
 
             if(ImGui::BeginDragDropSource()) {
                 s_TempPath = child.Filepath;
 
-                ImGui::SetDragDropPayload("ImagePath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
+                ImGui::SetDragDropPayload("TexturePath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
+
+                ImGui::Text("%s Texture: %s", "\uf1c5", child.Filepath.stem().c_str());
+
                 ImGui::EndDragDropSource();
             }
 
