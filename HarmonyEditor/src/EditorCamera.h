@@ -20,6 +20,15 @@ namespace HarmonyEditor {
 
         inline void SetViewportSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; UpdateProjection(); }
 
+        inline void ResetView() {
+             m_FocalPoint = GetForwardDirection();
+            m_Yaw = 0;
+            m_Pitch = 0;
+            m_Distance = 20.0f;
+
+            UpdateView();
+        }
+
         const glm::mat4& GetViewMatrix() const { return m_View; }
         glm::mat4 GetViewProjection() const { return m_Projection * m_View; }
 

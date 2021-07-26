@@ -107,6 +107,13 @@ void MenuBar::OnImGuiRender() {
             ImGui::EndMenu();
         }
 
+        if(ImGui::BeginMenu("View")) {
+            if(ImGui::MenuItem("Reset Camera View", "0"))
+                m_EditorScenePtr->GetEditorCamera().ResetView();
+
+            ImGui::EndMenu();
+        }
+
         if(ImGui::BeginMenu("Window")) {
 
             if(ImGui::BeginMenu("Editor Panels")) {

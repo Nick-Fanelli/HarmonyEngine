@@ -117,15 +117,8 @@ void EditorCamera::OnUpdate(float deltaTime) {
         UpdateView();
     }
 
-    if(Input::IsKeyDown(HARMONY_KEY_0)) {
-        m_FocalPoint = GetForwardDirection();
-        m_Yaw = 0;
-        m_Pitch = 0;
-        m_Distance = 20.0f;
-
-        UpdateView();
-    }
-
+    if(Input::IsKeyDown(HARMONY_KEY_0))
+        ResetView();
 }
 
 void EditorCamera::MousePan(const glm::vec2& delta) {

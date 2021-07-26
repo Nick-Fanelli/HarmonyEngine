@@ -7,6 +7,7 @@
 #include <Scene/Scene.h>
 
 #include "Project.h"
+#include "EditorCamera.h"
 
 namespace HarmonyEditor {
 
@@ -32,6 +33,8 @@ namespace HarmonyEditor {
         Project& GetActiveProject() { return m_ActiveProject; }
 
         void SetActiveProject(const Project& project);
+
+        EditorCamera& GetEditorCamera();
 
     private:
         Project m_ActiveProject = {};

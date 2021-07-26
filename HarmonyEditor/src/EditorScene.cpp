@@ -37,7 +37,7 @@ static SceneSerializer s_SceneSerializer;
 static ImGuizmo::OPERATION s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 
 static bool s_IsViewportSelected = false;
-static bool s_IsTabToggled = false;
+static bool s_IsTabToggled = true;
 
 static EditorScene* s_This;
 
@@ -45,6 +45,8 @@ static std::vector<Setting<bool>*> s_TabPointers;
 
 const ImGuizmo::OPERATION& EditorScene::GetCurrentOperation() { return s_CurrentImGuizmoOperation; }
 void EditorScene::SetCurrentOperation(const ImGuizmo::OPERATION& operation) { s_CurrentImGuizmoOperation = operation; }
+EditorCamera& EditorScene::GetEditorCamera() { return s_Camera; }
+
 
 void EditorScene::SetActiveProject(const Project& project) { 
     m_ActiveProject = project; 
