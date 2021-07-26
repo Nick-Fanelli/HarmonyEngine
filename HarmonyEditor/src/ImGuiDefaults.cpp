@@ -207,6 +207,39 @@ void ImGuiDefaults::DrawTextureControl(const std::string& label, AssetHandle<Tex
         textureHandle = {};
     }
 
+    ImGui::Columns(1);
+
+    ImGui::PopID();
+}
+
+
+void ImGuiDefaults::DrawMeshControl(const std::string& label, AssetHandle<Mesh>& meshHandle) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Columns(2, nullptr, false);
+    ImGui::SetColumnWidth(0, ColumnWidth);
+    ImGui::Text("%s", label.c_str());
+    ImGui::NextColumn();
+
+    ImGui::Button(meshHandle.IsAssigned() ? meshHandle.GetAssetBinding()->GetAssetName().c_str() : "Unattached");
+
+    if(ImGui::BeginDragDropTarget()) {
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ObjectPath")) {
+            auto path = *(const std::filesystem::path*) payload->Data;
+            meshHandle = AssetManager::CreateMesh(path);
+        }
+    }
+
+    const float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+    ImGui::SameLine();
+
+    if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
+        meshHandle = {};
+    }
+
+    ImGui::Columns(1);
+
     ImGui::PopID();
 }
 

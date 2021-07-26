@@ -43,19 +43,41 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
 template<typename ComponentType, typename UIFunction>
 static void DrawComponent(const char* componentName, Entity& entity, UIFunction uiFunction) {
 
-    if(!entity.ContainsComponent<ComponentType>())
-        return;
+    HARMONY_PROFILE_FUNCTION();
 
-    static constexpr auto flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow;
+    ImGui::PushID(componentName);
 
-    ImGui::Separator();
+    static constexpr auto flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
-    if(ImGui::CollapsingHeader(componentName, flags)) {
+    if(entity.ContainsComponent<ComponentType>()) {
+        
+        ImGui::Separator();
 
-        auto& component = entity.GetComponent<ComponentType>();
-        uiFunction(component);
+        const float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 
+        auto contentRegionAvailable = ImGui::GetContentRegionAvail();
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 2.0f, 3.0f });
+        bool opened = ImGui::TreeNodeEx(componentName, flags);
+        ImGui::PopStyleVar();
+
+        ImGui::SameLine(contentRegionAvailable.x - lineHeight / 2.0f);
+
+        if(ImGui::Button("\uf068", { lineHeight, lineHeight })) {
+            entity.RemoveComponent<ComponentType>();
+            if(opened) ImGui::TreePop();
+            ImGui::PopID();
+            return;
+        }
+
+        if(opened) {
+            auto& component = entity.GetComponent<ComponentType>();
+            uiFunction(component);
+            ImGui::TreePop();
+        }
     }
+
+    ImGui::PopID();
 }
 
 template<typename ComponentType>
@@ -85,6 +107,12 @@ static void DisplayEntity(Entity& entity) {
     DrawComponent<QuadRendererComponent>("Quad Renderer", entity, [&](QuadRendererComponent& component) {  
         ImGuiDefaults::DrawColorControl("Color", component.Color);
         ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
+    });
+
+    DrawComponent<MeshRendererComponent>("Mesh Renderer", entity, [&](MeshRendererComponent& component) {
+        ImGuiDefaults::DrawColorControl("Color", component.Color);
+        ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
+        ImGuiDefaults::DrawMeshControl("Mesh", component.MeshHandle);
     });
 
     // New Component Button

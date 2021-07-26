@@ -17,6 +17,7 @@ namespace HarmonyEditor::ImGuiDefaults {
 
     void DrawColorControl(const std::string& label, glm::vec4& values);
     void DrawTextureControl(const std::string& label, AssetHandle<Texture>& textureHandle);
+    void DrawMeshControl(const std::string& label, AssetHandle<Mesh>& meshHandle);
 
     void DrawComboSelection(const std::string& label, int& value, const char* items[], uint32_t itemCount);
 }
