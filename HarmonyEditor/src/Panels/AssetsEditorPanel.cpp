@@ -80,15 +80,11 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
     if(!child.ShouldShow)
         return;
 
+    bool isOpened = false; 
+
     switch(child.AssetType) {
         case AssetTypeDirectory:
-            if(ImGui::TreeNode(child.Filepath.c_str(), "\uf07b %s", child.GetRelativePath(parentPath).c_str())) {
-                for(auto& file : child.Children)
-                    DrawFileImGui(child.Filepath, file);
-                
-                ImGui::TreePop();
-            }
-            
+            isOpened = ImGui::TreeNode(child.Filepath.c_str(), "\uf07b %s", child.GetRelativePath(parentPath).c_str());
             break;
         case AssetTypeHarmonyScene:
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf466 %s", child.GetRelativePath(parentPath).c_str());
@@ -139,12 +135,23 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
     if(ImGui::BeginPopupContextItem(child.Filepath.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
         if(ImGui::Selectable("Delete")) {
-            remove(child.Filepath);
+            if(!std::filesystem::remove_all(child.Filepath)) {
+                Log::Warn("Didn't Delete File");
+            }
+            
             child.ShouldShow = false;
         }
 
         ImGui::EndPopup();
     }
+
+    if(isOpened) {
+        for(auto& file : child.Children)
+            DrawFileImGui(child.Filepath, file);
+
+        ImGui::TreePop();
+    }
+    
 }
 
 void AssetsEditorPanel::SyncAssets() {
