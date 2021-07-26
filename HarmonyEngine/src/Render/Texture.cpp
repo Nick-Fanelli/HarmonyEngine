@@ -5,13 +5,28 @@
 
 using namespace HarmonyEngine;
 
+static GLuint s_NullTextureID = -1;
 static bool s_Setup = false;
 
 void Texture::Create() {
     m_Created = true;
 
     if(!FileUtils::FileExists(m_Filepath.c_str())) {
-        Log::FormatError("Can not load texture at: %s", m_Filepath.c_str());
+        Log::FormatError("Can not load texture at: %s\n\tDoesn't Exist!\n\tStatus: Assigning null texture", m_Filepath.c_str());
+
+        if(s_NullTextureID == -1) {
+            glGenTextures(1, &s_NullTextureID);
+            glBindTexture(GL_TEXTURE_2D, s_NullTextureID);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            uint32_t color = 0xff00ff;
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, &color);
+        }
+
+        m_TextureID = s_NullTextureID;
+
         return;
     }
 
@@ -52,5 +67,7 @@ void Texture::Create() {
 }
 
 void Texture::Delete() {
+    if(m_TextureID == s_NullTextureID)
+        return;
     glDeleteTextures(1, &m_TextureID);
 }
