@@ -31,15 +31,17 @@ namespace HarmonyEngine {
 
         const std::filesystem::path& GetFilepath() const { return m_Filepath; }
 
-        const std::wstring& GetAssetName() {
-            static const std::wstring name = m_Filepath.filename();
-            return name;
+        const std::string& GetAssetName() const {
+            if(m_AssetName == "")
+                m_AssetName = m_Filepath.filename();
+            return m_AssetName;
         }
 
     private:
         T* m_RawAsset = nullptr;
         std::filesystem::path m_Filepath = "";
 
+        mutable std::string m_AssetName = "";
     };
 
 
