@@ -98,7 +98,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
                 ImGui::SetDragDropPayload("HarmonyScenePath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
 
-                ImGui::Text("%s Harmony Scene: %s", "\uf466", child.Filepath.stem().c_str());
+                ImGui::Text("%s %s", "\uf466", child.Filepath.filename().c_str());
                 
                 ImGui::EndDragDropSource();
             }
@@ -112,7 +112,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
                 ImGui::SetDragDropPayload("TexturePath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
 
-                ImGui::Text("%s Texture: %s", "\uf1c5", child.Filepath.stem().c_str());
+                ImGui::Text("%s %s", "\uf1c5", child.Filepath.filename().c_str());
 
                 ImGui::EndDragDropSource();
             }
@@ -126,7 +126,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
                 ImGui::SetDragDropPayload("ObjectPath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
 
-                ImGui::Text("%s Object %s", "\uf1b2", child.Filepath.stem().c_str());
+                ImGui::Text("%s %s", "\uf1b2", child.Filepath.filename().c_str());
 
                 ImGui::EndDragDropSource();
             }

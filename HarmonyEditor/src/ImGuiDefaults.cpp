@@ -8,14 +8,14 @@
 
 using namespace HarmonyEditor;
 
-void ImGuiDefaults::DrawFloat(const std::string& label, float& value, float speed, float min, float max) {
+void ImGuiDefaults::DrawFloat(const std::string& label, float& value, float speed, float min, float max, const char* format) {
     ImGui::PushID(label.c_str());
 
     ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnWidth(0, ColumnWidth * 3.0f);
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
-    ImGui::DragFloat("", &value, speed, min, max);
+    ImGui::DragFloat("", &value, speed, min, max, format);
     ImGui::Columns(1);
 
     ImGui::PopID();

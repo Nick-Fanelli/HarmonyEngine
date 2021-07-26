@@ -27,7 +27,7 @@ std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings =
 
 // Displayed
 Setting<int> Settings::EditorInputStyle = EditorCamera::InputStyle::InputStyleDefault;
-Setting<float> Settings::EditorMovementSensitivity = 0.003;
+Setting<float> Settings::EditorMovementSensitivity = 2.0f;
 
 static const std::filesystem::path& GetSettingsFilepath() {
     static const std::filesystem::path path = Application::GetApplicationSupportDirectory() / "user-settings.yaml";
@@ -109,7 +109,7 @@ void SettingsManager::OnImGuiRender() {
                 });
 
                 DrawSetting(Settings::EditorMovementSensitivity, []() {
-                    ImGuiDefaults::DrawFloat("Movement Sensitivity", Settings::EditorMovementSensitivity.CurrentValue, 0.001f, 0.0f);
+                    ImGuiDefaults::DrawFloat("Movement Sensitivity", Settings::EditorMovementSensitivity.CurrentValue, 0.01f, 0.0f, std::numeric_limits<float>::max(), "%.1f");
                 });
 
                 ImGui::TreePop();

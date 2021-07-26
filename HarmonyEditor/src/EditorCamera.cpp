@@ -59,14 +59,14 @@ void EditorCamera::OnUpdate(float deltaTime) {
         case InputStyleDefault:
             // Rotate on default pan on shift
             if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
-                const glm::vec2& delta = Input::GetDeltaMousePosition() * Settings::EditorMovementSensitivity.CurrentValue;
+                const glm::vec2& delta = Input::GetDeltaMousePosition() * 0.003f;
 
                 if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
                     MousePan(delta);
                 } else if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
                     MouseZoom(delta.y);
                 } else {
-                    MouseRotate(delta);
+                    MouseRotate(delta * Settings::EditorMovementSensitivity.CurrentValue);
                 }
 
                 UpdateView();
@@ -76,10 +76,10 @@ void EditorCamera::OnUpdate(float deltaTime) {
         case InputStyleReversed:
             // Pan as default rotate on shift
             if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
-                const glm::vec2& delta = Input::GetDeltaMousePosition() * Settings::EditorMovementSensitivity.CurrentValue;
+                const glm::vec2& delta = Input::GetDeltaMousePosition() * 0.003f;
 
                 if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
-                    MouseRotate(delta);
+                    MouseRotate(delta * Settings::EditorMovementSensitivity.CurrentValue);
                 } else if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
                     MouseZoom(delta.y);
                 } else {
@@ -92,14 +92,14 @@ void EditorCamera::OnUpdate(float deltaTime) {
         case InputStyleModern:
             // Rotate on right click pan on middle mouse
             if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_RIGHT)) {
-                const glm::vec2& delta = Input::GetDeltaMousePosition() * Settings::EditorMovementSensitivity.CurrentValue;
+                const glm::vec2& delta = Input::GetDeltaMousePosition() * 0.003f;
 
-                MouseRotate(delta);
+                MouseRotate(delta * Settings::EditorMovementSensitivity.CurrentValue);
                 UpdateView();
             }
 
             if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
-                const glm::vec2& delta = Input::GetDeltaMousePosition() * Settings::EditorMovementSensitivity.CurrentValue;
+                const glm::vec2& delta = Input::GetDeltaMousePosition() * 0.003f;
 
                 if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
                     MouseZoom(delta.y);
