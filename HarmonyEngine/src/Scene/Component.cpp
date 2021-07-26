@@ -101,14 +101,14 @@ static void SerializeMesh(YAML::Emitter& out, AssetHandle<Mesh>& meshHandle) {
 static void DeserializeTexture(YAML::Node& node, AssetHandle<Texture>& textureHandle) {
     if(auto textureNode = node["Texture"]) {
         auto textureFilepath = textureNode.as<std::string>();
-        textureHandle = AssetManager::QueueOrGetTexture(textureFilepath, textureFilepath);
+        textureHandle = AssetManager::GetTexture(textureFilepath);
     }
 }
 
 static void DeserializeMesh(YAML::Node& node, AssetHandle<Mesh>& meshHandle) {
     if(auto meshNode = node["Mesh"]) {
         auto meshFilepath = meshNode.as<std::string>();
-        meshHandle = AssetManager::QueueOrGetMesh(meshFilepath, meshFilepath);
+        meshHandle = AssetManager::GetMesh(meshFilepath);
     }
 }
 

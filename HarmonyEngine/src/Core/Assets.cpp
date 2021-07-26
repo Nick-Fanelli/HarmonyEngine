@@ -8,95 +8,76 @@ using namespace HarmonyEngine;
 // ==========================================================================================
 // Asset Manager
 // ==========================================================================================
-std::list<Asset<Texture>> AssetManager::s_TextureRegistry;
-std::list<Asset<Mesh>> AssetManager::s_MeshRegistry;
+template<typename T>
+std::list<Asset<T>> AssetManager::m_AssetRegistry;
 
-AssetHandle<Texture> AssetManager::QueueTexture(const std::string& filepath) {
-    return AssetHandle<Texture>(&s_TextureRegistry.emplace_back(filepath, filepath));
-}
-
-AssetHandle<Mesh> AssetManager::QueueMesh(const std::string& filepath) {
-    return AssetHandle<Mesh>(&s_MeshRegistry.emplace_back(filepath, filepath));
-}
-
-AssetHandle<Texture> AssetManager::QueueTexture(const std::string& filepath, const std::string& assetName) {
-    return AssetHandle<Texture>(&s_TextureRegistry.emplace_back(assetName, filepath));
-}
-
-AssetHandle<Mesh> AssetManager::QueueMesh(const std::string& filepath, const std::string& assetName) {
-    return AssetHandle<Mesh>(&s_MeshRegistry.emplace_back(assetName, filepath));
-}
-
-
-AssetHandle<Texture> AssetManager::QueueOrGetTexture(const std::string& filepath) {
-    for(auto& texture : s_TextureRegistry) {
-        if(texture->GetFilepath() == filepath)
-            return AssetHandle<Texture>(&texture);
+AssetHandle<Texture> AssetManager::GetTexture(const std::filesystem::path& filepath) {
+    for(auto& asset : m_AssetRegistry<Texture>) {
+        if(asset.GetFilepath() == filepath)
+            return AssetHandle<Texture>(&asset);
     }
 
-    return AssetManager::QueueTexture(filepath);
+    return AssetHandle<Texture>(&m_AssetRegistry<Texture>.emplace_back(filepath, filepath));
 }
 
-AssetHandle<Mesh> AssetManager::QueueOrGetMesh(const std::string& filepath) {
-    for(auto& mesh : s_MeshRegistry) {
-        if(mesh->Filepath == filepath)
-            return AssetHandle<Mesh>(&mesh);
+AssetHandle<Texture> AssetManager::CreateTexture(const std::filesystem::path& filepath) {
+    for(auto& asset : m_AssetRegistry<Texture>) {
+        if(asset.GetFilepath() == filepath) {
+            if(!asset.GetRawAsset()->IsCreated())
+                asset.GetRawAsset()->Create();
+            return AssetHandle<Texture>(&asset);
+        }
     }
 
-    return AssetManager::QueueMesh(filepath);
+    auto& texture = m_AssetRegistry<Texture>.emplace_back(filepath, filepath);
+    texture.GetRawAsset()->Create();
+    return AssetHandle<Texture>(&texture);
 }
 
-AssetHandle<Texture> AssetManager::QueueOrGetTexture(const std::string& filepath, const std::string& assetName) {
-    for(auto& texture : s_TextureRegistry) {
-        if(texture->GetFilepath() == filepath)
-            return AssetHandle<Texture>(&texture);
+
+AssetHandle<Mesh> AssetManager::GetMesh(const std::filesystem::path& filepath) {
+    for(auto& asset : m_AssetRegistry<Mesh>) {
+        if(asset.GetFilepath() == filepath)
+            return AssetHandle<Mesh>(&asset);
     }
 
-    return AssetManager::QueueTexture(filepath, assetName);
+    return AssetHandle<Mesh>(&m_AssetRegistry<Mesh>.emplace_back(filepath, filepath));
 }
 
-AssetHandle<Mesh> AssetManager::QueueOrGetMesh(const std::string& filepath, const std::string& assetName) {
-    for(auto& mesh : s_MeshRegistry) {
-        if(mesh->Filepath == filepath)
-            return AssetHandle<Mesh>(&mesh);
+AssetHandle<Mesh> AssetManager::CreateMesh(const std::filesystem::path& filepath) {
+    for(auto& asset : m_AssetRegistry<Mesh>) {
+        if(asset.GetFilepath() == filepath) {
+            if(!asset.GetRawAsset()->IsCreated())
+                OBJLoader::LoadOBJFile(filepath, asset.GetRawAsset());
+            return AssetHandle<Mesh>(&asset);
+        }
     }
 
-    return AssetManager::QueueMesh(filepath, assetName);
+    auto& mesh = m_AssetRegistry<Mesh>.emplace_back(filepath, filepath);
+    OBJLoader::LoadOBJFile(filepath, mesh.GetRawAsset());
+    return AssetHandle<Mesh>(&mesh);
 }
-
-
-void AssetManager::UpdateTextureRegistry(const std::string& filepath) {
-    for(auto& texture : s_TextureRegistry) {
-        if(texture->GetFilepath() == filepath)
-            return;
-    }
-
-    QueueTexture(filepath);
-}
-
-void AssetManager::UpdateMeshRegistry(const std::string& filepath) {
-    for(auto& mesh : s_MeshRegistry) {
-        if(mesh->Filepath == filepath)
-            return;
-    }
-
-    QueueMesh(filepath);
-}
-
 
 void AssetManager::CreateAll() {
-    // Keep all texture loading on one thread for OpenGL
-    for(auto& texture : s_TextureRegistry)
-        texture->Create();
+    // Textures
+    for(auto& texture : m_AssetRegistry<Texture>) {
+        if(!texture.GetRawAsset()->IsCreated())
+            texture.GetRawAsset()->Create();
+    }
 
-    for(auto& mesh : s_MeshRegistry)
-        OBJLoader::LoadOBJFile(mesh->Filepath, mesh.GetRawAsset());
+    // Meshes
+    for(auto& mesh : m_AssetRegistry<Mesh>) {
+        if(!mesh.GetRawAsset()->IsCreated())
+            OBJLoader::LoadOBJFile(mesh.GetFilepath(), mesh.GetRawAsset());
+    }
 }
 
 void AssetManager::DestroyAll() {
-    for(auto& texture : s_TextureRegistry)
-        texture->Delete();
-        
-    s_TextureRegistry.clear();
-    s_MeshRegistry.clear();
+    for(auto& texture : m_AssetRegistry<Texture>) {
+        if(texture.GetRawAsset()->IsCreated())
+            texture.GetRawAsset()->Delete();
+    }
+
+    m_AssetRegistry<Texture>.clear(); // Clear all textures
+    m_AssetRegistry<Mesh>.clear(); // Clear and Destroy Mesh Data
 }

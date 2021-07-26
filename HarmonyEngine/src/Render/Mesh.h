@@ -38,6 +38,7 @@ struct Mesh {
 
     Mesh() = default;
 
+    // TODO: Update to filepath here and at Texture.h
     Mesh(const std::string& filepath) : Filepath(filepath) {}
 
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices) :

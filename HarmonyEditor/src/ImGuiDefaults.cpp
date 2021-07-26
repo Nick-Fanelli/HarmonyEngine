@@ -190,14 +190,12 @@ void ImGuiDefaults::DrawTextureControl(const std::string& label, AssetHandle<Tex
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
 
-    ImGui::Button(textureHandle.IsAssigned() ? textureHandle.GetAssetBinding()->AssetName.c_str() : "[Unattached]");
+    ImGui::Button(textureHandle.IsAssigned() ? textureHandle.GetAssetBinding()->GetFilepath().c_str() : "[Unattached]");
 
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ImagePath")) {
             auto path = *(const std::filesystem::path*) payload->Data;
-            textureHandle = AssetManager::QueueOrGetTexture(path);
-            if(!textureHandle->IsCreated())
-                textureHandle->Create(); // Create texture
+            textureHandle = AssetManager::CreateTexture(path);
         }
     }
 
