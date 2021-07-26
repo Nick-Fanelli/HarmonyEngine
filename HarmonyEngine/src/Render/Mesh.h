@@ -32,14 +32,13 @@ struct Vertex {
 };
 
 struct Mesh {
-    std::string Filepath;
+    std::filesystem::path Filepath;
     std::vector<Vertex> Vertices;
     std::vector<uint32_t> Indices;
 
     Mesh() = default;
 
-    // TODO: Update to filepath here and at Texture.h
-    Mesh(const std::string& filepath) : Filepath(filepath) {}
+    Mesh(const std::filesystem::path& filepath) : Filepath(filepath) {}
 
     Mesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices) :
     Filepath(""), Vertices(vertices), Indices(indices) {}

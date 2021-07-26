@@ -11,7 +11,7 @@ namespace HarmonyEngine {
         GLuint m_TextureID = 0;
 
     protected:
-        std::string m_Filepath = nullptr;
+        std::filesystem::path m_Filepath = "";
         int m_Width, m_Height;
 
         bool m_Created = false;
@@ -19,12 +19,12 @@ namespace HarmonyEngine {
     public:
 
         Texture() = default;
-        Texture(const std::string& filepath) : m_Filepath(filepath) {}
+        Texture(const std::filesystem::path& filepath) : m_Filepath(filepath) {}
 
         void Create();
         void Delete();
 
-        void Create(const std::string& filepath) {
+        void Create(const std::filesystem::path& filepath) {
             m_Filepath = filepath;
 
             Texture::Create();
@@ -41,7 +41,7 @@ namespace HarmonyEngine {
         }
 
         const GLuint& GetTextureID() const { return m_TextureID; }
-        const std::string& GetFilepath() const { return m_Filepath; }
+        const std::filesystem::path& GetFilepath() const { return m_Filepath; }
 
         bool IsCreated() { return m_TextureID != 0; }
 

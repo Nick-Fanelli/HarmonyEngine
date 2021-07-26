@@ -41,7 +41,7 @@ void Texture::Create() {
         } else if (channels == 4) { // RBGA Channels
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         } else {
-            Log::Error(std::string("Could not load image ") + m_Filepath +
+            Log::Error(std::string("Could not load image ") + m_Filepath.c_str() +
                     std::string(", with unknown number of channels: ") + std::to_string(channels));
         }
 
