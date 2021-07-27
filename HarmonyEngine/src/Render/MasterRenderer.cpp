@@ -8,7 +8,13 @@ using namespace HarmonyEngine;
 static bool s_UseFramebuffer = false;
 static Framebuffer s_Framebuffer;
 
+static glm::vec4 s_ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
+
 Framebuffer* MasterRenderer::GetFramebuffer() { return &s_Framebuffer; }
+
+void MasterRenderer::SetClearColor(const glm::vec4& color) {
+    s_ClearColor = color;
+}
 
 void MasterRenderer::OnCreate(Camera* cameraPtr) {
     Renderer::OnCreate(cameraPtr);
@@ -34,7 +40,7 @@ void MasterRenderer::Begin() {
     RendererStats::Begin();
 
     // Clear Code
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(s_ClearColor.r, s_ClearColor.g, s_ClearColor.b, s_ClearColor.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

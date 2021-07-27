@@ -5,6 +5,7 @@
 
 #include "Application.h"
 #include "ImGuiDefaults.h"
+#include "Theme.h"
 
 using namespace HarmonyEditor;
 
@@ -26,6 +27,8 @@ std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings =
 };
 
 // Displayed
+Setting<int> Settings::EditorTheme = Theme::ThemePresetDark;
+
 Setting<int> Settings::EditorInputStyle = EditorCamera::InputStyle::InputStyleDefault;
 Setting<float> Settings::EditorMovementSensitivity = 2.0f;
 
@@ -55,6 +58,8 @@ void SettingsManager::LoadSettings() {
     for(auto& entry : Settings::AllShowPanelSettings)
         DeserializeSetting(root, *entry.second, entry.first.c_str());
 
+    DeserializeSetting(root, Settings::EditorTheme, "EditorTheme");
+
     DeserializeSetting(root, Settings::EditorInputStyle, "EditorInputStyle");
     DeserializeSetting(root, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");
 }
@@ -66,6 +71,8 @@ void SettingsManager::SaveSettings() {
 
     for(auto& entry : Settings::AllShowPanelSettings)
         SerializeSetting(out, *entry.second, entry.first.c_str());
+
+    SerializeSetting(out, Settings::EditorTheme, "EditorTheme");
 
     SerializeSetting(out, Settings::EditorInputStyle, "EditorInputStyle");
     SerializeSetting(out, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");
@@ -101,6 +108,11 @@ void SettingsManager::OnImGuiRender() {
         ImGui::Begin("Settings", &Settings::ShowSettingsPanel.CurrentValue);
 
         if(ImGui::CollapsingHeader("General")) {
+            DrawSetting(Settings::EditorTheme, []() {
+                static const char* items[] = { "Light", "Dark", };
+                ImGuiDefaults::DrawComboSelection("Theme", Settings::EditorTheme.CurrentValue, items, 2);
+            });
+
             if(ImGui::TreeNodeEx("Viewport Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
 
                 DrawSetting(Settings::EditorInputStyle, []() {

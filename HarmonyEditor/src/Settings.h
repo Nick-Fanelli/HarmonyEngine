@@ -57,6 +57,8 @@ namespace HarmonyEditor {
         static std::unordered_map<std::string, Setting<bool>*> AllShowPanelSettings;
 
         // Displayed
+        static Setting<int> EditorTheme;
+
         static Setting<int> EditorInputStyle;
         static Setting<float> EditorMovementSensitivity;
     };

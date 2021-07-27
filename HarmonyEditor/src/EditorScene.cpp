@@ -11,12 +11,14 @@
 #include <Layers/ImGuiLayer.h>
 #include <Layers/RenderLayer.h>
 
-#include <Render/Renderer2D.h>
+#include <Render/MasterRenderer.h>
 
 #include "Application.h"
 #include "EditorCamera.h"
 #include "MenuBar.h"
 #include "Settings.h"
+#include "ImGuiDefaults.h"
+#include "Theme.h"
 
 #include "Panels/HierarchyEditorPanel.h"
 #include "Panels/AssetsEditorPanel.h"
@@ -74,6 +76,13 @@ void EditorScene::OnCreate() {
     std::string iniSaveLocation = std::filesystem::path(Application::GetApplicationSupportDirectory()) / "window-layout.ini";
 
     s_ImGuiLayer.OnCreate(iniSaveLocation);
+
+    // Set Theme
+    Theme::SetTheme(static_cast<Theme::ThemePreset>(Settings::EditorTheme.CurrentValue));
+    if(static_cast<Theme::ThemePreset>(Settings::EditorTheme.CurrentValue) == Theme::ThemePresetLight) {
+        MasterRenderer::SetClearColor({ 0.8f, 0.8f, 0.8f, 1.0f });
+    }
+
     s_RenderLayer.OnCreate();
 
     if(FileUtils::FileExists(CacheManager::LastOpenProject)) {
