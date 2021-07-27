@@ -185,6 +185,30 @@ void AssetsEditorPanel::OnImGuiRender() {
             DrawFileImGui(m_EditorScenePtr->GetActiveProject().GetProjectAssetsDirectory(), child);
         }
 
+        ImGui::BeginChild("RightClickSelectable", ImGui::GetContentRegionAvail());        ImGui::EndChild();
+        if(ImGui::BeginPopupContextItem("AssetsEditorPanelRightClickArea", ImGuiPopupFlags_MouseButtonRight)) {
+            if(ImGui::Selectable("New Folder")) {
+                auto path = m_EditorScenePtr->GetActiveProject().GetProjectAssetsDirectory() / "Untitled Folder";
+                
+                uint32_t i = 1;
+
+                while(std::filesystem::exists(path)) {
+                    path = m_EditorScenePtr->GetActiveProject().GetProjectAssetsDirectory() / (std::string("Untitled Folder ") + std::to_string(i));
+                    if(i > 2000) {
+                        Log::Error("You are kidding me!!! How do you have 2,000 untitled folders!!!?!?!?!\n\tStatus: Breaking");
+                        break; 
+                    }
+
+                    i++;
+                }
+
+                std::filesystem::create_directories(path);
+                SyncAssets();
+            }
+
+            ImGui::EndPopup();
+        }
+
         ImGui::End();
     }
 }
