@@ -26,12 +26,16 @@ static void RenderComponent(Scene* scene, RenderFunction renderFunction) {
     }
 }
 
-void RenderLayer::Render() {
+void RenderLayer::Begin() {
     HARMONY_PROFILE_FUNCTION();
 
-    MasterRenderer::Begin(); // Begin the master renderer
+    MasterRenderer::Begin();
+    Renderer2D::StartBatch();
+    Renderer::StartBatch();
+}
 
-    Renderer2D::StartBatch(); // 2D Rendering Begin
+void RenderLayer::Render() {
+    HARMONY_PROFILE_FUNCTION();
 
     // Quad Renderer
     RenderComponent<QuadRendererComponent>(m_ScenePtr, [&](QuadRendererComponent& renderer, Transform& transform) {
@@ -49,10 +53,7 @@ void RenderLayer::Render() {
             Renderer2D::DrawQuad(transform, renderer.Color);
     });
 
-    Renderer2D::EndBatch(); // 2D Rendering End
-
-    Renderer::StartBatch(); // 3D Rendering Start
-
+    // Mesh Renderer
     RenderComponent<MeshRendererComponent>(m_ScenePtr, [&](MeshRendererComponent& renderer, Transform& transform) {
         if(!renderer.MeshHandle.IsAssigned())
             return;
@@ -61,10 +62,12 @@ void RenderLayer::Render() {
         else
             Renderer::DrawMesh(transform, renderer.MeshHandle, renderer.Color);
     });
+}
 
-    Renderer::EndBatch(); // 3D Rendering End
-
-    MasterRenderer::End(); // End the master renderer
+void RenderLayer::End() {
+    Renderer2D::EndBatch();
+    Renderer::EndBatch();
+    MasterRenderer::End();
 }
 
 void RenderLayer::OnDestroy() {

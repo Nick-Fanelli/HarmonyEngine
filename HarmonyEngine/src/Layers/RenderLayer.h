@@ -14,7 +14,9 @@ namespace HarmonyEngine {
         RenderLayer(Camera* cameraPtr, Scene* scenePtr) : m_CameraPtr(cameraPtr), m_ScenePtr(scenePtr) {}
 
         void OnCreate();
+        void Begin();
         void Render();
+        void End();
         void OnDestroy();
 
         const GLuint* GetRenderTexture() const { return m_RenderTexture; }

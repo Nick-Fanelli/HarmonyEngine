@@ -11,6 +11,8 @@
 #include <Layers/ImGuiLayer.h>
 #include <Layers/RenderLayer.h>
 
+#include <Render/Renderer2D.h>
+
 #include "Application.h"
 #include "EditorCamera.h"
 #include "MenuBar.h"
@@ -27,7 +29,6 @@ static RenderLayer s_RenderLayer;
 
 static HierarchyEditorPanel s_HierarchyEditorPanel;
 static AssetsEditorPanel s_AssetsEditorPanel;
-
 static MenuBar s_MenuBar;
 
 static EditorCamera s_Camera;
@@ -46,7 +47,6 @@ static std::vector<Setting<bool>*> s_TabPointers;
 const ImGuizmo::OPERATION& EditorScene::GetCurrentOperation() { return s_CurrentImGuizmoOperation; }
 void EditorScene::SetCurrentOperation(const ImGuizmo::OPERATION& operation) { s_CurrentImGuizmoOperation = operation; }
 EditorCamera& EditorScene::GetEditorCamera() { return s_Camera; }
-
 
 void EditorScene::SetActiveProject(const Project& project) { 
     m_ActiveProject = project; 
@@ -253,7 +253,11 @@ void EditorScene::OnUpdate(float deltaTime) {
     s_ImGuiLayer.End();
 
     // Render Layer
+    s_RenderLayer.Begin();
+
     s_RenderLayer.Render();
+
+    s_RenderLayer.End();
 }   
 
 void EditorScene::OnDestroy() {
