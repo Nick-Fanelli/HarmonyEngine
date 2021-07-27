@@ -1,1 +1,2 @@
+- ImGuiDefaults: Make better enum dropdown system!!!!!! - IMPORTANT
 - safety: save check dialogs (eg. if someone goes to close the currents scene, prompt to save)
