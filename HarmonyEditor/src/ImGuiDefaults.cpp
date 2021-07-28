@@ -88,7 +88,7 @@ void ImGuiDefaults::DrawVector3(const std::string& label, glm::vec3& values, flo
 }
 
 void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values) {
-    static constexpr auto resetValue = 255.0f;
+    static const float resetValue = 1.0f;
 
     ImGui::PushID(label.c_str());
 
@@ -111,8 +111,9 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
     // ImGui::PushFont(boldFont);
-    if(ImGui::Button("R", buttonSize))
-        tempColor.r = resetValue;
+    if(ImGui::Button("R", buttonSize)) {
+        values.r = resetValue;
+    }
     // ImGui::PopFont();
     ImGui::PopStyleColor(3);
 
@@ -125,8 +126,9 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.3f, 0.8f, 0.3f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
     // ImGui::PushFont(boldFont);
-    if (ImGui::Button("G", buttonSize))
-        tempColor.g = 0.0f;
+    if (ImGui::Button("G", buttonSize)) {
+        values.g = resetValue;
+    }
     // ImGui::PopFont();
     ImGui::PopStyleColor(3);
 
@@ -139,8 +141,9 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.2f, 0.35f, 0.9f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
     // ImGui::PushFont(boldFont);
-    if (ImGui::Button("B", buttonSize))
-        tempColor.b = resetValue;
+    if (ImGui::Button("B", buttonSize)) {
+        values.b = resetValue;
+    }
     // ImGui::PopFont();
     ImGui::PopStyleColor(3);
 
@@ -153,8 +156,9 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.15f, 0.15f, 0.15f, 1.0f });
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{ 0.1f, 0.1f, 0.1f, 1.0f });
     // ImGui::PushFont(boldFont);
-    if (ImGui::Button("A", buttonSize))
-        tempColor.a = resetValue;
+    if (ImGui::Button("A", buttonSize)) {
+        values.a = resetValue;
+    }
     // ImGui::PopFont();
     ImGui::PopStyleColor(3);
 
