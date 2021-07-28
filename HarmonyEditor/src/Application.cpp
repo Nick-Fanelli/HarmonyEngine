@@ -23,6 +23,7 @@ int main() {
     HARMONY_PROFILE_BEGIN_SESSION("Startup", "HarmonyProfile-Startup.json");
     NFD_Init();
     EditorScene editorScene{};
+
     Display::CreateDisplay(Application::GetDisplayTitle().c_str());
     SceneManager::SetActiveScene(&editorScene);
 

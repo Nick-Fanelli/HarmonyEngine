@@ -63,7 +63,7 @@ void Display::CreateDisplay(const char* title, const glm::vec2& displaySize) {
         Log::Error("Could not initialize GLFW!");
         return;
     }
-    
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -74,6 +74,19 @@ void Display::CreateDisplay(const char* title, const glm::vec2& displaySize) {
     s_Window = glfwCreateWindow(s_DisplayWidth, s_DisplayHeight, title, nullptr, nullptr);
     glfwSwapInterval(1); // Enable V-Sync
     // glfwSwapInterval(0); // Disable V-Sync
+
+    int width, height;
+
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    width = mode->width;
+    height = mode->height;
+
+    int newWidth = (int) ((float) (900 * width) / (float) height);
+    int newHeight = (int) ((float) (1600 * height) / (float) width);
+
+    glfwSetWindowSize(s_Window, newWidth, newHeight);
 
     if(s_Window == nullptr) {
         glfwTerminate();
