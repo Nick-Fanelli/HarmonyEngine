@@ -27,7 +27,7 @@ std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings =
 };
 
 // Displayed
-Setting<int> Settings::EditorTheme = Theme::ThemePresetDark;
+Setting<int> Settings::EditorTheme = 1; // Dark
 
 Setting<int> Settings::EditorInputStyle = EditorCamera::InputStyle::InputStyleDefault;
 Setting<float> Settings::EditorMovementSensitivity = 2.0f;
@@ -109,15 +109,13 @@ void SettingsManager::OnImGuiRender() {
 
         if(ImGui::CollapsingHeader("General")) {
             DrawSetting(Settings::EditorTheme, []() {
-                static const char* items[] = { "Light", "Dark", };
-                ImGuiDefaults::DrawComboSelection("Theme", Settings::EditorTheme.CurrentValue, items, 2);
+                ImGuiDefaults::DrawComboSelection("Theme", Settings::EditorTheme.CurrentValue, Theme::ThemePreset, Theme::ThemePresetCount);
             });
 
             if(ImGui::TreeNodeEx("Viewport Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
 
                 DrawSetting(Settings::EditorInputStyle, []() {
-                    static const char* items[] = { "Default", "Reversed", "Modern" };
-                    ImGuiDefaults::DrawComboSelection("Input Style", Settings::EditorInputStyle.CurrentValue, items, 3);
+                    ImGuiDefaults::DrawComboSelection("Input Style", Settings::EditorInputStyle.CurrentValue, EditorCamera::InputStyleFields, EditorCamera::InputStyleCount);
                 });
 
                 DrawSetting(Settings::EditorMovementSensitivity, []() {

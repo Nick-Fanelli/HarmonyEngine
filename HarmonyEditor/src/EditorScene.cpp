@@ -78,8 +78,8 @@ void EditorScene::OnCreate() {
     s_ImGuiLayer.OnCreate(iniSaveLocation);
 
     // Set Theme
-    Theme::SetTheme(static_cast<Theme::ThemePreset>(Settings::EditorTheme.CurrentValue));
-    if(static_cast<Theme::ThemePreset>(Settings::EditorTheme.CurrentValue) == Theme::ThemePresetLight) {
+    Theme::SetTheme(Settings::EditorTheme.CurrentValue);
+    if(Settings::EditorTheme == 0) {
         MasterRenderer::SetClearColor({ 0.8f, 0.8f, 0.8f, 1.0f });
     }
 

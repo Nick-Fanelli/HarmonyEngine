@@ -11,6 +11,9 @@
 
 using namespace HarmonyEditor;
 
+const char* EditorCamera::InputStyleFields[] = { "Default", "Reversed", "Modern" };
+const uint32_t EditorCamera::InputStyleCount = sizeof(EditorCamera::InputStyleFields) / sizeof(EditorCamera::InputStyleFields[0]);
+
 EditorCamera::EditorCamera() {
     UpdateView();
     UpdateProjection(); 

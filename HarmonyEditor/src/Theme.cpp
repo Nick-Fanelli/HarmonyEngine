@@ -2,6 +2,12 @@
 
 using namespace HarmonyEditor;
 
+const char* Theme::ThemePreset[]  = {
+    "Light", "Dark"
+};
+
+const uint32_t Theme::ThemePresetCount = sizeof(Theme::ThemePreset) / sizeof(Theme::ThemePreset[0]);
+
 static void ThemeLight() {
     auto& colors = ImGui::GetStyle().Colors;
 
@@ -72,12 +78,15 @@ static void ThemeDark() {
     colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 }
 
-void Theme::SetTheme(ThemePreset theme) {
+void Theme::SetTheme(int theme) {
     switch(theme) {
-        case ThemePresetLight:
+        case 0:
             ThemeLight();
             break;
-        case ThemePresetDark:
+        case 1:
+            ThemeDark();
+            break;
+        default:
             ThemeDark();
             break;
     }

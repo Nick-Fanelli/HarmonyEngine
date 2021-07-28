@@ -42,8 +42,11 @@ namespace HarmonyEditor {
         float GetYaw() const { return m_Yaw; }
 
         enum InputStyle {
-            InputStyleDefault, InputStyleReversed, InputStyleModern
+            InputStyleDefault = 0, InputStyleReversed = 1, InputStyleModern = 2
         };
+
+        static const char* InputStyleFields[];
+        static const uint32_t InputStyleCount;
 
     private:
         void UpdateProjection();
