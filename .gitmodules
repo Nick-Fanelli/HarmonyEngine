@@ -16,3 +16,6 @@
 [submodule "HarmonyEngine/vendor/ImGuizmo"]
 	path = HarmonyEngine/vendor/ImGuizmo
 	url = git@github.com:Nick-Fanelli/ImGuizmo.git
+[submodule "HarmonyEngine/vendor/lua"]
+	path = HarmonyEngine/vendor/lua
+	url = git@github.com:Nick-Fanelli/lua.git

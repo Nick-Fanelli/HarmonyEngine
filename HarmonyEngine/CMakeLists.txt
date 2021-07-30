@@ -14,6 +14,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/yaml-cpp)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/nativefiledialog)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/ImGuizmo)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua)
 
 file(GLOB_RECURSE SRC_FILES
         "src/**.h"
@@ -39,6 +40,7 @@ target_link_libraries(HarmonyEngine ImGUI)
 target_link_libraries(HarmonyEngine yaml-cpp)
 target_link_libraries(HarmonyEngine nfd)
 target_link_libraries(HarmonyEngine ImGuizmo)
+target_link_libraries(HarmonyEngine lua)
 
 target_precompile_headers(HarmonyEngine PUBLIC "src/harmonypch.h")
 target_precompile_headers(HarmonyEngine PUBLIC "src/imguipch.h")
