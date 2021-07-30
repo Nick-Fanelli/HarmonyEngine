@@ -14,7 +14,8 @@ enum AssetType {
     AssetTypeDirectory,
     AssetTypeTexture,
     AssetTypeObject,
-    AssetTypeHarmonyScene
+    AssetTypeHarmonyScene,
+    AssetTypeLuaScript
 };
 
 struct AssetFile {
@@ -61,6 +62,8 @@ static void LoadFile(AssetFile& parent) {
                 parent.Children.emplace_back(childEntry.path(), AssetTypeHarmonyScene);
             } else if(childEntry.path().extension() == ".obj") {
                 parent.Children.emplace_back(childEntry.path(), AssetTypeObject);
+            } else if(childEntry.path().extension() == ".lua") {
+                parent.Children.emplace_back(childEntry.path(), AssetTypeLuaScript);
             } else if(std::regex_match(childEntry.path().c_str(), imageRegex)) {
                 parent.Children.emplace_back(childEntry.path(), AssetTypeTexture);
             } else {
@@ -126,6 +129,12 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
                 ImGui::EndDragDropSource();
             }
+
+            break;
+
+        case AssetTypeLuaScript:
+
+            ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf1c9 %s", child.GetRelativePath(parentPath).c_str());
 
             break;
         case AssetTypeUnknown:
