@@ -115,6 +115,18 @@ static void DisplayEntity(Entity& entity) {
         ImGuiDefaults::DrawMeshControl("Mesh", component.MeshHandle);
     });
 
+    DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [&](SpriteRendererComponent& component) {
+        ImGuiDefaults::DrawColorControl("Color", component.Color);
+        ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
+
+        ImGuiDefaults::PushColumnWidth(150.0f);
+
+        ImGuiDefaults::DrawVector2("Top Left Coord", component.TopLeftCoord, 0.0f, 0.0f, 1.0f);
+        ImGuiDefaults::DrawVector2("Bottom Right Coords", component.BottomRightCoord, 1.0f, 0.0f, 1.0f);
+
+        ImGuiDefaults::PopColumnWidth();
+    });
+
     // New Component Button
     ImGui::Separator();
     if(ImGui::Button("Add Component"))
