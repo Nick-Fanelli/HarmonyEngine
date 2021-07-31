@@ -7,6 +7,7 @@
 #include <Scene/Component.h>
 #include <Scene/SceneSerialization.h>
 #include <Scene/Entity.h>
+#include <Scene/LuaScript.h>
 
 #include <Layers/ImGuiLayer.h>
 #include <Layers/RenderLayer.h>
@@ -43,6 +44,8 @@ static bool s_IsViewportSelected = false;
 static bool s_IsTabToggled = true;
 
 static EditorScene* s_This;
+
+static LuaScript s_LuaScript = { "/Users/nick227889/Dev/Example Project/Assets/Scripts/TestScript.lua" };
 
 static std::vector<Setting<bool>*> s_TabPointers;
 
@@ -238,6 +241,8 @@ void EditorScene::OnUpdate(float deltaTime) {
         s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::ROTATE;
     if(Input::IsKeyDown(HARMONY_KEY_S))
         s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::SCALE;
+
+    s_LuaScript.CallGlobalFunction("OnUpdate", deltaTime);
 
     // ImGui Layer
     s_ImGuiLayer.Begin();
