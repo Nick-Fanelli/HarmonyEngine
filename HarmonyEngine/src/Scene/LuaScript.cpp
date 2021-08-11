@@ -9,15 +9,13 @@ LuaScript::LuaScript(const std::filesystem::path& filepath) : m_Filepath(filepat
 
     if(!CheckLua(luaL_dofile(L, filepath.c_str()))) {
         L = nullptr;
-        return;
+        HARMONY_ASSERT_MESSAGE(false, "Lua Syntax Error!"); // TODO: Remove and replace with better system!
     }
 }
 
 LuaScript::~LuaScript() {
-    if(L != nullptr) {
+    if(L != nullptr)
         lua_close(L);
-        L = nullptr;
-    }
 }
 
 bool LuaScript::CheckLua(int result) {

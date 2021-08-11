@@ -4,8 +4,8 @@
 
 #if HARMONY_DEBUG
 
-    #define HARMONY_ASSERT(value) if(value) { Log::Error("Harmony Assertion!"); exit(-1); }
-    #define HARMONY_ASSERT_MESSAGE(value, message) if(value) { Log::FormatError("Harmony Assertion!:\n\t%s", message); exit(-1); }
+    #define HARMONY_ASSERT(value) if(!value) { Log::Error("Harmony Assertion!"); exit(-1); }
+    #define HARMONY_ASSERT_MESSAGE(value, message) if(!value) { Log::FormatError("Harmony Assertion!:\n\t%s", message); exit(-1); }
 
 #else
 

@@ -138,6 +138,16 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf1c9 %s", child.GetRelativePath(parentPath).c_str());
 
+            if(ImGui::BeginDragDropSource()) {
+                s_TempPath = child.Filepath;
+
+                ImGui::SetDragDropPayload(ImGuiDefaults::LuaScriptPathDragDropID, &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
+
+                ImGui::Text("%s %s", "\uf1c9", child.Filepath.filename().c_str());
+
+                ImGui::EndDragDropSource();
+            }
+
             break;
         case AssetTypeUnknown:
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf15b %s", child.GetRelativePath(parentPath).c_str());

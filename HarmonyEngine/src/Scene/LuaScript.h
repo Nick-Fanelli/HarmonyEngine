@@ -14,7 +14,7 @@ namespace HarmonyEngine {
     class LuaScript {
 
     public: 
-        LuaScript() {}
+        LuaScript() : L(nullptr) {}
         LuaScript(const std::filesystem::path& filepath);
         ~LuaScript();
 
