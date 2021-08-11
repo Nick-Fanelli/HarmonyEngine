@@ -4,6 +4,8 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include "LuaScript.h"
+
 #include "../Render/Transform.h"
 #include "../Render/Renderer.h"
 
@@ -96,5 +98,16 @@ namespace HarmonyEngine {
         void Serialize(YAML::Emitter& out) override;
         void Deserialize(YAML::Node& node) override;
         
+    };
+
+    struct LuaScriptComponent : public Component {
+
+        LuaScript Script;
+
+        LuaScriptComponent() = default;
+        LuaScriptComponent(const LuaScript& script) : Script(script) {}
+
+        void Serialize(YAML::Emitter& out) override;
+        void Deserialize(YAML::Node& node) override;
     };
 }

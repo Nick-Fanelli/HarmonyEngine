@@ -14,6 +14,7 @@ static const char* TransformComponentID = "TransformComponent";
 static const char* QuadRendererComponentID = "QuadRendererComponent";
 static const char* MeshRendererComponentID = "MeshRendererComponent";
 static const char* SpriteRendererComponentID = "SpriteRendererComponent";
+static const char* LuaScriptComponentID = "LuaScriptComponent";
 
 // ======================================================================================================
 // Scene Serialization
@@ -50,6 +51,7 @@ static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity) {
     SerializeComponenetYAML<QuadRendererComponent>(out, entity, QuadRendererComponentID);
     SerializeComponenetYAML<MeshRendererComponent>(out, entity, MeshRendererComponentID);
     SerializeComponenetYAML<SpriteRendererComponent>(out, entity, SpriteRendererComponentID);
+    SerializeComponenetYAML<LuaScriptComponent>(out, entity, LuaScriptComponentID);
 
     // End Entity Map
     out << YAML::EndMap;
@@ -84,6 +86,7 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
     DeserializeComponentYAML<SpriteRendererComponent>(entityNode, entity, SpriteRendererComponentID);
     DeserializeComponentYAML<MeshRendererComponent>(entityNode, entity, MeshRendererComponentID);
     DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, QuadRendererComponentID);
+    DeserializeComponentYAML<LuaScriptComponent>(entityNode, entity, LuaScriptComponentID);
 }
 
 void SceneSerializer::SerializeYAML() {

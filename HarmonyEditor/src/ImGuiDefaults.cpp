@@ -275,7 +275,7 @@ void ImGuiDefaults::DrawMeshControl(const std::string& label, AssetHandle<Mesh>&
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
 
-    ImGui::Button(meshHandle.IsAssigned() ? meshHandle.GetAssetBinding()->GetAssetName().c_str() : "Unattached");
+    ImGui::Button(meshHandle.IsAssigned() ? meshHandle.GetAssetBinding()->GetAssetName().c_str() : "[Unattached]");
 
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ObjectPath")) {
@@ -290,6 +290,29 @@ void ImGuiDefaults::DrawMeshControl(const std::string& label, AssetHandle<Mesh>&
 
     if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
         meshHandle = {};
+    }
+
+    ImGui::Columns(1);
+
+    ImGui::PopID();
+}
+
+void ImGuiDefaults::DrawLuaScriptControl(const std::string& label, LuaScript& script) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Columns(2, nullptr, false);
+    ImGui::SetColumnWidth(0, ColumnWidth);
+    ImGui::Text("%s", label.c_str());
+    ImGui::NextColumn();
+    
+    ImGui::Button(script.IsAssigned() ? script.GetFilepath().stem().c_str() : "[Unattached]");
+
+    ImGui::SameLine();
+
+    const float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+
+    if(ImGui::Button("\uf0e2", { lineHeight, lineHeight })) {
+        script = {};
     }
 
     ImGui::Columns(1);

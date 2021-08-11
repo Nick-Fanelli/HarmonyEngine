@@ -30,6 +30,8 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
 
     if(ImGui::BeginPopupContextItem(std::to_string((uint32_t) entity.GetEntityID()).c_str(), ImGuiPopupFlags_MouseButtonRight)) {
         if(ImGui::Selectable("Delete")) {
+            if(m_SelectedEntity == entity)
+                m_SelectedEntity = {};
             m_EditorScenePtr->GetSelectedScene().DeleteEntity(entity);
         }
 
@@ -127,6 +129,10 @@ static void DisplayEntity(Entity& entity) {
         ImGuiDefaults::PopColumnWidth();
     });
 
+    DrawComponent<LuaScriptComponent>("Lua Script", entity, [&](LuaScriptComponent& component) {
+        ImGuiDefaults::DrawLuaScriptControl("Lua Script", component.Script);
+    });
+
     // New Component Button
     ImGui::Separator();
     if(ImGui::Button("Add Component"))
@@ -138,6 +144,7 @@ static void DisplayEntity(Entity& entity) {
         DrawAddComponentMenuItem<QuadRendererComponent>("Quad Renderer", entity);
         DrawAddComponentMenuItem<MeshRendererComponent>("Mesh Renderer", entity);
         DrawAddComponentMenuItem<SpriteRendererComponent>("Sprite Renderer", entity);
+        DrawAddComponentMenuItem<LuaScriptComponent>("Lua Script", entity);
 
         ImGui::EndPopup();
     }

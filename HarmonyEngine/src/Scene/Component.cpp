@@ -172,3 +172,19 @@ void SpriteRendererComponent::Deserialize(YAML::Node& node) {
     BottomRightCoord = node["BottomRightCoord"].as<glm::vec2>();
     DeserializeTexture(node, TextureHandle);
 }
+
+// Lua Script Component
+// TODO: update the following two methods to use wide strings instead.
+void LuaScriptComponent::Serialize(YAML::Emitter& out) {
+    if(Script)
+        out << YAML::Key << "ScriptPath" << YAML::Value << Script.GetFilepath().string();
+}
+
+void LuaScriptComponent::Deserialize(YAML::Node& node) {
+    if(node["ScriptPath"]) {
+        auto path = node["ScriptPath"].as<std::string>();
+        if(!std::filesystem::is_empty(path) && std::filesystem::exists(path)) {
+            Script = { path };
+        }
+    }
+}

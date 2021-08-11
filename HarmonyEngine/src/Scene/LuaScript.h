@@ -66,6 +66,11 @@ namespace HarmonyEngine {
             return "null";
         }
 
+        operator bool() const { return L != nullptr; }
+        bool IsAssigned() const { return L != nullptr; }
+
+        const std::filesystem::path& GetFilepath() const { return m_Filepath; }
+
     private:
         std::filesystem::path m_Filepath;
         lua_State* L = nullptr;
