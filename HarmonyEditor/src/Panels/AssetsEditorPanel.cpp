@@ -7,6 +7,8 @@
 #include "../EditorScene.h"
 #include "../Settings.h"
 
+#include "../ImGuiDefaults.h"
+
 using namespace HarmonyEditor;
 
 enum AssetType {
@@ -95,7 +97,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
             if(ImGui::BeginDragDropSource()) {
                 s_TempPath = child.Filepath;
 
-                ImGui::SetDragDropPayload("HarmonyScenePath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
+                ImGui::SetDragDropPayload(ImGuiDefaults::HarmonyScenePathDragDropID, &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
 
                 ImGui::Text("%s %s", "\uf466", child.Filepath.filename().c_str());
                 
@@ -109,7 +111,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
             if(ImGui::BeginDragDropSource()) {
                 s_TempPath = child.Filepath;
 
-                ImGui::SetDragDropPayload("TexturePath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
+                ImGui::SetDragDropPayload(ImGuiDefaults::TexturePathDragDropID, &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
 
                 ImGui::Text("%s %s", "\uf1c5", child.Filepath.filename().c_str());
 
@@ -123,7 +125,7 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
             if(ImGui::BeginDragDropSource()) {
                 s_TempPath = child.Filepath;
 
-                ImGui::SetDragDropPayload("ObjectPath", &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
+                ImGui::SetDragDropPayload(ImGuiDefaults::ObjectPathDragDropID, &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
 
                 ImGui::Text("%s %s", "\uf1b2", child.Filepath.filename().c_str());
 

@@ -191,7 +191,7 @@ static void DrawGameViewport() {
 
     if(ImGui::BeginDragDropTarget()) {
 
-        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("HarmonyScenePath")) {
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(ImGuiDefaults::HarmonyScenePathDragDropID)) {
             auto path = *(const std::filesystem::path*) payload->Data;
             s_This->OpenScene(path);
         }

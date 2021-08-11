@@ -10,6 +10,11 @@ using namespace HarmonyEditor;
 
 static float ColumnWidth = ImGuiDefaults::DefaultColumnWidth;
 
+const char* ImGuiDefaults::TexturePathDragDropID       = "_!_TEXTURE_PATH_DND_ID_!_"   ;
+const char* ImGuiDefaults::ObjectPathDragDropID        = "_!_OBJECT_PATH_DND_ID_!_"    ;
+const char* ImGuiDefaults::HarmonyScenePathDragDropID  = "_!_HYSCENE_PATH_DND_ID_!_"   ;
+const char* ImGuiDefaults::LuaScriptPathDragDropID     = "_!_LUA_PATH_DND_ID_!_"       ;
+
 void ImGuiDefaults::PushColumnWidth(float width) { ColumnWidth = width; }
 void ImGuiDefaults::PopColumnWidth() { ColumnWidth = ImGuiDefaults::DefaultColumnWidth; }
 
@@ -247,7 +252,7 @@ void ImGuiDefaults::DrawTextureControl(const std::string& label, AssetHandle<Tex
     ImGui::Button(textureHandle.IsAssigned() ? textureHandle.GetAssetBinding()->GetAssetName().c_str() : "[Unattached]");
 
     if(ImGui::BeginDragDropTarget()) {
-        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("TexturePath")) {
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(TexturePathDragDropID)) {
             auto path = *(const std::filesystem::path*) payload->Data;
             textureHandle = AssetManager::CreateTexture(path);
         }
@@ -278,7 +283,7 @@ void ImGuiDefaults::DrawMeshControl(const std::string& label, AssetHandle<Mesh>&
     ImGui::Button(meshHandle.IsAssigned() ? meshHandle.GetAssetBinding()->GetAssetName().c_str() : "[Unattached]");
 
     if(ImGui::BeginDragDropTarget()) {
-        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ObjectPath")) {
+        if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(ObjectPathDragDropID)) {
             auto path = *(const std::filesystem::path*) payload->Data;
             meshHandle = AssetManager::CreateMesh(path);
         }

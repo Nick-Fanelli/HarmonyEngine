@@ -8,6 +8,11 @@
 using namespace HarmonyEngine;
 
 namespace HarmonyEditor::ImGuiDefaults {
+    
+    extern const char* TexturePathDragDropID;
+    extern const char* ObjectPathDragDropID;
+    extern const char* HarmonyScenePathDragDropID;
+    extern const char* LuaScriptPathDragDropID;
 
     static constexpr float DefaultColumnWidth = 75.0f;
 
