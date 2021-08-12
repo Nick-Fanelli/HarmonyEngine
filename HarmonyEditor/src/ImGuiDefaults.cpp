@@ -310,12 +310,14 @@ void ImGuiDefaults::DrawLuaScriptControl(const std::string& label, LuaScript& sc
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
     
-    ImGui::Button(script.IsAssigned() ? script.GetFilepath().filename().c_str() : "[Unattached]");
+    ImGui::Button("Please Reimplement");
+    // ImGui::Button(script.IsAssigned() ? script.GetFilepath().filename().c_str() : "[Unattached]");
 
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(LuaScriptPathDragDropID)) {
             auto path = *(const std::filesystem::path*) payload->Data;
-            script = { path };
+            Log::Warn("Must be reimplemented!");
+            // script = { path };
         }
     }
 

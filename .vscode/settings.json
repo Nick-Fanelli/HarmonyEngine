@@ -13,9 +13,11 @@
         "harmonyengine",
         "harmonypch",
         "hyscene",
+        "isfunction",
         "nfdchar",
         "nfdfilteritem",
         "nfdresult",
+        "pcall",
         "segoe"
     ],
     "files.associations": {

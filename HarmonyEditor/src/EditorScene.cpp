@@ -47,6 +47,8 @@ static EditorScene* s_This;
 
 static std::vector<Setting<bool>*> s_TabPointers;
 
+static LuaScript s_LuaScript;
+
 const ImGuizmo::OPERATION& EditorScene::GetCurrentOperation() { return s_CurrentImGuizmoOperation; }
 void EditorScene::SetCurrentOperation(const ImGuizmo::OPERATION& operation) { s_CurrentImGuizmoOperation = operation; }
 EditorCamera& EditorScene::GetEditorCamera() { return s_Camera; }
@@ -89,6 +91,9 @@ void EditorScene::OnCreate() {
     if(FileUtils::FileExists(CacheManager::LastOpenProject)) {
         SetActiveProject({CacheManager::LastOpenProject});
     }
+
+    s_LuaScript.OpenScript("/Users/nick227889/Dev/Example Project/Assets/Scripts/TestScript.lua");
+    s_LuaScript.OnCreate();
 }
 
 void EditorScene::OpenScene(const std::filesystem::path& filepath) {
@@ -240,6 +245,8 @@ void EditorScene::OnUpdate(float deltaTime) {
     if(Input::IsKeyDown(HARMONY_KEY_S))
         s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::SCALE;
 
+    s_LuaScript.OnUpdate(deltaTime);
+
     // ImGui Layer
     s_ImGuiLayer.Begin();
     ImGuizmo::BeginFrame();
@@ -268,9 +275,11 @@ void EditorScene::OnUpdate(float deltaTime) {
     s_RenderLayer.Render();
 
     s_RenderLayer.End();
-}   
+}
 
 void EditorScene::OnDestroy() {
+    s_LuaScript.OnDestroy();
+
     SaveScene();
 
     SettingsManager::SaveSettings();
