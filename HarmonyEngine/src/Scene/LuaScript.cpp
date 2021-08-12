@@ -4,8 +4,17 @@ using namespace HarmonyEngine;
 
 LuaScript::LuaScript(const std::filesystem::path& filepath) : m_Filepath(filepath) {
 
+    if(L != nullptr)
+        return;
+
     L = luaL_newstate();
     luaL_openlibs(L);
+
+    if(filepath.empty() || !std::filesystem::exists(filepath)) {
+        lua_close(L);
+        L = nullptr;
+        return;
+    }
 
     if(!CheckLua(luaL_dofile(L, filepath.c_str()))) {
         L = nullptr;
@@ -14,12 +23,16 @@ LuaScript::LuaScript(const std::filesystem::path& filepath) : m_Filepath(filepat
 }
 
 LuaScript::~LuaScript() {
-    if(L != nullptr)
+    if(L != nullptr) {
         lua_close(L);
+    }
 }
 
 bool LuaScript::CheckLua(int result) {
     HARMONY_PROFILE_FUNCTION();
+
+    if(L == nullptr)
+        return false;
 
     if(result != LUA_OK) {
         std::string errormsg = lua_tostring(L, -1);
@@ -32,6 +45,9 @@ bool LuaScript::CheckLua(int result) {
 
 void LuaScript::CallGlobalFunction(const std::string& functionName) {
     HARMONY_PROFILE_FUNCTION();
+
+    if(L == nullptr)   
+        return;
 
     lua_getglobal(L, functionName.c_str());
     if(lua_isfunction(L, -1)) {

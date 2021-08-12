@@ -14,7 +14,7 @@ namespace HarmonyEngine {
     class LuaScript {
 
     public: 
-        LuaScript() : L(nullptr) {}
+        LuaScript() {}
         LuaScript(const std::filesystem::path& filepath);
         ~LuaScript();
 
@@ -23,6 +23,9 @@ namespace HarmonyEngine {
         template<typename T>
         void CallGlobalFunction(const std::string& functionName, const T& arg) {
             HARMONY_PROFILE_FUNCTION();
+
+            if(L == nullptr)
+                return;
 
             lua_getglobal(L, functionName.c_str());
             if(lua_isfunction(L, -1)) {
@@ -40,6 +43,9 @@ namespace HarmonyEngine {
         inline float GetGlobalVariable(const std::string& variableName) {
             HARMONY_PROFILE_FUNCTION();
 
+            if(L == nullptr)
+                return -1.0f;
+
             lua_getglobal(L, variableName.c_str());
             if(lua_isnumber(L, -1)) {
                 float variable = (float) lua_tonumber(L, -1);
@@ -54,6 +60,9 @@ namespace HarmonyEngine {
         template<>
         inline std::string GetGlobalVariable(const std::string& variableName) {
             HARMONY_PROFILE_FUNCTION();
+
+            if(L == nullptr)
+                return "null";
 
             lua_getglobal(L, variableName.c_str());
             if(lua_isstring(L, -1)) {
@@ -79,12 +88,19 @@ namespace HarmonyEngine {
 
         template<typename T>
         void LuaPush(const T& data) {
+
+            if(L == nullptr)
+                return;
+
             Log::Warn("Lua push not implemented");
         }   
 
         template<>
         inline void LuaPush(const float& data) {
             HARMONY_PROFILE_FUNCTION();
+
+            if(L == nullptr)
+                return;
             
             lua_pushnumber(L, data);
         }
