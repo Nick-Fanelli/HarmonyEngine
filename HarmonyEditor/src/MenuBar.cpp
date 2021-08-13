@@ -91,7 +91,7 @@ void MenuBar::OnImGuiRender() {
                     m_EditorScenePtr->GetSelectedScene().SetSceneName(path.stem());
 
                     SceneSerializer serializer = SceneSerializer(&m_EditorScenePtr->GetSelectedScene(), path);
-                    serializer.SerializeYAML();
+                    serializer.SerializeYAML(m_EditorScenePtr->GetActiveProject().GetProjectDirectory());
 
                     m_EditorScenePtr->OpenScene(path);
                 });

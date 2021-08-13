@@ -20,12 +20,12 @@ static const char* LuaScriptComponentID = "LuaScriptComponent";
 // Scene Serialization
 // ======================================================================================================
 
-SceneSerializer::SceneSerializer(Scene* scenePtr, const std::string& filepath) : m_ScenePtr(scenePtr), m_Filepath(filepath) {
+SceneSerializer::SceneSerializer(Scene* scenePtr, const std::filesystem::path& filepath) : m_ScenePtr(scenePtr), m_Filepath(filepath) {
 
 }
 
 template<typename ComponentType>
-static void SerializeComponenetYAML(YAML::Emitter& out, Entity& entity, const char* componentName) {
+static void SerializeComponenetYAML(YAML::Emitter& out, Entity& entity, const char* componentName, const std::filesystem::path& mask) {
     if(entity.ContainsComponent<ComponentType>()) {
         out << YAML::Key << componentName;
         out << YAML::BeginMap; // Component Map
@@ -34,31 +34,31 @@ static void SerializeComponenetYAML(YAML::Emitter& out, Entity& entity, const ch
 
         if(std::is_base_of<Component, ComponentType>()) {
             auto component = dynamic_cast<Component*>(&rawComponent);
-            component->Serialize(out);
+            component->Serialize(out, mask);
         }
 
         out << YAML::EndMap; // Component Map   
     }
 }
 
-static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity) {
+static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity, const std::filesystem::path& mask) {
     // Begin Entity Map
     out << YAML::BeginMap;
     out << YAML::Key << "Entity" << YAML::Value << (uint32_t) entity.GetEntityID();
     
-    SerializeComponenetYAML<TagComponent>(out, entity, TagComponentID);
-    SerializeComponenetYAML<TransformComponent>(out, entity, TransformComponentID);
-    SerializeComponenetYAML<QuadRendererComponent>(out, entity, QuadRendererComponentID);
-    SerializeComponenetYAML<MeshRendererComponent>(out, entity, MeshRendererComponentID);
-    SerializeComponenetYAML<SpriteRendererComponent>(out, entity, SpriteRendererComponentID);
-    SerializeComponenetYAML<LuaScriptComponent>(out, entity, LuaScriptComponentID);
+    SerializeComponenetYAML<TagComponent>(out, entity, TagComponentID, mask);
+    SerializeComponenetYAML<TransformComponent>(out, entity, TransformComponentID, mask);
+    SerializeComponenetYAML<QuadRendererComponent>(out, entity, QuadRendererComponentID, mask);
+    SerializeComponenetYAML<MeshRendererComponent>(out, entity, MeshRendererComponentID, mask);
+    SerializeComponenetYAML<SpriteRendererComponent>(out, entity, SpriteRendererComponentID, mask);
+    SerializeComponenetYAML<LuaScriptComponent>(out, entity, LuaScriptComponentID, mask);
 
     // End Entity Map
     out << YAML::EndMap;
 }
 
 template<typename ComponenetType>
-static bool DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const char* componentName) {
+static bool DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const char* componentName, const std::filesystem::path& mask) {
     auto componentNode = entityNode[componentName];
 
     if(componentNode) {
@@ -66,7 +66,7 @@ static bool DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, E
 
         if(std::is_base_of<Component, ComponenetType>()) {
             auto component = dynamic_cast<Component*>(&rawComponent);
-            component->Deserialize(componentNode);
+            component->Deserialize(componentNode, mask);
             return true;
         }
 
@@ -75,21 +75,21 @@ static bool DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, E
     return false;
 }
 
-static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const std::string& name) {
+static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const std::string& name, const std::filesystem::path& mask) {
 
-    if(!DeserializeComponentYAML<TransformComponent>(entityNode, entity, TransformComponentID)) {
+    if(!DeserializeComponentYAML<TransformComponent>(entityNode, entity, TransformComponentID, mask)) {
         entity.RemoveComponent<TransformComponent>();
         return;
     }
 
-    DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, QuadRendererComponentID);
-    DeserializeComponentYAML<SpriteRendererComponent>(entityNode, entity, SpriteRendererComponentID);
-    DeserializeComponentYAML<MeshRendererComponent>(entityNode, entity, MeshRendererComponentID);
-    DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, QuadRendererComponentID);
-    DeserializeComponentYAML<LuaScriptComponent>(entityNode, entity, LuaScriptComponentID);
+    DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, QuadRendererComponentID, mask);
+    DeserializeComponentYAML<SpriteRendererComponent>(entityNode, entity, SpriteRendererComponentID, mask);
+    DeserializeComponentYAML<MeshRendererComponent>(entityNode, entity, MeshRendererComponentID, mask);
+    DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, QuadRendererComponentID, mask);
+    DeserializeComponentYAML<LuaScriptComponent>(entityNode, entity, LuaScriptComponentID, mask);
 }
 
-void SceneSerializer::SerializeYAML() {
+void SceneSerializer::SerializeYAML(const std::filesystem::path& mask) {
     YAML::Emitter out;
 
     out << YAML::BeginMap; 
@@ -103,7 +103,7 @@ void SceneSerializer::SerializeYAML() {
     });
 
     for(uint32_t i = entities.size(); i --> 0;) {
-        SerializeEntityYAML(out, entities[i]);
+        SerializeEntityYAML(out, entities[i], mask);
     }
 
     out << YAML::EndSeq;
@@ -117,7 +117,7 @@ void SceneSerializer::SerializerBinary() {
     HARMONY_ASSERT(true);
 }
 
-void SceneSerializer::DeserializeYAML() {
+void SceneSerializer::DeserializeYAML(const std::filesystem::path& mask) {
 
     std::ifstream in(m_Filepath);
     std::stringstream stream;
@@ -147,7 +147,7 @@ void SceneSerializer::DeserializeYAML() {
 
             Entity deserializedEntity = m_ScenePtr->CreateEntity(name);
 
-            DeserializeEntityYAML(entity, deserializedEntity, name);
+            DeserializeEntityYAML(entity, deserializedEntity, name, mask);
         }   
     }
 }

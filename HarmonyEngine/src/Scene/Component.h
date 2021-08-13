@@ -14,8 +14,8 @@ namespace HarmonyEngine {
     class Component {
 
     public:
-        virtual void Serialize(YAML::Emitter& out) {}
-        virtual void Deserialize(YAML::Node& node) {}
+        virtual void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) {}
+        virtual void Deserialize(YAML::Node& node, const std::filesystem::path& mask) {}
 
         virtual ~Component() {}
     };
@@ -29,8 +29,8 @@ namespace HarmonyEngine {
 
         TagComponent(const std::string& name) : Name(name) {}
 
-        void Serialize(YAML::Emitter& out) override;
-        void Deserialize(YAML::Node& node) override;
+        void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
+        void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
     };
 
     struct TransformComponent : public Component {
@@ -42,8 +42,8 @@ namespace HarmonyEngine {
 
         TransformComponent(const struct Transform& transform) : Transform(transform) {}
 
-        void Serialize(YAML::Emitter& out) override;
-        void Deserialize(YAML::Node& node) override;
+        void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
+        void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
     };
 
     struct MeshRendererComponent : public Component {
@@ -59,8 +59,8 @@ namespace HarmonyEngine {
         MeshRendererComponent(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture) : MeshHandle(mesh), TextureHandle(texture) {}
         MeshRendererComponent(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture, const glm::vec4& color) : MeshHandle(mesh), TextureHandle(texture), Color(color) {}
 
-        void Serialize(YAML::Emitter& out) override;
-        void Deserialize(YAML::Node& node) override;
+        void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
+        void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
 
     };
 
@@ -76,8 +76,8 @@ namespace HarmonyEngine {
         QuadRendererComponent(const glm::vec4& color) : Color(color) {}
         QuadRendererComponent(const glm::vec4& color, const AssetHandle<Texture>& texture) : Color(color), TextureHandle(texture) {}
 
-        void Serialize(YAML::Emitter& out) override;
-        void Deserialize(YAML::Node& node) override;
+        void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
+        void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
     };
 
     struct SpriteRendererComponent : public Component {
@@ -95,8 +95,8 @@ namespace HarmonyEngine {
         SpriteRendererComponent(const glm::vec4& color, AssetHandle<Texture> textureHandle, const glm::vec2& topLeft, const glm::vec2& bottomRight) 
             : Color(color), TextureHandle(textureHandle), TopLeftCoord(topLeft), BottomRightCoord(bottomRight) {}
 
-        void Serialize(YAML::Emitter& out) override;
-        void Deserialize(YAML::Node& node) override;
+        void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
+        void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
         
     };
 
@@ -107,7 +107,7 @@ namespace HarmonyEngine {
         LuaScriptComponent() = default;
         LuaScriptComponent(const LuaScript& script) : Script(script) {}
         
-        void Serialize(YAML::Emitter& out) override;
-        void Deserialize(YAML::Node& node) override;
+        void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
+        void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
     };
 }

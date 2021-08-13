@@ -16,12 +16,12 @@ namespace HarmonyEngine {
         SceneSerializer() = default;
         SceneSerializer(const SceneSerializer&) = default;
 
-        SceneSerializer(Scene* scenePtr, const std::string& filepath);
+        SceneSerializer(Scene* scenePtr, const std::filesystem::path& filepath);
 
-        void SerializeYAML();
+        void SerializeYAML(const std::filesystem::path& mask = "");
         void SerializerBinary();
 
-        void DeserializeYAML();
+        void DeserializeYAML(const std::filesystem::path& mask = "");
         void DeserializeBinary();
 
         operator bool() const { return m_ScenePtr != nullptr; }
@@ -29,7 +29,7 @@ namespace HarmonyEngine {
 
     private:
         Scene* m_ScenePtr = nullptr;
-        std::string m_Filepath;
+        std::filesystem::path m_Filepath;
     };
 
 };

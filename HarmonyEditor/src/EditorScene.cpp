@@ -100,14 +100,14 @@ void EditorScene::OpenScene(const std::filesystem::path& filepath) {
     AssetManager::DestroyAll(); // TODO: Reuse any assets that are shared!
 
     s_SceneSerializer = SceneSerializer(&m_SelectedScene, filepath);
-    s_SceneSerializer.DeserializeYAML();
+    s_SceneSerializer.DeserializeYAML(m_ActiveProject.GetProjectDirectory());
 
     AssetManager::CreateAll();
 }
 
 void EditorScene::SaveScene() {
     if(s_SceneSerializer)
-        s_SceneSerializer.SerializeYAML();
+        s_SceneSerializer.SerializeYAML(m_ActiveProject.GetProjectDirectory());
 }
 
 static void DrawDockspace() {
