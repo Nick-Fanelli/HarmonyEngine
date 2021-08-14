@@ -32,6 +32,30 @@ namespace HarmonyEngine {
         static void GetWidth(int* result) { glfwGetWindowSize(s_Window, result, nullptr); }
         static void GetHeight(int* result) { glfwGetWindowSize(s_Window, nullptr, result); }
 
+        static int GetWidth() { 
+            int width;
+            glfwGetWindowSize(s_Window, &width, nullptr);
+            return width;
+        }
+
+        static int GetHeight() { 
+            int height;
+            glfwGetWindowSize(s_Window, nullptr, &height);
+            return height;
+        }
+
+        static glm::vec2 GetWindowSize() {
+            int width, height;
+            glfwGetWindowSize(s_Window, &width, &height);
+            return { width, height };
+        }
+
+        static glm::vec2 GetWindowPosition() {
+            int x, y;
+            glfwGetWindowPos(s_Window, &x, &y);
+            return { x, y };
+        }
+
         static const float GetAspectWidth() { return DisplayAspect.x; }
         static const float GetAspectHeight() { return DisplayAspect.y; }
         static const glm::vec2& GetRawDisplayAspect() { return DisplayAspect; }
@@ -51,6 +75,13 @@ namespace HarmonyEngine {
 
             outVec2->x = (float) x;
             outVec2->y = (float) y;
+        }
+
+        static ImVec2 GetImGuiSize() {
+            int x, y;
+            glfwGetWindowSize(s_Window, &x, &y);
+
+            return { (float) x, (float) y };
         }
 
         static GLFWwindow* GetWindowPtr() { return s_Window; }

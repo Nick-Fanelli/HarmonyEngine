@@ -271,9 +271,7 @@ void EditorScene::OnUpdate(float deltaTime) {
 
     // Render Layer
     s_RenderLayer.Begin();
-
     s_RenderLayer.Render();
-
     s_RenderLayer.End();
 }
 
