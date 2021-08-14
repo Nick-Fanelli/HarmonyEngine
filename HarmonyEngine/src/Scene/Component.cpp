@@ -189,10 +189,4 @@ void LuaScriptComponent::Deserialize(YAML::Node& node, const std::filesystem::pa
             Log::FormatWarn("Script at '%s' no longer exists", path.c_str());
         }
     }
-    // if(node["ScriptPath"]) {
-    //     auto path = node["ScriptPath"].as<std::string>();
-    //     if(!std::filesystem::is_empty(path) && std::filesystem::exists(path)) {
-    //         Script = { path };
-    //     }
-    // }
 }
