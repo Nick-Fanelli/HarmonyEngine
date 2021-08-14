@@ -18,6 +18,7 @@
         "nfdfilteritem",
         "nfdresult",
         "pcall",
+        "pushcfunction",
         "segoe"
     ],
     "files.associations": {

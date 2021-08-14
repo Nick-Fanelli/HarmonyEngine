@@ -2,6 +2,8 @@
 
 using namespace HarmonyEngine;
 
+#include <Core/Input.h>
+
 // ======================= Lua Types ================================
 // - Nil (similar to null in java)
 // - Boolean
@@ -27,10 +29,58 @@ LuaScript::~LuaScript() {
     lua_close(L); // Close the lua state
 }
 
+// Native Functions
+int NativeIsKey(lua_State* L) {
+
+    auto keyCode = lua_tonumber(L, -1); // The first argument
+    lua_pushboolean(L, Input::IsKey(keyCode));
+
+    return 1; // 1 = amount of return values
+}
+
+int NativeIsKeyDown(lua_State* L) {
+
+    auto keyCode = lua_tonumber(L, -1);
+    lua_pushboolean(L, Input::IsKeyDown(keyCode));
+
+    return 1;
+}
+
+int NativeIsKeyUp(lua_State* L) {
+
+    auto keyCode = lua_tonumber(L, -1);
+    lua_pushboolean(L, Input::IsKeyUp(keyCode));
+
+    return 1;
+}
+
+int NativePrint(lua_State* L) {
+
+    auto message = lua_tostring(L, -1);
+    std::cout << message << std::endl; // TODO: push to some console
+
+    return 0;
+}
+
 void LuaScript::OpenScript(const std::filesystem::path& scriptPath) {
     luaL_openlibs(L);
 
     // Bind Native Functions
+    // IsKey
+    lua_pushcfunction(L, NativeIsKey);
+    lua_setglobal(L, "IsKey");
+
+    // IsKeyDown
+    lua_pushcfunction(L, NativeIsKeyDown);
+    lua_setglobal(L, "IsKeyDown");
+
+    // IsKeyUp
+    lua_pushcfunction(L, NativeIsKeyUp);
+    lua_setglobal(L, "IsKeyUp");
+
+    // Print
+    lua_pushcfunction(L, NativePrint);
+    lua_setglobal(L, "print");
 
     // Load Harmony Library
     HARMONY_ASSERT_MESSAGE(HandleLua(luaL_dostring(L, GetHarmonyLibrary().c_str())), "Could not load HarmonyLibrary.lua");
