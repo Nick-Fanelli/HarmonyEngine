@@ -24,6 +24,9 @@ namespace HarmonyEngine {
         void OnUpdate(float deltaTime);
         void OnDestroy();
 
+        bool IsAssigned() const { return m_IsAssigned; }
+        const std::filesystem::path& GetFilepath() const { return m_Filepath; }
+
     private:    
         static const std::string& GetHarmonyLibrary();
 
@@ -31,7 +34,11 @@ namespace HarmonyEngine {
         
     private:
         lua_State* L = nullptr;
+
+        bool m_IsAssigned = false;
         bool m_ContainsOnUpdateFunction = false;
+
+        std::filesystem::path m_Filepath;
     
     };
 

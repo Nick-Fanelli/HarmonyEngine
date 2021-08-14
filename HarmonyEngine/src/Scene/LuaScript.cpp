@@ -63,6 +63,14 @@ int NativePrint(lua_State* L) {
 }
 
 void LuaScript::OpenScript(const std::filesystem::path& scriptPath) {
+    if(m_IsAssigned) {
+        lua_close(L);
+        L = luaL_newstate();
+    }
+
+    m_IsAssigned = true;
+    m_Filepath = scriptPath;
+
     luaL_openlibs(L);
 
     // Bind Native Functions
