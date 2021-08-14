@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/Nick-Fanelli/HarmonyEngine/compare/v0.2.0...v0.3.0) (2021-08-14)
+
+
+### Features
+
+* add basic native functions for input and printing to lua scripts ([064a959](https://github.com/Nick-Fanelli/HarmonyEngine/commit/064a9591083a09cbdd8c67dd5d2f57aab884a30f))
+* add folder button in AssetsEditorPanel ([3852492](https://github.com/Nick-Fanelli/HarmonyEngine/commit/38524925325386f6d2e6d7795e86c19c78b41681))
+* add global support for lua scripting ([df96226](https://github.com/Nick-Fanelli/HarmonyEngine/commit/df96226df9aa497067484cde0f6246c3121d0e53))
+* add in some more window size getters in the display class ([5315d3c](https://github.com/Nick-Fanelli/HarmonyEngine/commit/5315d3c0d665db74fb743da81293793fdee6e0b9))
+* add lua script component to components panel and display it ([a3bedbd](https://github.com/Nick-Fanelli/HarmonyEngine/commit/a3bedbdb6b5b3dc6b9ef80a41ae622db9a6c4606))
+* add lua script identification to asset editor panel ([156df6b](https://github.com/Nick-Fanelli/HarmonyEngine/commit/156df6be67955ee830beac2d2519d312fcc73b15))
+* add reset button to texture handle drop target ([4f8f308](https://github.com/Nick-Fanelli/HarmonyEngine/commit/4f8f308fa995b0f29365e2cf1604f2a848c31bd1))
+* add reset camera option to the menu bar ([8cad3a4](https://github.com/Nick-Fanelli/HarmonyEngine/commit/8cad3a41defe68b51b0c119ca5abc20816934194))
+* add sprite renderer to components panel ([4723ea1](https://github.com/Nick-Fanelli/HarmonyEngine/commit/4723ea188b68d178ffdb739ae9274a1983e17326))
+* add support to create the engine window at perfect size for monitor ([eec89ba](https://github.com/Nick-Fanelli/HarmonyEngine/commit/eec89baeebaa31e6682db94b7d8f952acf478410))
+* add texture handle support ([b873f61](https://github.com/Nick-Fanelli/HarmonyEngine/commit/b873f61661b064d4f282727fa0f748dd688ec3aa))
+* add theme system ([f7bb625](https://github.com/Nick-Fanelli/HarmonyEngine/commit/f7bb62588640ed2e695236cdb2fc92f036548f32))
+* add tooltip for drag and drop assets ([bfab910](https://github.com/Nick-Fanelli/HarmonyEngine/commit/bfab910e1a06355946f41768e45f4b408b1fbf93))
+* allow directories to be deleted in asset editor panel ([e4df520](https://github.com/Nick-Fanelli/HarmonyEngine/commit/e4df5201507d5435e1e7e2108da7a2d34d4f88b9))
+* allowed scenes to be dragged and dropped onto the viewport to be opened ([98ea931](https://github.com/Nick-Fanelli/HarmonyEngine/commit/98ea9310f7fd0d87a73a274bcfd35540d0c79efe))
+* assign any missing textures the ugly pink ([67e4dad](https://github.com/Nick-Fanelli/HarmonyEngine/commit/67e4dadfce1280a7ea1d093688ecd14bfbe32c6a))
+* display image name instead of full filepath ([a1d0129](https://github.com/Nick-Fanelli/HarmonyEngine/commit/a1d0129cb5a8f20762b03f1d96596438919fc19b))
+* drag and drop lua script component ([31420ce](https://github.com/Nick-Fanelli/HarmonyEngine/commit/31420cece44d9a69ed2026e253483632303bfc2a))
+* fix editor camera movement to make it more comfortable ([cef1ef9](https://github.com/Nick-Fanelli/HarmonyEngine/commit/cef1ef9ec9c74343f44da903ea92e5894fe32426))
+* lua script component ([4134dde](https://github.com/Nick-Fanelli/HarmonyEngine/commit/4134ddee92c811a37dcaffdae6f2b9d5488bdf7b))
+* LuaScript class that allows lua scripts to be opened and called ([c46b9c6](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c46b9c6ff787affb34144494fb088c7de249d040))
+* mesh renderer support ([5317e5c](https://github.com/Nick-Fanelli/HarmonyEngine/commit/5317e5cc34fb87f415654db0459884a15d43e6e3))
+* new asset loading system ([892d3a6](https://github.com/Nick-Fanelli/HarmonyEngine/commit/892d3a6f4b280658fb57fb34c65fb6a015620cbd))
+* reset camera to origin when zero key is pressed ([c4bc7b2](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c4bc7b23797f6e68174040d805ac92b2ddcf11b0))
+
+
+### Bug Fixes
+
+* color value reset ([e675f2a](https://github.com/Nick-Fanelli/HarmonyEngine/commit/e675f2a029f99bbad6306a119b71e058076be109))
+* threw in some failsafe code to keep it from breaking ([a7c8667](https://github.com/Nick-Fanelli/HarmonyEngine/commit/a7c866768a577c2740bd0da6600f551a3970f645))
+* update mesh and texture to use filesystem path instead of std::string ([c98a8dd](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c98a8ddfa07282a647076b580d4a6bee380ad74d))
+* update the saved path's to be realitve instead of absolute in the hyscene file ([8f7b570](https://github.com/Nick-Fanelli/HarmonyEngine/commit/8f7b5705dbbbbdf2f04aa85450ddadc14821a265))
+
 ## [0.2.0](https://github.com/Nick-Fanelli/HarmonyEngine/compare/v0.1.0...v0.2.0) (2021-07-25)
 
 
