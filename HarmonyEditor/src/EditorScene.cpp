@@ -97,6 +97,9 @@ void EditorScene::OnCreate() {
 }
 
 void EditorScene::OpenScene(const std::filesystem::path& filepath) {
+
+    s_HierarchyEditorPanel.m_SelectedEntity = {};  // Clear the selected entity! (Important because entity will soon no longer exist!)
+
     AssetManager::DestroyAll(); // TODO: Reuse any assets that are shared!
 
     s_SceneSerializer = SceneSerializer(&m_SelectedScene, filepath);

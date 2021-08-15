@@ -10,6 +10,8 @@ using namespace HarmonyEngine;
 
 namespace HarmonyEditor {
 
+    class EditorScene;
+
     class HierarchyEditorPanel {
 
     public:
@@ -27,6 +29,8 @@ namespace HarmonyEditor {
     private:
         EditorScene* m_EditorScenePtr;
         Entity m_SelectedEntity{};
+
+        friend class EditorScene;
 
     };
 
