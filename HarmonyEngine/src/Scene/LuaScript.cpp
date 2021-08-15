@@ -54,13 +54,18 @@ int NativeIsKeyUp(lua_State* L) {
     return 1;
 }
 
-int NativePrint(lua_State* L) {
+int NativeGetMousePosition(lua_State* L) {
 
-    auto message = lua_tostring(L, -1);
-    std::cout << message << std::endl; // TODO: push to some console
+    auto mousePosition = Input::GetMousePosition();
 
-    return 0;
-}
+    lua_newtable(L);
+    lua_pushinteger(L, mousePosition.x);
+    lua_setfield(L, -2, "x");
+    lua_pushinteger(L, mousePosition.y);
+    lua_setfield(L, -2, "y");
+
+    return 1;
+} 
 
 void LuaScript::OpenScript(const std::filesystem::path& scriptPath) {
     if(m_IsAssigned) {
@@ -86,9 +91,9 @@ void LuaScript::OpenScript(const std::filesystem::path& scriptPath) {
     lua_pushcfunction(L, NativeIsKeyUp);
     lua_setglobal(L, "IsKeyUp");
 
-    // Print
-    lua_pushcfunction(L, NativePrint);
-    lua_setglobal(L, "print");
+    // _NativeGetMousePosition
+    lua_pushcfunction(L, NativeGetMousePosition);
+    lua_setglobal(L, "_NativeGetMousePosition");
 
     // Load Harmony Library
     HARMONY_ASSERT_MESSAGE(HandleLua(luaL_dostring(L, GetHarmonyLibrary().c_str())), "Could not load HarmonyLibrary.lua");
