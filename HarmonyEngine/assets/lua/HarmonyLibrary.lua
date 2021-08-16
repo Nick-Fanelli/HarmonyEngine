@@ -119,3 +119,76 @@ KEY_RIGHT_CONTROL      = 345
 KEY_RIGHT_ALT          = 346
 KEY_RIGHT_SUPER        = 347
 KEY_MENU               = 348
+
+-- Vector2 --
+
+Vector2 = {}
+Vector2.__index = Vector2
+
+function Vector2.new(x, y)
+    return setmetatable({ x = x or 0, y = y or 0 }, Vector2)
+end
+
+function Vector2.__add(a, b)
+    if type(a) == "number" then
+        return Vector2.new(b.x + a, b.y + a)
+    elseif type(b) == "number" then
+        return Vector2.new(a.x + b, a.y + b)
+    else
+        return Vector2.new(a.x + b.x, a.y + b.y)
+    end
+end
+
+function Vector2.__sub(a, b)
+    if type(a) == "number" then
+        return Vector2.new(b.x - a, b.y - a)
+    elseif type(b) == "number" then
+        return Vector2.new(a.x - b, a.y - b)
+    else
+        return Vector2.new(a.x - b.x, a.y - b.y)
+    end
+end
+
+function Vector2.__mul(a, b)
+    if type(a) == "number" then
+        return Vector2.new(b.x * a, b.y * a)
+    elseif type(b) == "number" then
+        return Vector2.new(a.x * b, a.y * b)
+    else
+        return Vector2.new(a.x * b.x, a.y * b.y)
+    end
+end
+
+function Vector2.__div(a, b)
+    if type(a) == "number" then
+        return Vector2.new(b.x / a, b.y / a)
+    elseif type(b) == "number" then
+        return Vector2.new(a.x / b, a.y / b)
+    else
+        return Vector2.new(a.x / b.x, a.y / b.y)
+    end
+end
+
+function Vector2.__eq(a, b)
+    return a.x == b.x and a.y == b.y
+end
+
+function Vector2.__tostring(a)
+    return "[" .. a.x .. ", " .. a.y .. "]"
+end
+
+function Vector2:clone()
+    return Vector2.new(self.x, self.y)
+end
+
+function Vector2:unpack()
+    return self.x, self.y
+end
+
+-- Mouse Position --
+function GetMousePosition()
+    
+    local values = _NativeGetMousePosition()
+    return Vector2.new(values.x, values.y)
+
+end
