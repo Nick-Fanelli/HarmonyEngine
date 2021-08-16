@@ -12,7 +12,6 @@ void RenderLayer::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
 
     MasterRenderer::OnCreate(m_CameraPtr);
-    MasterRenderer::SetUseFramebuffer(true);
 
     m_RenderTexture = MasterRenderer::GetFramebuffer()->GetTexturePtr();
 }

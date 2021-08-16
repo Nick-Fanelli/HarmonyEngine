@@ -87,6 +87,8 @@ void EditorScene::OnCreate() {
     }
 
     s_RenderLayer.OnCreate();
+    MasterRenderer::SetUseFramebuffer(true);
+
     Renderer::SetScenePtr(&m_SelectedScene);
 
     if(FileUtils::FileExists(CacheManager::LastOpenProject)) {
