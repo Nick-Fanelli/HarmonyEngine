@@ -110,4 +110,16 @@ namespace HarmonyEngine {
         void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
         void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
     };
-}
+
+    struct PointLightComponent : public Component {
+
+        glm::vec4 Hue;
+
+        PointLightComponent() : Hue(1.0f) {}
+        PointLightComponent(const glm::vec4& hue) : Hue(hue) {}
+
+        void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
+        void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
+    };
+
+} 

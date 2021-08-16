@@ -15,6 +15,7 @@ static const char* QuadRendererComponentID = "QuadRendererComponent";
 static const char* MeshRendererComponentID = "MeshRendererComponent";
 static const char* SpriteRendererComponentID = "SpriteRendererComponent";
 static const char* LuaScriptComponentID = "LuaScriptComponent";
+static const char* PointLightComponentID = "PointLightComponent";
 
 // ======================================================================================================
 // Scene Serialization
@@ -52,6 +53,7 @@ static void SerializeEntityYAML(YAML::Emitter& out, Entity& entity, const std::f
     SerializeComponenetYAML<MeshRendererComponent>(out, entity, MeshRendererComponentID, mask);
     SerializeComponenetYAML<SpriteRendererComponent>(out, entity, SpriteRendererComponentID, mask);
     SerializeComponenetYAML<LuaScriptComponent>(out, entity, LuaScriptComponentID, mask);
+    SerializeComponenetYAML<PointLightComponent>(out, entity, PointLightComponentID, mask);
 
     // End Entity Map
     out << YAML::EndMap;
@@ -87,6 +89,7 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
     DeserializeComponentYAML<MeshRendererComponent>(entityNode, entity, MeshRendererComponentID, mask);
     DeserializeComponentYAML<QuadRendererComponent>(entityNode, entity, QuadRendererComponentID, mask);
     DeserializeComponentYAML<LuaScriptComponent>(entityNode, entity, LuaScriptComponentID, mask);
+    DeserializeComponentYAML<PointLightComponent>(entityNode, entity, PointLightComponentID, mask);
 }
 
 void SceneSerializer::SerializeYAML(const std::filesystem::path& mask) {

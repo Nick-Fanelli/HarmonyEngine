@@ -87,6 +87,7 @@ void EditorScene::OnCreate() {
     }
 
     s_RenderLayer.OnCreate();
+    Renderer::SetScenePtr(&m_SelectedScene);
 
     if(FileUtils::FileExists(CacheManager::LastOpenProject)) {
         SetActiveProject({CacheManager::LastOpenProject});

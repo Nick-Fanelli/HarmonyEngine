@@ -36,6 +36,7 @@ namespace HarmonyEngine {
     class Renderer {
 
         static Camera* s_Camera;
+        static Scene* s_ScenePtr;
 
         static void UpdateBatchData();
         static void Render();
@@ -52,6 +53,8 @@ namespace HarmonyEngine {
 
         static void StartBatch();
         static void EndBatch();
+
+        static void SetScenePtr(Scene* scenePtr) { s_ScenePtr = scenePtr; }
 
         // TODO: Remove
         static void DrawImGuiEnvironmentLighting(bool* open);

@@ -133,6 +133,10 @@ static void DisplayEntity(Entity& entity) {
         ImGuiDefaults::DrawLuaScriptControl("Lua Script", component.Script);
     });
 
+    DrawComponent<PointLightComponent>("Point Light", entity, [&](PointLightComponent& component) {
+        ImGuiDefaults::DrawColorControl("Hue", component.Hue);
+    });
+
     // New Component Button
     ImGui::Separator();
     if(ImGui::Button("Add Component"))
@@ -145,6 +149,7 @@ static void DisplayEntity(Entity& entity) {
         DrawAddComponentMenuItem<MeshRendererComponent>("Mesh Renderer", entity);
         DrawAddComponentMenuItem<SpriteRendererComponent>("Sprite Renderer", entity);
         DrawAddComponentMenuItem<LuaScriptComponent>("Lua Script", entity);
+        DrawAddComponentMenuItem<PointLightComponent>("Point Light", entity);
 
         ImGui::EndPopup();
     }

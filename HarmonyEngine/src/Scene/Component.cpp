@@ -190,3 +190,12 @@ void LuaScriptComponent::Deserialize(YAML::Node& node, const std::filesystem::pa
         }
     }
 }
+
+// Point Light Component
+void PointLightComponent::Serialize(YAML::Emitter& out, const std::filesystem::path& mask) {
+    out << YAML::Key << "Hue" << YAML::Value << Hue;
+}
+
+void PointLightComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
+    Hue = node["Hue"].as<glm::vec4>();
+}

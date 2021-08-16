@@ -2,12 +2,14 @@
 
 #include "Shader.h"
 #include "Renderer2D.h"
+#include "../Scene/Component.h"
 
 using namespace HarmonyEngine;
 
 static const size_t MaxObjectCount = 245; // 245
 static const size_t MaxVertexCount = 80000; // 80,000
 static const size_t MaxIndexCount = 120000; // 120,000
+
 
 static RenderBatch s_Batch;
 static Shader s_Shader;
@@ -17,6 +19,7 @@ static uint32_t s_MaxTextureCount;
 static GLuint s_WhiteTexture;
 
 Camera* Renderer::s_Camera = nullptr;
+Scene* Renderer::s_ScenePtr = nullptr;
 
 static int* s_TextureSlots;
 
@@ -84,6 +87,13 @@ void Renderer::OnCreate(Camera* camera) {
     // Push data to GPU
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * MaxVertexCount, nullptr, GL_DYNAMIC_DRAW);
 
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
+    glEnableVertexAttribArray(5);
+
     glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, Position));
     glVertexAttribPointer(1, 3, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, Normal));
     glVertexAttribPointer(2, 4, GL_FLOAT, false, sizeof(Vertex), (void*) offsetof(Vertex, Color));
@@ -129,41 +139,43 @@ void Renderer::Render() {
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
     s_Shader.AddUniformMat4Array("uTransformations", objectCount, s_Batch.Offsets);
 
-    // Environmental Lighting
-    s_Shader.AddUniformVec3("uLightPosition", s_LightPosition);
-    s_Shader.AddUniformVec3("uLightColor", s_LightColor);
-    s_Shader.AddUniformFloat("uAmbientStrength", s_AmbientStrength);
+    // TODO: Remove s_LightPosition, s_LightColor and s_AmbientStrength
 
+    // Bind the textures
     for(int i = 0; i < s_Batch.TextureIndex; i++) {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, s_Batch.Textures[i]);
     }
 
+    // Bind the lights
+    int lightCount = 0;
+
+    if(s_ScenePtr != nullptr) {
+
+        auto rendererGroup = s_ScenePtr->GetRegistry().group<PointLightComponent>(entt::get<TransformComponent>);
+        for(auto& entity : rendererGroup) {
+
+            auto[lightComponent, transform] = rendererGroup.get<PointLightComponent, TransformComponent>(entity);
+
+            std::string positionCapture = "uPointLights[" + std::to_string(lightCount) + "].Position";
+            std::string colorCapture = "uPointLights[" + std::to_string(lightCount) + "].Color";
+
+            s_Shader.AddUniformVec3(positionCapture.c_str(), transform.Transform.Position);
+            s_Shader.AddUniformVec3(colorCapture.c_str(), lightComponent.Hue);
+
+            lightCount++;
+        }
+    }
+
+    s_Shader.AddUnformInt("uPointLightCount", lightCount);
+    s_Shader.AddUniformVec3("uViewDirection", s_Camera->GetPosition());
+
     glBindVertexArray(s_Batch.VaoID); // Bind the VAO
-
-    // Enable all the Vertex Attrib Pointers
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-    glEnableVertexAttribArray(4);
-    glEnableVertexAttribArray(5);
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the indices
-
     glDrawElements(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0); // Draw the elements
 
 #if HARMONY_DEBUG
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind the Ibo
-
-    // Disable all the Vertex Attrib Pointers
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-    glDisableVertexAttribArray(3);
-    glDisableVertexAttribArray(4);
-    glDisableVertexAttribArray(5);
-
     glBindVertexArray(0);
 
     s_Shader.Unbind();

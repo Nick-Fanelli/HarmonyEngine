@@ -16,6 +16,6 @@ namespace HarmonyEngine {
         static void Update(float deltaTime);
         static void OnDestroy();
 
-        static const Scene* GetActiveScenePtr() { return s_ActiveScenePtr; }
+        static Scene* GetActiveScenePtr() { return s_ActiveScenePtr; }
     };
 }
