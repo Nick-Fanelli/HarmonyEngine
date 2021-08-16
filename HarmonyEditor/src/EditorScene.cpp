@@ -164,12 +164,32 @@ static void DrawGameViewport() {
         return;
 
     ImGui::Begin("Game Viewport", &Settings::ShowViewportPanel.CurrentValue);
+
+#if HARMONY_DEBUG
+
+    if(!MasterRenderer::GetUseFramebuffer())
+        s_IsViewportSelected = true;
+    else
+        s_IsViewportSelected = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
+#else
+
     s_IsViewportSelected = ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
+
+#endif
 
     ImGui::BeginChild("Render"); {
 
-        ImVec2 wsize = ImGui::GetWindowSize();
+    ImVec2 wsize = ImGui::GetWindowSize();
+
+#if HARMONY_DEBUG
+    if(MasterRenderer::GetUseFramebuffer())
         s_Camera.SetViewportSize(wsize.x, wsize.y);
+    else
+        s_Camera.SetViewportSize(Display::GetWidth(), Display::GetHeight());
+
+#else
+    s_Camera.SetViewportSize(wsize.x, wsize.y);
+#endif
 
         ImGui::Image((void*)(intptr_t) *s_RenderLayer.GetRenderTexture(), wsize, { 0.0, 1.0 }, { 1.0, 0.0 });
 
@@ -243,6 +263,12 @@ void EditorScene::OnUpdate(float deltaTime) {
 
         s_IsTabToggled = !s_IsTabToggled;
     }
+
+#if HARMONY_DEBUG   
+    if(Input::IsKeyDown(HARMONY_KEY_F6)) {
+        MasterRenderer::SetUseFramebuffer(!MasterRenderer::GetUseFramebuffer());
+    }
+#endif
 
     if(Input::IsKeyDown(HARMONY_KEY_T))
         s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
