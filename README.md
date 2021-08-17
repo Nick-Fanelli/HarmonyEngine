@@ -1,46 +1,59 @@
 # HarmonyEngine
 
-*Harmony Engine* is a **3D game engine** with a **basic 3D game editor** that can be used to **develop games**.
+**Harmony Engine** is currently a *3D and 2D game engine* in development with hopes to one day be a standalone game engine that can be used to *develop 3D or 2D games*.
 
-![Image of Harmony Engine v0.2.0 (Jul 25, 2021)](screenshots/harmony-engine-window-v0-2-0.png)
-<p align="center"><i>Image of Harmony Engine v0.2.0 (Jul 25, 2021)</i></p>
+![Image of Harmony Engine v0.3.0 (Jul 25, 2021)](screenshots/harmony-engine-window-v0-3-0.png)
+<p align="center"><i>Image of Harmony Engine v0.3.0 (Aug 16, 2021)</i></p>
 
 <br />
 
 Currently *Harmony Engine* is begin developed on MacOS however, with a few quick adjustments it should be able to run on Windows 10 as well. *(Windows support coming soon)!!!*
 
-#### Short-Term Goals
-* Editor Mouse Picking
-* Drag and Drop Assets Functionality
-* Integration with Operating System *(eg. file recognition, etc.)*
-* Editor Undo/Redo System
-* Engine Runtime
-* Lua Scripting
-
-#### Long-Term Goals
-* Compile *Harmony Engine/Editor* to a Window Executable File.
-* Audio Support
-* Ability to work with external applications. *(eg. Blender, Maya, Photoshop, etc.)*
-* Ability to compile a Harmony Project into a native executable. *(meaning you will be able to run your project outside of Harmony Engine)* 
-
----
-
 ## Quick Links
 
+1. [Highlight Features and Goals](#highlight-features)
 1. [Changelog](CHANGELOG.md)
-1. [Cloning and Building Project](#cloning-and-building-project)
-1. [Generating Changelog](#generating-the-changelog)
+1. [Instructions for Cloning and Building Project](#cloning-and-building-project)
+1. [Instructions for Generating Changelog](#generating-the-changelog)
 1. [How to Contribute](#how-to-contribute)
 
 ---
 
-## Cloning and Building Project
+## Highlight Features
+* 3D Rendering
+* 2D Rendering Support
+* Editor based workflow
+* Lua Scripting
+* Drag and Drop Assets Functionality
 
-1. [Mac Instructions](#getting-started-with-mac)
-2. [Windows 10 Instructions](#getting-started-with-windows)
-3. [Linux Instructions](#getting-started-with-linux)
+## Short-Term Goals
+* Editor Mouse Picking
+* Integration with Operating System *(eg. file recognition, etc.)*
+* Editor Undo/Redo System
+* Engine Runtime
 
-### Getting Started With Mac
+## Long-Term Goals
+* Compile *Harmony Engine/Editor* to a Window Executable File.
+* Audio Support
+* Ability to work with external applications. *(eg. Blender, Maya, Photoshop, etc.)*
+* Ability to compile a Harmony Project into a native executable. *(meaning you will be able to run your project outside of Harmony Engine)* 
+* Mobile platform support
+
+---
+
+# Cloning and Building Project
+
+1. **[Mac Instructions](#getting-started-with-mac)**
+2. **[Windows 10 Instructions (Coming Soon)](#getting-started-with-windows)**
+3. **[Linux Instructions (Coming Soon)](#getting-started-with-linux)**
+
+<br />
+
+---
+
+## Getting Started With Mac
+
+<br />
 
 **1. Clone the Repository** - *Make sure you have git command line tools installed! (on MacOS simply running `git` in terminal will prompt its installation)*
 ```shell
@@ -80,19 +93,23 @@ git clone git@github.com:Nick-Fanelli/HarmonyEngine.git --recursive
     ***Note: Make sure you run the executable from the build directory!***
 ---
 
-### Getting Started with Windows
+## Getting Started with Windows
+
+<br />
 
 Getting started instructions for Windows coming soon...
 
 ---
 
-### Getting Started with Linux
+## Getting Started with Linux
+
+<br />
 
 Getting started instructions for Linux coming soon...
 
 ---
 
-## Generating the Changelog
+# Generating the Changelog
 
 **1. Make sure that [NPM](https://www.npmjs.com/) command line tools are installed**<br>
 **2. Get the needed dependencies**
@@ -114,7 +131,7 @@ git push --follow-tags
 
 ---
 
-## How to Contribute
+# How to Contribute
 
 No contributions currently needed!
 Instructions Coming soon...
