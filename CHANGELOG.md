@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/Nick-Fanelli/HarmonyEngine/compare/v0.3.0...v0.4.0) (2021-08-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* ability to render multiple lights in a scene
+
+### Features
+
+* ability to render multiple lights in a scene ([2c36e76](https://github.com/Nick-Fanelli/HarmonyEngine/commit/2c36e7611d8c319821be1549bb4e2e5ae675de3a))
+* add vector2 and mouse position getter to lua scripting ([95c032e](https://github.com/Nick-Fanelli/HarmonyEngine/commit/95c032ef9ac7d0abad1f15e528482758ce71056b))
+* add vector2 and mouse position getter to lua scripting ([26b9729](https://github.com/Nick-Fanelli/HarmonyEngine/commit/26b97296b1b5f85cf17fb69abdf4ea805c49463c))
+* add vector2 and mouse position getter to lua scripting ([5adffe2](https://github.com/Nick-Fanelli/HarmonyEngine/commit/5adffe25f0ac5d87da72f95d533095f4b78b3e7d))
+* developer (spectator view) ([c2dfa98](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c2dfa989b3d9e429032ed6d244fdddebbcd51a35))
+
+
+### Bug Fixes
+
+* crash when changing scenes with entity selected ([6d04372](https://github.com/Nick-Fanelli/HarmonyEngine/commit/6d043721ff3fe6ebcd5b7fe7b0dd7a898376d3b4))
+* security vulnerability in npm ([c98261e](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c98261e92820c0a4ff19301c588520bceaf66d9b))
+
 ## [0.3.0](https://github.com/Nick-Fanelli/HarmonyEngine/compare/v0.2.0...v0.3.0) (2021-08-14)
 
 
