@@ -152,11 +152,7 @@ void Renderer::Render() {
 
     if(s_ScenePtr != nullptr) {
 
-        auto rendererGroup = s_ScenePtr->GetRegistry().group<PointLightComponent>(entt::get<TransformComponent>);
-        for(auto& entity : rendererGroup) {
-
-            auto[lightComponent, transform] = rendererGroup.get<PointLightComponent, TransformComponent>(entity);
-
+        s_ScenePtr->ForEachEntityWithTransform<PointLightComponent>([&](TransformComponent& transform, PointLightComponent& lightComponent) {
             std::string positionCapture = "uPointLights[" + std::to_string(lightCount) + "].Position";
             std::string colorCapture = "uPointLights[" + std::to_string(lightCount) + "].Color";
 
@@ -164,7 +160,7 @@ void Renderer::Render() {
             s_Shader.AddUniformVec3(colorCapture.c_str(), lightComponent.Hue);
 
             lightCount++;
-        }
+        });
     }
 
     s_Shader.AddUnformInt("uPointLightCount", lightCount);

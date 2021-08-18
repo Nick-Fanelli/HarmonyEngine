@@ -18,11 +18,16 @@ void RenderLayer::OnCreate() {
 
 template<typename ComponentType, typename RenderFunction>
 static void RenderComponent(Scene* scene, RenderFunction renderFunction) {
-    auto rendererGroup = scene->GetRegistry().group<ComponentType>(entt::get<TransformComponent>);
-    for(auto& entity : rendererGroup) {
-        auto[renderer, transform] = rendererGroup.template get<ComponentType, TransformComponent>(entity);
-        renderFunction(renderer, transform.Transform);
-    }
+
+    scene->ForEachEntityWithTransform<ComponentType>([&](TransformComponent& transform, ComponentType& component) {
+        renderFunction(component, transform.Transform);
+    });
+
+    // auto rendererGroup = scene->GetRegistry().group<ComponentType>(entt::get<TransformComponent>);
+    // for(auto& entity : rendererGroup) {
+    //     auto[renderer, transform] = rendererGroup.template get<ComponentType, TransformComponent>(entity);
+    //     renderFunction(renderer, transform.Transform);
+    // }
 }
 
 void RenderLayer::Begin() {

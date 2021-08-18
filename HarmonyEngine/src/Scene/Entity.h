@@ -27,12 +27,12 @@ namespace HarmonyEngine {
 
         template<typename T, typename... Args>
         T& AddComponent(Args&&... args) {
-            return m_ScenePtr->GetRegistry().emplace<T>(m_EntityID, std::forward<Args>(args)...);
+            return m_ScenePtr->m_Registry.emplace<T>(m_EntityID, std::forward<Args>(args)...);
         }
 
         template<typename T>
         bool ContainsComponent() {
-            return m_ScenePtr->GetRegistry().has<T>(m_EntityID);
+            return m_ScenePtr->m_Registry.has<T>(m_EntityID);
         }
 
         template<typename T>
@@ -41,7 +41,7 @@ namespace HarmonyEngine {
                 HARMONY_ASSERT_MESSAGE(true, "Entity does not contain the requested component!")
             }
 
-            return m_ScenePtr->GetRegistry().get<T>(m_EntityID);
+            return m_ScenePtr->m_Registry.get<T>(m_EntityID);
         }
 
         template<typename T>
@@ -51,7 +51,7 @@ namespace HarmonyEngine {
                 return;
             }
 
-            m_ScenePtr->GetRegistry().remove<T>(m_EntityID);
+            m_ScenePtr->m_Registry.remove<T>(m_EntityID);
         }
 
         bool IsCreated() { return m_ScenePtr != nullptr; }

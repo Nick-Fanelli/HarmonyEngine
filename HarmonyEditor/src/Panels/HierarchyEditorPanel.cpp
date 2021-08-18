@@ -171,7 +171,7 @@ void HierarchyEditorPanel::OnImGuiRender() {
 
         if(ImGui::TreeNodeEx(m_EditorScenePtr->GetSelectedScene().GetSceneName().c_str(), flags)) {
 
-            m_EditorScenePtr->GetSelectedScene().GetRegistry().each([&](auto entityID) {
+            m_EditorScenePtr->GetSelectedScene().ForEachEntity([&] (auto entityID) {
                 Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };
                 AddToHierarchy(entity);
             });

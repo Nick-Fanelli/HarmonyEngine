@@ -2,6 +2,8 @@
 
 #include "harmonypch.h"
 
+// #include "Component.h"
+
 #include "../Render/Transform.h"
 
 #include <entt/entt.hpp>
@@ -11,9 +13,12 @@ namespace HarmonyEngine {
     class SceneSerializer;
     class Entity;
 
+    struct TransformComponent;
+
     class Scene {
 
         friend class SceneSerializer;
+        friend class Entity;
         
     protected:
         std::string m_SceneName;
@@ -36,8 +41,19 @@ namespace HarmonyEngine {
 
         void DeleteEntity(Entity& entity);
 
-        const entt::registry& GetRegistry() const { return m_Registry; }
-        entt::registry& GetRegistry() { return m_Registry; }
+        template<typename ComponentType, typename Function>
+        void ForEachEntityWithTransform(Function function) {
+            auto group = m_Registry.group<ComponentType>(entt::get<TransformComponent>);
+            for(auto& entity : group) {
+                auto[component, transform] = group.template get<ComponentType, TransformComponent>(entity);
+                function(transform, component);
+            }            
+        }
+
+        template<typename Function>
+        void ForEachEntity(Function function) {
+            m_Registry.each(function);
+        }
 
     };
 
