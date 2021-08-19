@@ -101,7 +101,7 @@ void SceneSerializer::SerializeYAML(const std::filesystem::path& mask) {
 
     std::vector<Entity> entities;
 
-    m_ScenePtr->m_Registry.each([&](auto entityID) {
+    m_ScenePtr->ForEachEntity([&](auto entityID) {
         entities.emplace_back(m_ScenePtr, entityID);
     });
 

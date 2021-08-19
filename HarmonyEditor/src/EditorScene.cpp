@@ -101,6 +101,10 @@ void EditorScene::OnCreate() {
 
 void EditorScene::OpenScene(const std::filesystem::path& filepath) {
 
+    // Save and reset the selected scene
+    SaveScene();
+    m_SelectedScene = {};
+
     s_HierarchyEditorPanel.m_SelectedEntity = {};  // Clear the selected entity! (Important because entity will soon no longer exist!)
 
     AssetManager::DestroyAll(); // TODO: Reuse any assets that are shared!

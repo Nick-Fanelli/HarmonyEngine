@@ -52,8 +52,12 @@ namespace HarmonyEngine {
 
         template<typename Function>
         void ForEachEntity(Function function) {
-            m_Registry.each(function);
+            m_Registry.each([&](auto entityID) {
+                function(entityID);
+            });
         }
+
+        void ClearRegistry();
 
     };
 

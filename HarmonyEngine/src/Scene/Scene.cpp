@@ -23,3 +23,7 @@ void Scene::DeleteEntity(Entity& entity) {
 
     entity.m_ScenePtr = nullptr;
 }
+
+void Scene::ClearRegistry() {
+    m_Registry.clear<>();
+}
