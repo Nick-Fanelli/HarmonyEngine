@@ -72,7 +72,10 @@ void EditorCamera::OnUpdate(float deltaTime) {
                     MouseRotate(delta * Settings::EditorMovementSensitivity.CurrentValue);
                 }
 
+                m_IsInOperation = true;
                 UpdateView();
+            } else if(Input::IsMouseButtonUp(HARMONY_MOUSE_BUTTON_MIDDLE)) {
+                m_IsInOperation = false;
             }
             break;
 
@@ -89,7 +92,10 @@ void EditorCamera::OnUpdate(float deltaTime) {
                     MousePan(delta);
                 }
 
+                m_IsInOperation = true;
                 UpdateView();
+            } else if(Input::IsMouseButtonUp(HARMONY_MOUSE_BUTTON_MIDDLE)) {
+                m_IsInOperation = false;
             }
             break;
         case InputStyleModern:
@@ -98,10 +104,10 @@ void EditorCamera::OnUpdate(float deltaTime) {
                 const glm::vec2& delta = Input::GetDeltaMousePosition() * 0.003f;
 
                 MouseRotate(delta * Settings::EditorMovementSensitivity.CurrentValue);
-                UpdateView();
-            }
 
-            if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
+                m_IsInOperation = true; 
+                UpdateView();
+            } else if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_MIDDLE)) {
                 const glm::vec2& delta = Input::GetDeltaMousePosition() * 0.003f;
 
                 if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
@@ -110,7 +116,10 @@ void EditorCamera::OnUpdate(float deltaTime) {
                     MousePan(delta);
                 }
 
+                m_IsInOperation = true; 
                 UpdateView();
+            } else if(Input::IsMouseButtonUp(HARMONY_MOUSE_BUTTON_RIGHT) || Input::IsMouseButtonUp(HARMONY_MOUSE_BUTTON_MIDDLE)) {
+                m_IsInOperation = false;
             }
             break;
     }

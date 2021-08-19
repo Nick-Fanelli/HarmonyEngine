@@ -242,7 +242,7 @@ void EditorScene::OnUpdate(float deltaTime) {
     HARMONY_PROFILE_FUNCTION();
 
     // Camera Update
-    if(s_IsViewportSelected)
+    if(s_IsViewportSelected || s_Camera.IsInOperation())
         s_Camera.OnUpdate(deltaTime);
 
     if(Input::IsKeyDown(HARMONY_KEY_TAB)) {
@@ -286,7 +286,7 @@ void EditorScene::OnUpdate(float deltaTime) {
     }
 
     ImGuiDefaults::ResetIsInputFocused();
-    
+
     s_LuaScript.OnUpdate(deltaTime);
 
     // ImGui Layer

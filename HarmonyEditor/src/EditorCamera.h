@@ -18,6 +18,8 @@ namespace HarmonyEditor {
         inline float GetDistance() const { return m_Distance; }
         inline void SetDistance(float distance) { m_Distance = distance; }
 
+        inline bool IsInOperation() const { return m_IsInOperation; }
+
         inline void SetViewportSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; UpdateProjection(); }
 
         inline void ResetView() {
@@ -61,6 +63,8 @@ namespace HarmonyEditor {
         std::pair<float, float> PanSpeed() const;
         float RotationSpeed() const;
         float ZoomSpeed() const;
+
+        bool m_IsInOperation = false;
     private:
         float m_ViewportWidth = 1280, m_ViewportHeight = 720;
         float m_FOV = 45.0f, m_AspectRatio = m_ViewportWidth / m_ViewportHeight, m_NearClip = 0.1f, m_FarClip = 2500.0f;
