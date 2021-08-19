@@ -45,7 +45,11 @@ private:
 static AssetFile s_RootFile;
 static time_t s_Timer = time(0);
 
+static EditorScene* s_EditorScenePtr = nullptr;
+
 AssetsEditorPanel::AssetsEditorPanel(EditorScene* editorScenePtr) : m_EditorScenePtr(editorScenePtr) {
+    s_EditorScenePtr = editorScenePtr;
+
     SyncAssets();
 }
 
@@ -93,6 +97,10 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
             break;
         case AssetTypeHarmonyScene:
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf466 %s", child.GetRelativePath(parentPath).c_str());
+
+            if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered()) {
+                s_EditorScenePtr->OpenScene(child.Filepath);
+            }
 
             if(ImGui::BeginDragDropSource()) {
                 s_TempPath = child.Filepath;
