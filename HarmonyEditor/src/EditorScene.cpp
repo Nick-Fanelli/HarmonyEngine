@@ -275,13 +275,18 @@ void EditorScene::OnUpdate(float deltaTime) {
     }
 #endif
 
-    if(Input::IsKeyDown(HARMONY_KEY_T))
-        s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
-    if(Input::IsKeyDown(HARMONY_KEY_R))
-        s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::ROTATE;
-    if(Input::IsKeyDown(HARMONY_KEY_S))
-        s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::SCALE;
 
+    if(!ImGuiDefaults::IsInputFocused()) {
+        if(Input::IsKeyDown(HARMONY_KEY_T))
+            s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+        if(Input::IsKeyDown(HARMONY_KEY_R))
+            s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::ROTATE;
+        if(Input::IsKeyDown(HARMONY_KEY_S))
+            s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::SCALE;
+    }
+
+    ImGuiDefaults::ResetIsInputFocused();
+    
     s_LuaScript.OnUpdate(deltaTime);
 
     // ImGui Layer

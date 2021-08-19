@@ -9,6 +9,7 @@
 using namespace HarmonyEditor;
 
 static float ColumnWidth = ImGuiDefaults::DefaultColumnWidth;
+static bool s_IsInputFocused = false;
 
 const char* ImGuiDefaults::TexturePathDragDropID       = "_!_TEXTURE_PATH_DND_ID_!_"   ;
 const char* ImGuiDefaults::ObjectPathDragDropID        = "_!_OBJECT_PATH_DND_ID_!_"    ;
@@ -17,6 +18,14 @@ const char* ImGuiDefaults::LuaScriptPathDragDropID     = "_!_LUA_PATH_DND_ID_!_"
 
 void ImGuiDefaults::PushColumnWidth(float width) { ColumnWidth = width; }
 void ImGuiDefaults::PopColumnWidth() { ColumnWidth = ImGuiDefaults::DefaultColumnWidth; }
+
+void ImGuiDefaults::ResetIsInputFocused() {
+    s_IsInputFocused = false;
+}
+
+bool ImGuiDefaults::IsInputFocused() {
+    return s_IsInputFocused;
+}
 
 void ImGuiDefaults::DrawFloat(const std::string& label, float& value, float speed, float min, float max, const char* format) {
     ImGui::PushID(label.c_str());
@@ -37,6 +46,8 @@ void ImGuiDefaults::DrawTextInput(const std::string& label, std::string& value) 
     ImGui::Text("%s", label.c_str());
     ImGui::SameLine();
     ImGui::InputText("", &value);
+
+    s_IsInputFocused |= ImGui::IsItemFocused();
 
     ImGui::PopID();
 }
@@ -64,6 +75,7 @@ void ImGuiDefaults::DrawVector2(const std::string& label, glm::vec2& values, flo
 
     ImGui::SameLine();
     ImGui::DragFloat("##X", &values.x, 0.1f, min, max, "%.2f");
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::PopItemWidth();
     ImGui::SameLine();
 
@@ -76,6 +88,7 @@ void ImGuiDefaults::DrawVector2(const std::string& label, glm::vec2& values, flo
 
     ImGui::SameLine();
     ImGui::DragFloat("##Y", &values.y, 0.1f, min, max, "%.2f");
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::PopItemWidth();
     ImGui::SameLine();
 
@@ -109,6 +122,7 @@ void ImGuiDefaults::DrawVector3(const std::string& label, glm::vec3& values, flo
 
     ImGui::SameLine();
     ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::PopItemWidth();
     ImGui::SameLine();
 
@@ -121,6 +135,7 @@ void ImGuiDefaults::DrawVector3(const std::string& label, glm::vec3& values, flo
 
     ImGui::SameLine();
     ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::PopItemWidth();
     ImGui::SameLine();
 
@@ -133,6 +148,7 @@ void ImGuiDefaults::DrawVector3(const std::string& label, glm::vec3& values, flo
 
     ImGui::SameLine();
     ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::PopItemWidth();
 
     ImGui::PopStyleVar();
@@ -174,6 +190,7 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
 
     ImGui::SameLine();
     changed |= ImGui::DragFloat("##R", &tempColor.r, 1.0f, 0.0f, 255.0f, "%.0f");
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::PopItemWidth();
     ImGui::SameLine();
 
@@ -189,6 +206,7 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
 
     ImGui::SameLine();
     changed |= ImGui::DragFloat("##G", &tempColor.g, 1.0f, 0.0f, 255.0f, "%.0f");
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::PopItemWidth();
     ImGui::SameLine();
 
@@ -204,6 +222,7 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
 
     ImGui::SameLine();
     changed |= ImGui::DragFloat("##B", &tempColor.b, 1.0f, 0.0f, 255.0f, "%.0f");
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::PopItemWidth();
     ImGui::SameLine();
 
@@ -219,6 +238,7 @@ void ImGuiDefaults::DrawColorControl(const std::string& label, glm::vec4& values
 
     ImGui::SameLine();
     changed |= ImGui::DragFloat("##A", &tempColor.a, 1.0f, 0.0f, 255.0f, "%.0f");
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::PopItemWidth();
     
     ImGui::PopStyleVar();
@@ -340,6 +360,7 @@ void ImGuiDefaults::DrawComboSelection(const std::string& label, int& value, con
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
     ImGui::Combo("", &value, items, itemCount);
+    s_IsInputFocused |= ImGui::IsItemFocused();
     ImGui::Columns(1);
 
     ImGui::PopID();

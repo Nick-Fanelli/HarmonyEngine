@@ -16,6 +16,9 @@ namespace HarmonyEditor::ImGuiDefaults {
 
     static constexpr float DefaultColumnWidth = 75.0f;
 
+    void ResetIsInputFocused();
+    bool IsInputFocused();
+
     void PushColumnWidth(float width);
     void PopColumnWidth();
 
