@@ -41,7 +41,7 @@ static SceneSerializer s_SceneSerializer;
 static ImGuizmo::OPERATION s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 
 static bool s_IsViewportSelected = false;
-static bool s_IsTabToggled = true;
+static bool s_IsTabToggled = false;
 
 static EditorScene* s_This;
 
@@ -248,6 +248,10 @@ void EditorScene::OnUpdate(float deltaTime) {
     if(Input::IsKeyDown(HARMONY_KEY_TAB)) {
 
         if(s_IsTabToggled) {
+            for(auto& ptr : s_TabPointers) {
+                ptr->CurrentValue = true;
+            }
+        } else {
             s_TabPointers.clear();
 
             for(auto& entry : Settings::AllShowPanelSettings) {
@@ -259,10 +263,7 @@ void EditorScene::OnUpdate(float deltaTime) {
                     entry.second->CurrentValue = false;
                 }
             }
-        } else {
-            for(auto& ptr : s_TabPointers) {
-                ptr->CurrentValue = true;
-            }
+            
         }
 
         s_IsTabToggled = !s_IsTabToggled;
@@ -312,6 +313,14 @@ void EditorScene::OnUpdate(float deltaTime) {
 }
 
 void EditorScene::OnDestroy() {
+
+    // Un-toggle tab
+    if(s_IsTabToggled) {
+        for(auto& ptr : s_TabPointers) {
+            ptr->CurrentValue = true;
+        }
+    }
+
     s_LuaScript.OnDestroy();
 
     SaveScene();
