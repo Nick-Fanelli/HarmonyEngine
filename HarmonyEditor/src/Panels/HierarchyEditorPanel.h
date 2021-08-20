@@ -25,10 +25,13 @@ namespace HarmonyEditor {
 
     private:
         void AddToHierarchy(Entity& entity);
+        void DisplayScenePreferences();
 
     private:
         EditorScene* m_EditorScenePtr;
         Entity m_SelectedEntity{};
+
+        bool m_IsSceneSelected = false;
 
         friend class EditorScene;
 

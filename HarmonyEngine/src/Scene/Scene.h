@@ -24,8 +24,14 @@ namespace HarmonyEngine {
         std::string m_SceneName;
         entt::registry m_Registry;
 
+        float m_AmbientIntensity = 0.1f;
+
     public:
         const std::string& GetSceneName() const { return m_SceneName; }
+        std::string& GetSceneName() { return m_SceneName; }
+
+        float GetAmbientIntensity() const { return m_AmbientIntensity; }
+        float& GetAmbientIntensity() { return m_AmbientIntensity; }
 
         void SetSceneName(const std::string& name) { m_SceneName = name; }
 

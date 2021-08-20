@@ -26,6 +26,7 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
 
     if(ImGui::IsItemClicked()) {
         m_SelectedEntity = entity; 
+        m_IsSceneSelected = false;
     }
 
     if(ImGui::BeginPopupContextItem(std::to_string((uint32_t) entity.GetEntityID()).c_str(), ImGuiPopupFlags_MouseButtonRight)) {
@@ -156,6 +157,17 @@ static void DisplayEntity(Entity& entity) {
 
 }
 
+void HierarchyEditorPanel::DisplayScenePreferences() {
+    
+    static Scene& selectedScene = m_EditorScenePtr->GetSelectedScene();
+
+    ImGuiDefaults::DrawTextInput("Scene Name", selectedScene.GetSceneName());
+    ImGui::Separator();
+
+    ImGuiDefaults::DrawFloat("Ambient Intensity", selectedScene.GetAmbientIntensity(), 0.1f, 0.0f, 1.0f);
+
+}
+
 void HierarchyEditorPanel::OnImGuiRender() {
     HARMONY_PROFILE_FUNCTION();
 
@@ -169,7 +181,12 @@ void HierarchyEditorPanel::OnImGuiRender() {
 
         static constexpr auto flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-        if(ImGui::TreeNodeEx(m_EditorScenePtr->GetSelectedScene().GetSceneName().c_str(), flags)) {
+        if(ImGui::TreeNodeEx(m_EditorScenePtr->GetSelectedScene().GetSceneName().c_str(), flags | (m_IsSceneSelected ? ImGuiTreeNodeFlags_Selected : 0))) {
+
+            if(ImGui::IsItemClicked()) {
+                m_SelectedEntity = {};
+                m_IsSceneSelected = true;
+            }
 
             m_EditorScenePtr->GetSelectedScene().ForEachEntity([&] (auto entityID) {
                 Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };
@@ -188,6 +205,8 @@ void HierarchyEditorPanel::OnImGuiRender() {
 
         if(m_SelectedEntity)
             DisplayEntity(m_SelectedEntity);
+        else if(m_IsSceneSelected)
+            DisplayScenePreferences();
 
         ImGui::End();
 

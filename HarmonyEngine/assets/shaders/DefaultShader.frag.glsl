@@ -23,13 +23,15 @@ struct PointLight {
 uniform PointLight[MAX_LIGHT_COUNT] uPointLights;
 uniform int uPointLightCount;
 
+uniform float uAmbientIntensity;
+
 uniform vec3 uViewDirection;
 
 out vec4 out_Color;
 
 void main() {
 
-    vec3 lighting = vColor.rgb * 0.1; // 0.1 is the hard-coded ambient value
+    vec3 lighting = vColor.rgb * uAmbientIntensity; // 0.1 is the hard-coded ambient value
 
     for(int i = 0; i < uPointLightCount; i++) {
         float dist = length(uPointLights[i].Position - vPosition);

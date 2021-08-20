@@ -97,6 +97,8 @@ void SceneSerializer::SerializeYAML(const std::filesystem::path& mask) {
 
     out << YAML::BeginMap; 
     out << YAML::Key << "Scene" << YAML::Value << m_ScenePtr->m_SceneName;
+    out << YAML::Key << "AmbientIntensity" << YAML::Value << m_ScenePtr->m_AmbientIntensity;
+
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
     std::vector<Entity> entities;
@@ -135,6 +137,9 @@ void SceneSerializer::DeserializeYAML(const std::filesystem::path& mask) {
     std::string sceneName = root["Scene"].as<std::string>();
     m_ScenePtr->m_SceneName = sceneName;
     Log::FormatInfo("Deserializing scene '%s'", sceneName.c_str());
+
+    if(root["AmbientIntensity"])
+        m_ScenePtr->m_AmbientIntensity = root["AmbientIntensity"].as<float>();
 
     m_ScenePtr->m_Registry.clear();
 

@@ -166,6 +166,8 @@ void Renderer::Render() {
     s_Shader.AddUnformInt("uPointLightCount", lightCount);
     s_Shader.AddUniformVec3("uViewDirection", s_Camera->GetPosition());
 
+    s_Shader.AddUniformFloat("uAmbientIntensity", s_ScenePtr->GetAmbientIntensity());
+
     glBindVertexArray(s_Batch.VaoID); // Bind the VAO
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the indices
     glDrawElements(GL_TRIANGLES, s_Batch.IndexCount, GL_UNSIGNED_INT, 0); // Draw the elements
