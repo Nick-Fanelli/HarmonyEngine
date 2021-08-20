@@ -18,7 +18,7 @@ namespace HarmonyEngine {
         ~LuaScript();
 
     public:
-        void OpenScript(const std::filesystem::path& scriptPath);
+        void LoadGlobalScript(const std::filesystem::path& scriptPath);
 
         void OnCreate();
         void OnUpdate(float deltaTime);

@@ -67,7 +67,7 @@ int NativeGetMousePosition(lua_State* L) {
     return 1;
 } 
 
-void LuaScript::OpenScript(const std::filesystem::path& scriptPath) {
+void LuaScript::LoadGlobalScript(const std::filesystem::path& scriptPath) {
     if(m_IsAssigned) {
         lua_close(L);
         L = luaL_newstate();
