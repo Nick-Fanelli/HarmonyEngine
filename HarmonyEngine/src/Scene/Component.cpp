@@ -184,7 +184,7 @@ void LuaScriptComponent::Deserialize(YAML::Node& node, const std::filesystem::pa
     if(node["ScriptPath"]) {
         auto path = node["ScriptPath"].as<std::string>();
         if(std::filesystem::exists(mask / path)) {
-            Script.OpenGlobalScript(mask / path);
+            Script.LoadGlobalScript(mask / path);
         } else {
             Log::FormatWarn("Script at '%s' no longer exists", path.c_str());
         }

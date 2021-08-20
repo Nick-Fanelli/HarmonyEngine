@@ -95,7 +95,7 @@ void EditorScene::OnCreate() {
         SetActiveProject({CacheManager::LastOpenProject});
     }
 
-    s_LuaScript.OpenGlobalScript("/Users/nick227889/Dev/Example Project/Assets/Scripts/TestScript.lua");
+    s_LuaScript.LoadGlobalScript("/Users/nick227889/Dev/Example Project/Assets/Scripts/TestScript.lua");
     s_LuaScript.OnCreate();
 }
 

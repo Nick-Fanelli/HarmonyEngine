@@ -335,7 +335,7 @@ void ImGuiDefaults::DrawLuaScriptControl(const std::string& label, LuaScript& sc
     if(ImGui::BeginDragDropTarget()) {
         if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(LuaScriptPathDragDropID)) {
             auto path = *(const std::filesystem::path*) payload->Data;
-            script.OpenGlobalScript(path);
+            script.LoadGlobalScript(path);
         }
     }
 
