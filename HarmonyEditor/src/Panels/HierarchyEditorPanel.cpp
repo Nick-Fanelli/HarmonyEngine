@@ -158,13 +158,35 @@ static void DisplayEntity(Entity& entity) {
 }
 
 void HierarchyEditorPanel::DisplayScenePreferences() {
-    
+
+    static constexpr auto flags = ImGuiTreeNodeFlags_DefaultOpen;
+
     static Scene& selectedScene = m_EditorScenePtr->GetSelectedScene();
 
     ImGuiDefaults::DrawTextInput("Scene Name", selectedScene.GetSceneName());
     ImGui::Separator();
 
-    ImGuiDefaults::DrawFloat("Ambient Intensity", selectedScene.GetAmbientIntensity(), 0.1f, 0.0f, 1.0f);
+    if(ImGui::TreeNodeEx("Renderer Settings", flags)) {
+        ImGui::Indent();
+
+        ImGuiDefaults::DrawFloat("Ambient Intensity", selectedScene.GetAmbientIntensity(), 0.1f, 0.0f, 1.0f);
+
+        ImGui::Unindent();
+        ImGui::TreePop();
+    }
+
+    ImGui::Separator();
+
+    if(ImGui::TreeNodeEx("Global Scripts", flags)) {
+        ImGui::Indent();
+
+        ImGuiDefaults::PushColumnWidth(100.0f);
+        ImGuiDefaults::DrawLuaScriptControl("Global Script", selectedScene.GetGlobalScript());
+        ImGuiDefaults::PopColumnWidth();
+
+        ImGui::Unindent();
+        ImGui::TreePop();
+    }
 
 }
 

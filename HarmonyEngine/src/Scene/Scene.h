@@ -3,6 +3,7 @@
 #include "harmonypch.h"
 
 // #include "Component.h"
+#include "LuaScript.h"
 
 #include "../Render/Transform.h"
 
@@ -24,6 +25,7 @@ namespace HarmonyEngine {
         std::string m_SceneName;
         entt::registry m_Registry;
 
+        LuaScript m_GlobalLuaScript;
         float m_AmbientIntensity = 0.1f;
 
     public:
@@ -32,6 +34,9 @@ namespace HarmonyEngine {
 
         float GetAmbientIntensity() const { return m_AmbientIntensity; }
         float& GetAmbientIntensity() { return m_AmbientIntensity; }
+
+        // const LuaScript& GetGlobalScript() const { return m_GlobalLuaScript; }
+        LuaScript& GetGlobalScript() { return m_GlobalLuaScript; }
 
         void SetSceneName(const std::string& name) { m_SceneName = name; }
 

@@ -22,11 +22,13 @@ using namespace HarmonyEngine;
 // Set global pops previous item off stack!
 
 LuaScript::LuaScript() {
-    L = luaL_newstate(); // Create the lua state
+    // L = luaL_newstate(); // Create the lua state
 }
 
 LuaScript::~LuaScript() {
-    lua_close(L); // Close the lua state
+    if(L != nullptr)
+        lua_close(L); // Close the lua state
+    L = nullptr;
 }
 
 // Native Functions
@@ -68,15 +70,19 @@ int NativeGetMousePosition(lua_State* L) {
 } 
 
 void LuaScript::LoadGlobalScript(const std::filesystem::path& scriptPath) {
-    if(m_IsAssigned) {
+
+    if(m_IsAssigned)
         lua_close(L);
-        L = luaL_newstate();
-    }
+
+    L = luaL_newstate();
 
     m_IsAssigned = true;
     m_Filepath = scriptPath;
 
     luaL_openlibs(L);
+
+    // Load Harmony Library
+    HARMONY_ASSERT_MESSAGE(HandleLua(luaL_dostring(L, GetHarmonyLibrary().c_str())), "Could not load HarmonyLibrary.lua");
 
     // Bind Native Functions
     // IsKey
@@ -95,12 +101,18 @@ void LuaScript::LoadGlobalScript(const std::filesystem::path& scriptPath) {
     lua_pushcfunction(L, NativeGetMousePosition);
     lua_setglobal(L, "_NativeGetMousePosition");
 
-    // Load Harmony Library
-    HARMONY_ASSERT_MESSAGE(HandleLua(luaL_dostring(L, GetHarmonyLibrary().c_str())), "Could not load HarmonyLibrary.lua");
-
     // Load the script
-    // TODO: Don't read throught FileUtils
-    std::string scriptContents = FileUtils::ReadFile(scriptPath);
+    std::string line;
+    std::string scriptContents;
+
+    std::ifstream file(scriptPath);
+    if(file.is_open()) {
+        while(std::getline(file, line)) {
+            scriptContents += line + "\n";
+        }
+        file.close();
+    }
+
     HandleLua(luaL_dostring(L, scriptContents.c_str())); // load the script
     
     // Check for OnUpdate function
@@ -148,8 +160,22 @@ void LuaScript::OnDestroy() {
 const std::string& LuaScript::GetHarmonyLibrary() {
     HARMONY_PROFILE_FUNCTION();
 
-    // TODO: Don't read through FileUtils
-    static const std::string libraryCode = FileUtils::ReadFile("engineAssets/lua/HarmonyLibrary.lua");
+    static std::string libraryCode = "";
+
+    if(libraryCode == "") {
+
+        std::string line;
+
+        std::ifstream file("engineAssets/lua/HarmonyLibrary.lua");
+        if(file.is_open()) {
+            while(std::getline(file, line)) {
+                libraryCode += line + "\n";
+            }
+
+            file.close();
+        }        
+    }
+
     return libraryCode;
 }
 
