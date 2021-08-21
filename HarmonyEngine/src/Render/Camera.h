@@ -61,6 +61,8 @@ namespace HarmonyEngine {
     public:
         PerspectiveCamera();
 
+        void SetPosition(const glm::vec3& position);
+
         void Move(const glm::vec3& deltaPosition);
         void Rotate(float yawOffset, float pitchOffset);
         void Rotate(const glm::vec2& rotation);

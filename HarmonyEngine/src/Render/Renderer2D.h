@@ -132,8 +132,6 @@ namespace HarmonyEngine {
 
     class Renderer2D {
 
-        static Camera* s_Camera;
-
         static void Render();
         static void UpdateBatchVertexData();
         static void AllocateVertices(int amount);
@@ -141,7 +139,7 @@ namespace HarmonyEngine {
 
     public:
 
-        static void OnCreate(Camera* camera);
+        static void OnCreate();
         static void OnDestroy();
 
         static void StartBatch();

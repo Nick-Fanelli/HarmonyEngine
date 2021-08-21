@@ -156,7 +156,7 @@ static void DrawDockspace() {
     ImGui::End();
 }
 
-static void DrawGameViewport() {
+void EditorScene::DrawGameViewport() {
     HARMONY_PROFILE_FUNCTION();
 
     if(!Settings::ShowViewportPanel)
@@ -193,7 +193,7 @@ static void DrawGameViewport() {
         ImGui::Image((void*)(intptr_t) *s_RenderLayer.GetRenderTexture(), wsize, { 0.0, 1.0 }, { 1.0, 0.0 });
 
         // ImGuizmo
-        if(s_HierarchyEditorPanel.GetSelectedEntity() && s_HierarchyEditorPanel.GetSelectedEntity().ContainsComponent<TransformComponent>()) {
+        if(s_HierarchyEditorPanel.GetSelectedEntity() && s_HierarchyEditorPanel.GetSelectedEntity().ContainsComponent<TransformComponent>() && !m_IsRunning) {
 
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
@@ -235,6 +235,15 @@ static void DrawGameViewport() {
 void EditorScene::StartRuntime() {
     if(s_SceneSerializer.IsAssigned()) {
         SaveScene();
+
+        m_SelectedScene.ForEachEntityWithTransform<CameraComponent>([&](TransformComponent& transform, CameraComponent& component) {
+            if(component.IsMainCamera) {
+                component.Camera.SetPosition(transform.Transform.Position);
+                MasterRenderer::CameraPtr = &component.Camera;
+                return;
+            }
+        });
+
         m_SelectedScene.OnCreate();
         m_IsRunning = true;
     }
@@ -244,6 +253,7 @@ void EditorScene::StopRuntime() {
     m_IsRunning = false;
     
     if(s_SceneSerializer.IsAssigned()) {
+        MasterRenderer::CameraPtr = &s_Camera;
         m_SelectedScene.OnDestroy();
     }
 }

@@ -5,6 +5,8 @@
 
 using namespace HarmonyEngine;
 
+Camera* MasterRenderer::CameraPtr = nullptr;
+
 static bool s_UseFramebuffer = false;
 static Framebuffer s_Framebuffer;
 
@@ -17,8 +19,11 @@ void MasterRenderer::SetClearColor(const glm::vec4& color) {
 }
 
 void MasterRenderer::OnCreate(Camera* cameraPtr) {
-    Renderer::OnCreate(cameraPtr);
-    Renderer2D::OnCreate(cameraPtr);
+
+    CameraPtr = cameraPtr;
+
+    Renderer::OnCreate();
+    Renderer2D::OnCreate();
 }
 
 void MasterRenderer::OnDestroy() {

@@ -5,19 +5,29 @@
 #include "Framebuffer.h"
 #include "Camera.h"
 
-namespace HarmonyEngine::MasterRenderer {
+namespace HarmonyEngine {
 
-    void SetClearColor(const glm::vec4& color);
+    class MasterRenderer {
+    public:
+        MasterRenderer() = delete;
+        ~MasterRenderer() = delete;
 
-    void OnCreate(Camera* cameraPtr);
-    void OnDestroy();
+        MasterRenderer(const MasterRenderer&) = delete;
 
-    void SetUseFramebuffer(bool value);
-    bool GetUseFramebuffer();
+        static Camera* CameraPtr;
 
-    Framebuffer* GetFramebuffer();
+        static void SetClearColor(const glm::vec4& color);
 
-    void Begin();
-    void End();
+        static void OnCreate(Camera* cameraPtr);
+        static void OnDestroy();
 
-};
+        static void SetUseFramebuffer(bool value);
+        static bool GetUseFramebuffer();
+
+        static Framebuffer* GetFramebuffer();
+
+        static void Begin();
+        static void End();
+    };
+
+}

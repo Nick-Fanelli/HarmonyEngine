@@ -107,6 +107,11 @@ static void DisplayEntity(Entity& entity) {
         ImGuiDefaults::DrawVector3("Scale", component.Transform.Scale, 1.0f);
     });
 
+    DrawComponent<CameraComponent>("Camera Component", entity, [&](CameraComponent& component) {
+        // TODO: Make sure that there is only one main camera!
+        ImGuiDefaults::DrawBool("Is Main", component.IsMainCamera);
+    });
+
     DrawComponent<QuadRendererComponent>("Quad Renderer", entity, [&](QuadRendererComponent& component) {  
         ImGuiDefaults::DrawColorControl("Color", component.Color);
         ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
@@ -146,6 +151,7 @@ static void DisplayEntity(Entity& entity) {
     if(ImGui::BeginPopup("AddComponentPopup")) {
         
         DrawAddComponentMenuItem<TransformComponent>("Transform", entity);
+        DrawAddComponentMenuItem<CameraComponent>("Camera Component", entity);
         DrawAddComponentMenuItem<QuadRendererComponent>("Quad Renderer", entity);
         DrawAddComponentMenuItem<MeshRendererComponent>("Mesh Renderer", entity);
         DrawAddComponentMenuItem<SpriteRendererComponent>("Sprite Renderer", entity);

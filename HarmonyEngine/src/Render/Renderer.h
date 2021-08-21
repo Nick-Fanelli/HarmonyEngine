@@ -35,7 +35,6 @@ namespace HarmonyEngine {
 
     class Renderer {
 
-        static Camera* s_Camera;
         static Scene* s_ScenePtr;
 
         static void UpdateBatchData();
@@ -48,7 +47,7 @@ namespace HarmonyEngine {
 
     public:
 
-        static void OnCreate(Camera* camera);
+        static void OnCreate();
         static void OnDestroy();
 
         static void StartBatch();

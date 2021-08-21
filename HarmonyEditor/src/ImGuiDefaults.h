@@ -23,6 +23,7 @@ namespace HarmonyEditor::ImGuiDefaults {
     void PopColumnWidth();
 
     void DrawFloat(const std::string& label, float& value, float speed = 1.0f, float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max(), const char* format = "%.3f");
+    void DrawBool(const std::string& label, bool& value);
 
     void DrawTextInput(const std::string& label, std::string& value);
     void DrawVector2(const std::string& label, glm::vec2& values, float resetValue = 0.0f, float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max());

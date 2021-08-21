@@ -50,12 +50,19 @@ PerspectiveCamera::PerspectiveCamera() {
     RecalculateViewMatrix();
 }
 
+void PerspectiveCamera::SetPosition(const glm::vec3& position) { 
+    m_Position = position; 
+    RecalculateViewMatrix();
+}
+
+
 void PerspectiveCamera::RecalculateViewMatrix() {
     m_View = glm::lookAt(m_Position, m_Position - cameraFront, cameraUp);
 }
 
 void PerspectiveCamera::Move(const glm::vec3& deltaPosition) {
     m_Position += deltaPosition;
+    RecalculateViewMatrix();
 }
 
 void PerspectiveCamera::Rotate(float yawOffset, float pitchOffset) {

@@ -20,6 +20,8 @@ namespace HarmonyEditor {
         void OnUpdate(float deltaTime) override;
         void OnDestroy() override;  
 
+        void DrawGameViewport();
+
         void OpenScene(const std::filesystem::path& filepath);
         void SaveScene();
 

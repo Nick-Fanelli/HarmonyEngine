@@ -4,12 +4,13 @@
 #include "Renderer2D.h"
 #include "../Scene/Component.h"
 
+#include "MasterRenderer.h"
+
 using namespace HarmonyEngine;
 
 static const size_t MaxObjectCount = 245; // 245
 static const size_t MaxVertexCount = 80000; // 80,000
 static const size_t MaxIndexCount = 120000; // 120,000
-
 
 static RenderBatch s_Batch;
 static Shader s_Shader;
@@ -18,7 +19,6 @@ static uint32_t s_MaxTextureCount;
 
 static GLuint s_WhiteTexture;
 
-Camera* Renderer::s_Camera = nullptr;
 Scene* Renderer::s_ScenePtr = nullptr;
 
 static int* s_TextureSlots;
@@ -27,15 +27,13 @@ static glm::vec3 s_LightPosition = { 0, 15, 0 };
 static glm::vec3 s_LightColor = { 1, 1, 1 };
 static float s_AmbientStrength = 0.2f;
 
-void Renderer::OnCreate(Camera* camera) {
+void Renderer::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
 
     if(s_Batch.Vertices != nullptr) {
         Log::Error("Vertices array was not equal to nullptr, exiting Renderer::OnCreate()");
         return;
     }
-
-    s_Camera = camera;
 
     s_MaxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
@@ -135,7 +133,7 @@ void Renderer::Render() {
     size_t objectCount = s_Batch.OffsetPtr - s_Batch.Offsets;
 
     s_Shader.Bind();
-    s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
+    s_Shader.AddUniformMat4("uViewProjectionMatrix", MasterRenderer::CameraPtr->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
     s_Shader.AddUniformMat4Array("uTransformations", objectCount, s_Batch.Offsets);
 
@@ -164,7 +162,7 @@ void Renderer::Render() {
     }
 
     s_Shader.AddUnformInt("uPointLightCount", lightCount);
-    s_Shader.AddUniformVec3("uViewDirection", s_Camera->GetPosition());
+    s_Shader.AddUniformVec3("uViewDirection", MasterRenderer::CameraPtr->GetPosition());
 
     s_Shader.AddUniformFloat("uAmbientIntensity", s_ScenePtr->GetAmbientIntensity());
 

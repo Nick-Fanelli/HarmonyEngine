@@ -1,6 +1,7 @@
 #include "Renderer2D.h"
 
 #include "Shader.h"
+#include "MasterRenderer.h"
 
 using namespace HarmonyEngine;
 
@@ -17,8 +18,6 @@ static GLuint s_WhiteTexture;
 
 static glm::vec4 s_QuadVertexPositions[4];
 
-Camera* Renderer2D::s_Camera = nullptr;
-
 size_t RendererStats::BatchCount = 0;
 size_t RendererStats::CurrentBatchCount = 0;
 
@@ -30,7 +29,7 @@ size_t RendererStats::CurrentIndexCount = 0;
 
 static int* s_TextureSlots;
 
-void Renderer2D::OnCreate(Camera* camera) {
+void Renderer2D::OnCreate() {
     HARMONY_PROFILE_FUNCTION();
 
     // Check to make sure that OnCreate method wasn't already called
@@ -38,8 +37,6 @@ void Renderer2D::OnCreate(Camera* camera) {
         Log::Error("Vertices array was not equal to nullptr, exiting Renderer2D::OnCreate()");
         return;
     }
-
-    s_Camera = camera;
 
     s_MaxTextureCount = OpenGLUtils::GetGUPMaxTextureSlots();
 
@@ -127,7 +124,7 @@ void Renderer2D::Render() {
     HARMONY_PROFILE_FUNCTION();
 
     s_Shader.Bind();
-    s_Shader.AddUniformMat4("uViewProjectionMatrix", s_Camera->GetProjectViewMatrix());
+    s_Shader.AddUniformMat4("uViewProjectionMatrix", MasterRenderer::CameraPtr->GetProjectViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
 
     for(int i = 0; i < s_Batch.TextureIndex; i++) {
