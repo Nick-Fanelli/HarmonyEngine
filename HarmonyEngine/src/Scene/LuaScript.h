@@ -14,7 +14,7 @@ namespace HarmonyEngine {
     class LuaScript {
 
     public:
-        LuaScript();
+        LuaScript() = default;
         ~LuaScript();
 
     public:

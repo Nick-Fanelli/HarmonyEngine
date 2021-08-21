@@ -21,10 +21,6 @@ using namespace HarmonyEngine;
 
 // Set global pops previous item off stack!
 
-LuaScript::LuaScript() {
-    // L = luaL_newstate(); // Create the lua state
-}
-
 LuaScript::~LuaScript() {
     if(L != nullptr)
         lua_close(L); // Close the lua state
@@ -71,10 +67,18 @@ int NativeGetMousePosition(lua_State* L) {
 
 void LuaScript::LoadGlobalScript(const std::filesystem::path& scriptPath) {
 
+    HARMONY_PROFILE_FUNCTION();
+
     if(m_IsAssigned)
         lua_close(L);
 
     L = luaL_newstate();
+
+    if(!FileUtils::FileExists(scriptPath)) {
+        Log::FormatError("Lua Script file doesn't exist: '%s'", scriptPath.string().c_str());
+        m_IsAssigned = false;
+        return;
+    }
 
     m_IsAssigned = true;
     m_Filepath = scriptPath;
