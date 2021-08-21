@@ -43,9 +43,9 @@ namespace HarmonyEngine {
         Scene() = default;
         Scene(const std::string& sceneName) : m_SceneName(std::move(sceneName)) {}
 
-        virtual void OnCreate() {}
-        virtual void OnUpdate(float deltaTime) {}
-        virtual void OnDestroy() { m_Registry.clear<>(); }
+        virtual void OnCreate();
+        virtual void OnUpdate(float deltaTime);
+        virtual void OnDestroy();
 
         Entity CreateEntity(const std::string& name);
         Entity CreateEntity(const std::string& name, const Transform& transform);

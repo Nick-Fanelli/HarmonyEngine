@@ -23,6 +23,9 @@ namespace HarmonyEditor {
         void OpenScene(const std::filesystem::path& filepath);
         void SaveScene();
 
+        void StartRuntime();
+        void StopRuntime();
+
         const Scene& GetSelectedScene() const { return m_SelectedScene; }
         Scene& GetSelectedScene() { return m_SelectedScene; }
 
@@ -34,11 +37,15 @@ namespace HarmonyEditor {
 
         void SetActiveProject(const Project& project);
 
+        bool IsRunning() const { return m_IsRunning; }
+
         EditorCamera& GetEditorCamera();
 
     private:
         Project m_ActiveProject = {};
         Scene m_SelectedScene = Scene{"Untitled Scene"};
+
+        bool m_IsRunning = false;
 
     };
 }

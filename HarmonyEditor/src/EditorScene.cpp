@@ -47,8 +47,6 @@ static EditorScene* s_This;
 
 static std::vector<Setting<bool>*> s_TabPointers;
 
-static LuaScript s_LuaScript;
-
 const ImGuizmo::OPERATION& EditorScene::GetCurrentOperation() { return s_CurrentImGuizmoOperation; }
 void EditorScene::SetCurrentOperation(const ImGuizmo::OPERATION& operation) { s_CurrentImGuizmoOperation = operation; }
 EditorCamera& EditorScene::GetEditorCamera() { return s_Camera; }
@@ -94,9 +92,6 @@ void EditorScene::OnCreate() {
     if(FileUtils::FileExists(CacheManager::LastOpenProject)) {
         SetActiveProject({CacheManager::LastOpenProject});
     }
-
-    s_LuaScript.LoadGlobalScript("/Users/nick227889/Dev/Example Project/Assets/Scripts/TestScript.lua");
-    s_LuaScript.OnCreate();
 }
 
 void EditorScene::OpenScene(const std::filesystem::path& filepath) {
@@ -237,12 +232,28 @@ static void DrawGameViewport() {
     ImGui::End();
 }
 
+void EditorScene::StartRuntime() {
+    if(s_SceneSerializer.IsAssigned()) {
+        SaveScene();
+        m_SelectedScene.OnCreate();
+        m_IsRunning = true;
+    }
+}
+
+void EditorScene::StopRuntime() {
+    m_IsRunning = false;
+    
+    if(s_SceneSerializer.IsAssigned()) {
+        m_SelectedScene.OnDestroy();
+    }
+}
+
 void EditorScene::OnUpdate(float deltaTime) {
 
     HARMONY_PROFILE_FUNCTION();
 
     // Camera Update
-    if(s_IsViewportSelected || s_Camera.IsInOperation())
+    if((s_IsViewportSelected || s_Camera.IsInOperation()) && !m_IsRunning)
         s_Camera.OnUpdate(deltaTime);
 
     if(Input::IsKeyDown(HARMONY_KEY_TAB)) {
@@ -275,7 +286,6 @@ void EditorScene::OnUpdate(float deltaTime) {
     }
 #endif
 
-
     if(!ImGuiDefaults::IsInputFocused()) {
         if(Input::IsKeyDown(HARMONY_KEY_T))
             s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
@@ -287,7 +297,10 @@ void EditorScene::OnUpdate(float deltaTime) {
 
     ImGuiDefaults::ResetIsInputFocused();
 
-    s_LuaScript.OnUpdate(deltaTime);
+    // Runtime Updates
+    if(m_IsRunning) {
+        m_SelectedScene.OnUpdate(deltaTime);
+    }
 
     // ImGui Layer
     s_ImGuiLayer.Begin();
@@ -325,8 +338,6 @@ void EditorScene::OnDestroy() {
             ptr->CurrentValue = true;
         }
     }
-
-    s_LuaScript.OnDestroy();
 
     SaveScene();
 

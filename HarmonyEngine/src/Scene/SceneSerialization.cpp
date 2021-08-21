@@ -98,6 +98,10 @@ void SceneSerializer::SerializeYAML(const std::filesystem::path& mask) {
     out << YAML::BeginMap; 
     out << YAML::Key << "Scene" << YAML::Value << m_ScenePtr->m_SceneName;
     out << YAML::Key << "AmbientIntensity" << YAML::Value << m_ScenePtr->m_AmbientIntensity;
+    
+    // TODO: Use wstring instead of string
+    if(m_ScenePtr->m_GlobalLuaScript.IsAssigned())
+        out << YAML::Key << "GlobalScript" << YAML::Value << std::filesystem::relative(m_ScenePtr->m_GlobalLuaScript.GetFilepath().string(), mask);
 
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
@@ -140,6 +144,9 @@ void SceneSerializer::DeserializeYAML(const std::filesystem::path& mask) {
 
     if(root["AmbientIntensity"])
         m_ScenePtr->m_AmbientIntensity = root["AmbientIntensity"].as<float>();
+
+    if(root["GlobalScript"])
+        m_ScenePtr->m_GlobalLuaScript.LoadGlobalScript(mask / root["GlobalScript"].as<std::string>());
 
     m_ScenePtr->m_Registry.clear();
 

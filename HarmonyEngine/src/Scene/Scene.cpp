@@ -18,6 +18,20 @@ Entity Scene::CreateEntity(const std::string& name, const Transform& transform) 
     return entity;
 }
 
+void Scene::OnCreate() {
+    if(m_GlobalLuaScript.IsAssigned())
+        m_GlobalLuaScript.OnCreate();
+}
+
+void Scene::OnUpdate(float deltaTime) {
+    m_GlobalLuaScript.OnUpdate(deltaTime);
+}
+
+void Scene::OnDestroy() {
+    if(m_GlobalLuaScript.IsAssigned())
+        m_GlobalLuaScript.OnDestroy();
+}
+
 void Scene::DeleteEntity(Entity& entity) {
     m_Registry.destroy(entity.GetEntityID());
 
