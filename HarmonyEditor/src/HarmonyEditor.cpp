@@ -14,11 +14,11 @@ using namespace HarmonyEditor;
 int main() {
 
 #if HARMONY_DEBUG
-    Log::SetLogLevel(Log::LogLevel::LogLevelWarn);
     Log::Info("Running Harmony Engine in DEBUG mode!");
+    Log::SetLogLevel(Log::LogLevel::LogLevelWarn);
 #else
-    Log::SetLogLevel(Log::LogLeveL::LogLevelError);
     Log::Info("Running Harmony Engine in RELEASE mode!");
+    Log::SetLogLevel(Log::LogLeveL::LogLevelError);
 #endif
 
     Application application = Application("Harmony Engine");
