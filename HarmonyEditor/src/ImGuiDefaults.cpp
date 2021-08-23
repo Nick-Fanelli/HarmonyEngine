@@ -103,15 +103,14 @@ void ImGuiDefaults::DrawVector2(const std::string& label, glm::vec2& values, flo
     ImGui::SameLine();
     ImGui::DragFloat("##Y", &values.y, 0.1f, min, max, "%.2f");
     s_IsInputFocused |= ImGui::IsItemFocused();
+
     ImGui::PopItemWidth();
-    ImGui::SameLine();
 
     ImGui::PopStyleVar();
     ImGui::Columns(1);
 
     ImGui::PopID();
 }
-
 
 void ImGuiDefaults::DrawVector3(const std::string& label, glm::vec3& values, float resetValue) {
     ImGui::PushID(label.c_str());
