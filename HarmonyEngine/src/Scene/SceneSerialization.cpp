@@ -96,6 +96,9 @@ static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Enti
 }
 
 void SceneSerializer::SerializeYAML(const std::filesystem::path& mask) {
+
+    Log::FormatInfo("Serializing Scene '%s'", m_ScenePtr->m_SceneName.c_str());
+
     YAML::Emitter out;
 
     out << YAML::BeginMap; 
@@ -123,6 +126,8 @@ void SceneSerializer::SerializeYAML(const std::filesystem::path& mask) {
 
     std::ofstream outStream(m_Filepath);
     outStream << out.c_str();
+
+    Log::Success("Successfully Serialized Scene!");
 }
 
 void SceneSerializer::SerializerBinary() {
@@ -168,6 +173,8 @@ void SceneSerializer::DeserializeYAML(const std::filesystem::path& mask) {
             DeserializeEntityYAML(entity, deserializedEntity, name, mask);
         }   
     }
+
+    Log::Success("Successfully Deserialized Scene!");
 }
 
 void SceneSerializer::DeserializeBinary() {

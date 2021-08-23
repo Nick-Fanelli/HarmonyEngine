@@ -1,6 +1,6 @@
 #include "Project.h"
 
-#include "Application.h"
+#include "HarmonyEditor.h"
 
 using namespace HarmonyEditor;
 

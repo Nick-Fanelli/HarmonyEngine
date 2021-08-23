@@ -14,7 +14,7 @@
 
 #include <Render/MasterRenderer.h>
 
-#include "Application.h"
+#include "HarmonyEditor.h"
 #include "EditorCamera.h"
 #include "MenuBar.h"
 #include "Settings.h"
@@ -58,7 +58,7 @@ void EditorScene::SetActiveProject(const Project& project) {
     CacheManager::LastOpenProject = project.GetProjectDirectory().string();
     s_AssetsEditorPanel.SyncAssets();
 
-    std::string title = std::string(Application::GetDisplayTitle() + " | ") + project.GetProjectDirectory().stem().string();
+    std::string title = std::string(HarmonyEditorApplication::GetDisplayTitle() + " | ") + project.GetProjectDirectory().stem().string();
     glfwSetWindowTitle(Display::GetWindowPtr(), title.c_str());
 }
 
@@ -76,7 +76,7 @@ void EditorScene::OnCreate() {
     s_HierarchyEditorPanel = this;
     s_AssetsEditorPanel = this;
 
-    std::string iniSaveLocation = std::filesystem::path(Application::GetApplicationSupportDirectory()) / "window-layout.ini";
+    std::string iniSaveLocation = std::filesystem::path(HarmonyEditorApplication::GetApplicationSupportDirectory()) / "window-layout.ini";
 
     s_ImGuiLayer.OnCreate(iniSaveLocation);
 

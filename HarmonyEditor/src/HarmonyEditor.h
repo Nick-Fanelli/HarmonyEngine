@@ -6,7 +6,7 @@ using namespace HarmonyEngine;
 
 namespace HarmonyEditor {
 
-	class Application {
+	class HarmonyEditorApplication {
 
 	public:
 

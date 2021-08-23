@@ -1,6 +1,8 @@
-#include "Application.h"
+#include "HarmonyEditor.h"
 
 #include <nfd.h>
+
+#include <Application.h>
 
 #include <Scene/SceneManager.h>
 #include <Core/Display.h>
@@ -12,36 +14,22 @@ using namespace HarmonyEditor;
 int main() {
 
 #if HARMONY_DEBUG
+    Log::SetLogLevel(Log::LogLevel::LogLevelWarn);
     Log::Info("Running Harmony Engine in DEBUG mode!");
 #else
+    Log::SetLogLevel(Log::LogLeveL::LogLevelError);
     Log::Info("Running Harmony Engine in RELEASE mode!");
 #endif
 
-    Log::SetLogLevel(Log::LogLevel::LogLevelWarn);
+    Application application = Application("Harmony Engine");
+    EditorScene scene = EditorScene();
 
-    // Startup
-    HARMONY_PROFILE_BEGIN_SESSION("Startup", "HarmonyProfile-Startup.json");
     NFD_Init();
-    EditorScene editorScene{};
 
-    Display::CreateDisplay(Application::GetDisplayTitle().c_str());
-    SceneManager::SetActiveScene(&editorScene);
-
-    HARMONY_PROFILE_END_SESSION();
-
-    // Runtime
-    HARMONY_PROFILE_BEGIN_SESSION("Runtime", "HarmonyProfile-Runtime.json");
-    Display::StartGameLoop();
-    HARMONY_PROFILE_END_SESSION();
-
-    // Shutdown
-    HARMONY_PROFILE_BEGIN_SESSION("Shutdown", "HarmonyProfile-Shutdown.json");
-    Display::CleanUp();
-    NFD_Quit();
-    HARMONY_PROFILE_END_SESSION();
+    application.StartApplication(scene);
 }
 
-const std::filesystem::path& Application::GetApplicationSupportDirectory() {
+const std::filesystem::path& HarmonyEditorApplication::GetApplicationSupportDirectory() {
 #ifdef HARMONY_PLATFORM_MACOS
     static std::filesystem::path path = Platform::GetHomeDirectory() + "/Library/Application Support/HarmonyEngine/";
 #else
@@ -54,7 +42,7 @@ const std::filesystem::path& Application::GetApplicationSupportDirectory() {
     return path;
 }
 
-const std::filesystem::path& Application::GetApplicationCacheFilepath() {
+const std::filesystem::path& HarmonyEditorApplication::GetApplicationCacheFilepath() {
 #ifdef HARMONY_PLATFORM_MACOS
     static std::filesystem::path path = Platform::GetHomeDirectory() + "/Library/Caches/HarmonyEngine/harmony-cache.yaml";
 #else
@@ -67,7 +55,7 @@ const std::filesystem::path& Application::GetApplicationCacheFilepath() {
     return path;
 }
 
-void Application::OpenFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const std::filesystem::path&)>& function) {
+void HarmonyEditorApplication::OpenFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const std::filesystem::path&)>& function) {
     nfdchar_t* outPath;
     nfdfilteritem_t nfdFilterItems[1] = { { filterItems.first, filterItems.second } };
     nfdresult_t result = NFD_OpenDialog(&outPath, nfdFilterItems, 1, nullptr);
@@ -80,7 +68,7 @@ void Application::OpenFileDialog(const std::pair<const char*, const char*>& filt
     }
 }
 
-void Application::OpenFolderDialog(const std::function<void(const std::filesystem::path&)>& function) {
+void HarmonyEditorApplication::OpenFolderDialog(const std::function<void(const std::filesystem::path&)>& function) {
     nfdchar_t* outPath;
     nfdresult_t result = NFD_PickFolder(&outPath, nullptr);
     if(result == NFD_OKAY) {
@@ -91,7 +79,7 @@ void Application::OpenFolderDialog(const std::function<void(const std::filesyste
     }
 }
 
-void Application::SaveFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const std::filesystem::path&)>& function) {
+void HarmonyEditorApplication::SaveFileDialog(const std::pair<const char*, const char*>& filterItems, const std::function<void(const std::filesystem::path&)>& function) {
     nfdchar_t* outPath;
     nfdfilteritem_t nfdFilterItems[1] = { { filterItems.first, filterItems.second } };
     nfdresult_t result = NFD_SaveDialog(&outPath, nfdFilterItems, 1, nullptr, nullptr);

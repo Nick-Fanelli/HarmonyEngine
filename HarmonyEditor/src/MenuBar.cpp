@@ -5,7 +5,7 @@
 #include <Core/Input.h>
 #include <Scene/SceneSerialization.h>
 
-#include "Application.h"
+#include "HarmonyEditor.h"
 #include "EditorScene.h"
 #include "Settings.h"
 #include "Project.h"
@@ -56,7 +56,7 @@ void MenuBar::OnImGuiRender() {
         if(ImGui::BeginMenu("File")) {
 
             if(ImGui::MenuItem("New Project")) {
-                Application::OpenFolderDialog([&](const std::filesystem::path& path) {
+                HarmonyEditorApplication::OpenFolderDialog([&](const std::filesystem::path& path) {
                     m_EditorScenePtr->SetActiveProject({ path });
                 });
             }
@@ -64,7 +64,7 @@ void MenuBar::OnImGuiRender() {
             ImGui::Separator();
 
             if(ImGui::MenuItem("Open Project")) {
-                Application::OpenFolderDialog([&](const std::filesystem::path& path) {
+                HarmonyEditorApplication::OpenFolderDialog([&](const std::filesystem::path& path) {
                     if(!Project::IsProject(path)) {
                         Log::Warn("Warning not a project; Status: returning!"); // TODO: Display with ImGui or some kind-of popup
                         return;
@@ -74,7 +74,7 @@ void MenuBar::OnImGuiRender() {
             }
 
             if(ImGui::MenuItem("Open Scene")) {
-                Application::OpenFileDialog({ "Harmony Scene File", "hyscene" }, [&](const std::filesystem::path& path) {
+                HarmonyEditorApplication::OpenFileDialog({ "Harmony Scene File", "hyscene" }, [&](const std::filesystem::path& path) {
                     m_EditorScenePtr->OpenScene(path);
                 });
             }
@@ -86,7 +86,7 @@ void MenuBar::OnImGuiRender() {
             }
 
             if(ImGui::MenuItem("Save Scene As")) {
-                Application::SaveFileDialog({ "Harmony Scene File", "hyscene" }, [&](const std::filesystem::path& path) {
+                HarmonyEditorApplication::SaveFileDialog({ "Harmony Scene File", "hyscene" }, [&](const std::filesystem::path& path) {
                     FileUtils::CreateFile(path);
 
                     m_EditorScenePtr->GetSelectedScene().SetSceneName(path.stem());

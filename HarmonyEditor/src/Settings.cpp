@@ -3,7 +3,7 @@
 #include <imguipch.h>
 #include <yaml-cpp/yaml.h>
 
-#include "Application.h"
+#include "HarmonyEditor.h"
 #include "ImGuiDefaults.h"
 #include "Theme.h"
 
@@ -33,7 +33,7 @@ Setting<int> Settings::EditorInputStyle = EditorCamera::InputStyle::InputStyleDe
 Setting<float> Settings::EditorMovementSensitivity = 2.0f;
 
 static const std::filesystem::path& GetSettingsFilepath() {
-    static const std::filesystem::path path = Application::GetApplicationSupportDirectory() / "user-settings.yaml";
+    static const std::filesystem::path path = HarmonyEditorApplication::GetApplicationSupportDirectory() / "user-settings.yaml";
     return path;
 }
 
@@ -141,7 +141,7 @@ static void DeserializeValue(YAML::Node& node, T& value, const char* id) {
 }
 
 void CacheManager::LoadCache() {
-    std::ifstream in(Application::GetApplicationCacheFilepath());
+    std::ifstream in(HarmonyEditorApplication::GetApplicationCacheFilepath());
     std::stringstream stream;
     stream << in.rdbuf();
 
@@ -159,6 +159,6 @@ void CacheManager::SaveCache() {
 
     out << YAML::EndMap; // Root
 
-    std::ofstream outStream(Application::GetApplicationCacheFilepath());
+    std::ofstream outStream(HarmonyEditorApplication::GetApplicationCacheFilepath());
     outStream << out.c_str();
 }
