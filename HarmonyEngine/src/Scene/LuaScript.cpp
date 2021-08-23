@@ -189,6 +189,7 @@ bool LuaScript::HandleLua(int result) {
     if(result != LUA_OK) {
         std::string errormsg = lua_tostring(L, -1);
         Log::Error(errormsg);
+        HARMONY_ASSERT(false);
         return false;
     }
 
