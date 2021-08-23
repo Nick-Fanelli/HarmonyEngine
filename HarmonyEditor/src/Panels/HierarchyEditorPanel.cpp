@@ -7,6 +7,8 @@
 #include "../Settings.h"
 #include "../ImGuiDefaults.h"
 
+#include "../Windows/CommonWindows.h"
+
 using namespace HarmonyEditor;
 
 void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
@@ -83,15 +85,15 @@ static void DrawComponent(const char* componentName, Entity& entity, UIFunction 
     ImGui::PopID();
 }
 
-template<typename ComponentType>
-static void DrawAddComponentMenuItem(const char* componentName, Entity& entity) {
-    if(!entity.ContainsComponent<ComponentType>()) {
-        if(ImGui::MenuItem(componentName)) {
-            entity.AddComponent<ComponentType>();
-            ImGui::CloseCurrentPopup();
-        }
-    }
-}
+// template<typename ComponentType>
+// static void DrawAddComponentMenuItem(const char* componentName, Entity& entity) {
+//     if(!entity.ContainsComponent<ComponentType>()) {
+//         if(ImGui::MenuItem(componentName)) {
+//             entity.AddComponent<ComponentType>();
+//             ImGui::CloseCurrentPopup();
+//         }
+//     }
+// }
 
 static void DisplayEntity(Entity& entity) {
 
@@ -146,21 +148,7 @@ static void DisplayEntity(Entity& entity) {
     // New Component Button
     ImGui::Separator();
     if(ImGui::Button("Add Component"))
-        ImGui::OpenPopup("AddComponentPopup");
-
-    if(ImGui::BeginPopup("AddComponentPopup")) {
-        
-        DrawAddComponentMenuItem<TransformComponent>("Transform", entity);
-        DrawAddComponentMenuItem<CameraComponent>("Camera Component", entity);
-        DrawAddComponentMenuItem<QuadRendererComponent>("Quad Renderer", entity);
-        DrawAddComponentMenuItem<MeshRendererComponent>("Mesh Renderer", entity);
-        DrawAddComponentMenuItem<SpriteRendererComponent>("Sprite Renderer", entity);
-        DrawAddComponentMenuItem<LuaScriptComponent>("Lua Script", entity);
-        DrawAddComponentMenuItem<PointLightComponent>("Point Light", entity);
-
-        ImGui::EndPopup();
-    }
-
+        NewComponentWindow::OpenNewComponentPopup(entity);
 }
 
 void HierarchyEditorPanel::DisplayScenePreferences() {

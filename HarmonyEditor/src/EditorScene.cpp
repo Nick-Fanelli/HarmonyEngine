@@ -24,6 +24,8 @@
 #include "Panels/HierarchyEditorPanel.h"
 #include "Panels/AssetsEditorPanel.h"
 
+#include "Windows/CommonWindows.h"
+
 using namespace HarmonyEditor;
 using namespace HarmonyEngine;
 
@@ -331,6 +333,8 @@ void EditorScene::OnUpdate(float deltaTime) {
     s_AssetsEditorPanel.OnImGuiRender();
 
     SettingsManager::OnImGuiRender();
+
+    CommonWindows::OnImGuiRender();
 
     s_ImGuiLayer.End();
 
