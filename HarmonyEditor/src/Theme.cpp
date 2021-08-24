@@ -15,6 +15,7 @@ static void ThemeLight() {
 
     colors[ImGuiCol_DockingPreview] = BrandAccentColor;
     colors[ImGuiCol_DragDropTarget] = BrandAccentColor;
+    colors[ImGuiCol_NavHighlight] = BrandAccentColor;
 
     colors[ImGuiCol_WindowBg] = ImVec4{ 0.9f, 0.895f, 0.89f, 1.0f };
 
@@ -55,6 +56,8 @@ static void ThemeDark() {
 
     colors[ImGuiCol_DockingPreview] = BrandAccentColor;
     colors[ImGuiCol_DragDropTarget] = BrandAccentColor;
+    colors[ImGuiCol_NavHighlight] = BrandAccentColor;
+    colors[ImGuiCol_ResizeGripActive] = BrandAccentColor;
 
     colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
 
