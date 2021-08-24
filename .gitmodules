@@ -16,3 +16,6 @@
 [submodule "HarmonyEditor/vendor/nativefiledialog"]
 	path = HarmonyEditor/vendor/nativefiledialog
 	url = https://github.com/Nick-Fanelli/nativefiledialog
+[submodule "HarmonyEngine/vendor/imgui"]
+	path = HarmonyEngine/vendor/imgui
+	url = git@github.com:Nick-Fanelli/imgui.git
