@@ -16,3 +16,6 @@
 [submodule "HarmonyEngine/vendor/imgui"]
 	path = HarmonyEngine/vendor/imgui
 	url = htpts://github.com/Nick-Fanelli/imgui.git
+[submodule "HarmonyEditor/vendor/ImGuizmo"]
+	path = HarmonyEditor/vendor/ImGuizmo
+	url = https://github.com/Nick-Fanelli/ImGuizmo
