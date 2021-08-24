@@ -26,15 +26,25 @@ void EditorCamera::OnUpdate(float deltaTime) {
 
                 if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
                     MousePan(delta);
-                } else if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
-                    MouseZoom(delta.y);
                 } else {
                     MouseRotate(delta * Settings::EditorMovementSensitivity.CurrentValue);
                 }
 
                 m_IsInOperation = true;
                 UpdateView();
-            } else if(Input::IsMouseButtonUp(HARMONY_MOUSE_BUTTON_MIDDLE)) {
+            } else if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
+                const glm::vec2& delta = Input::GetDeltaMousePosition() * 0.003f;
+                
+                if(Input::IsMouseButton(HARMONY_MOUSE_BUTTON_LEFT)) {
+                    if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT))
+                        MousePan(delta);
+                    else
+                        MouseRotate(delta * Settings::EditorMovementSensitivity.CurrentValue);
+                }
+
+                m_IsInOperation = true;
+                UpdateView();
+            } else if(Input::IsMouseButtonUp(HARMONY_MOUSE_BUTTON_MIDDLE) || Input::IsMouseButtonUp(HARMONY_MOUSE_BUTTON_LEFT)) {
                 m_IsInOperation = false;
             }
             break;
@@ -46,8 +56,6 @@ void EditorCamera::OnUpdate(float deltaTime) {
 
                 if(Input::IsKey(HARMONY_KEY_LEFT_SHIFT)) {
                     MouseRotate(delta * Settings::EditorMovementSensitivity.CurrentValue);
-                } else if(Input::IsKey(HARMONY_KEY_LEFT_ALT)) {
-                    MouseZoom(delta.y);
                 } else {
                     MousePan(delta);
                 }
