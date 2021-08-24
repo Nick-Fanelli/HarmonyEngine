@@ -18,7 +18,7 @@ int main() {
     Log::SetLogLevel(Log::LogLevel::LogLevelWarn);
 #else
     Log::Info("Running Harmony Engine in RELEASE mode!");
-    Log::SetLogLevel(Log::LogLeveL::LogLevelError);
+    Log::SetLogLevel(Log::LogLevel::LogLevelError);
 #endif
 
     Application application = Application("Harmony Engine");
