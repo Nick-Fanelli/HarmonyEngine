@@ -1,5 +1,7 @@
 #include "CommonWindows.h"
 
+#include <Core/Input.h>
+
 using namespace HarmonyEditor;
 
 void CommonWindows::OnImGuiRender() {
@@ -36,6 +38,11 @@ static void DrawComponent(const char* componentName, Entity& entity, ImGuiTextFi
         ImGui::TreeNodeEx(componentName, treeNodeFlags | ((s_SelectedComponentID == componentName) ? ImGuiTreeNodeFlags_Selected : 0));
 
         if(s_ShouldApplyComponent && s_SelectedComponentID == componentName) {
+            entity.AddComponent<ComponentType>();
+            NewComponentWindow::CloseNewComponentPopup();
+        }
+
+        if(ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
             entity.AddComponent<ComponentType>();
             NewComponentWindow::CloseNewComponentPopup();
         }
@@ -89,7 +96,12 @@ void NewComponentWindow::OnImGuiRender() {
 
             ImGui::BeginChild("##Description", { ImGui::GetContentRegionAvailWidth(), ImGui::GetContentRegionAvail().y - lineHeight - 5.0f }, false, flags);
 
-            ImGui::Text("%s", "Component Description Comming Soon...");
+            if(!s_SelectedComponentID)
+                // TODO: Implement somthing where it shows documentation for how components work
+                ImGui::Text("%s", "Select A Component for Documentation");
+            else   
+                // Pull the specific component documentation from some wiki
+                ImGui::Text("%s", "Component Documentation Comming Soon!");
 
             ImGui::EndChild();
 
@@ -101,6 +113,9 @@ void NewComponentWindow::OnImGuiRender() {
                 ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
 
             s_ShouldApplyComponent |= ImGui::ButtonEx("Add Component", {}, (s_SelectedComponentID == nullptr ? ImGuiItemFlags_Disabled : 0));
+
+            if(Input::IsKeyDown(HARMONY_KEY_ENTER))
+                s_ShouldApplyComponent = true;
 
             if(s_SelectedComponentID == nullptr) {
                 s_ShouldApplyComponent = false;
