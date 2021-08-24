@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/Nick-Fanelli/HarmonyEngine/compare/v0.4.0...v0.5.0) (2021-08-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* new add component popup
+
+### Features
+
+* add ambient intensity field to scene ([52f82c3](https://github.com/Nick-Fanelli/HarmonyEngine/commit/52f82c376397ea8cecaaeec213f00b662140843f))
+* add brand theme color to imgui theme ([ff0bb44](https://github.com/Nick-Fanelli/HarmonyEngine/commit/ff0bb440a2c0bc85d33fbbd6e219ed79f16a4bd6))
+* add set viewport functionallity to the perspective camera ([b08f99f](https://github.com/Nick-Fanelli/HarmonyEngine/commit/b08f99f664c25a7cb3f2ee15e78384caa6af8feb))
+* add trackpad movement support for default movement style ([bda6c9d](https://github.com/Nick-Fanelli/HarmonyEngine/commit/bda6c9dd7f91ed05ebd9edfbd0c3bbec6c682aba))
+* assert is there's a lua scripting error ([1cc6f83](https://github.com/Nick-Fanelli/HarmonyEngine/commit/1cc6f83d7777f2078ed9cdf051c112b604cff767))
+* check for lua script existance before loading ([c1c7606](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c1c76067abf18d98356590e0538300ee6b6f4884))
+* editor scene runtime and global scripts ([b5765b0](https://github.com/Nick-Fanelli/HarmonyEngine/commit/b5765b07ebd516b9a52323ab10ac9c39eaf70ad3))
+* intensity slider on point lights ([513041b](https://github.com/Nick-Fanelli/HarmonyEngine/commit/513041b3f2d74a6e62a54933d978650ac0c901dc))
+* load the camera from the camera component on begin runtime ([352e565](https://github.com/Nick-Fanelli/HarmonyEngine/commit/352e565f7c597b94c4cec8498bf70215501440a4))
+* make the double click and enter key add the component from the new component window ([fb584c8](https://github.com/Nick-Fanelli/HarmonyEngine/commit/fb584c8e73ae7f92276ba72fdd738a903634e3da))
+* new add component popup ([769f9dd](https://github.com/Nick-Fanelli/HarmonyEngine/commit/769f9ddbc89479bda21d90f3b526f75750f9688f))
+* open scene from asset panel with double click ([75a7584](https://github.com/Nick-Fanelli/HarmonyEngine/commit/75a75848829b0f706fe16ca63ff408a26965b9d8))
+* update default movement sensitivity to be 3 ([4266461](https://github.com/Nick-Fanelli/HarmonyEngine/commit/4266461e58a716cdac0aa0498035e0cb2d51217a))
+* update more ImGui colors to be the brand color ([c9d6440](https://github.com/Nick-Fanelli/HarmonyEngine/commit/c9d6440fcdaa7b8472277f3247c8eeb673319648))
+
+
+### Bug Fixes
+
+* continue to update the camera when an operation is active even when the mouse is no longer hovering the viewport ([9998ac1](https://github.com/Nick-Fanelli/HarmonyEngine/commit/9998ac1afea6488a8ac1f7c96d521f550c888cd1))
+* crash error when changing scenes ([96d635d](https://github.com/Nick-Fanelli/HarmonyEngine/commit/96d635d4766aadb44c52f5284638c9683d687da3))
+* imguizmo keyboard shortcut operation mode change locked when editing text ([d114e0f](https://github.com/Nick-Fanelli/HarmonyEngine/commit/d114e0f8d9d7a5c9ee2229bd3dac2f3e9dab0e08))
+* lua scripting crash ([9d200bf](https://github.com/Nick-Fanelli/HarmonyEngine/commit/9d200bf565eba13f22f66aa7db7c024bba49aabf))
+* make sure that all windows are visable when closing editor scene ([653f82e](https://github.com/Nick-Fanelli/HarmonyEngine/commit/653f82e6c350b05d148310cbd11ebcef85b5caae))
+* previous refactor #b5cfc9c ([3adb4e5](https://github.com/Nick-Fanelli/HarmonyEngine/commit/3adb4e5dc6ac92026369e84daa5158ab26de15dd)), closes [#b5cfc9](https://github.com/Nick-Fanelli/HarmonyEngine/issues/b5cfc9)
+* render lighting bug (read disc.) ([d4ed360](https://github.com/Nick-Fanelli/HarmonyEngine/commit/d4ed360fd26a1cc8e49ada22b2e58a13f3ed874e))
+* set the log level after displaying what release mode is running ([5a38c00](https://github.com/Nick-Fanelli/HarmonyEngine/commit/5a38c009450066a59a786142209448a37ca0618a))
+* typo ([7908c0f](https://github.com/Nick-Fanelli/HarmonyEngine/commit/7908c0f292ad5e6a4246bf8b1726c351b4caf1d0))
+* vector2 control pushing a new line ([e82be20](https://github.com/Nick-Fanelli/HarmonyEngine/commit/e82be201b53dc58397c2e3d0271a8839f51bdc07))
+
 ## [0.4.0](https://github.com/Nick-Fanelli/HarmonyEngine/compare/v0.3.0...v0.4.0) (2021-08-17)
 
 
