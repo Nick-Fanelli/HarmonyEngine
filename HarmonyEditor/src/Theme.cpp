@@ -2,6 +2,8 @@
 
 using namespace HarmonyEditor;
 
+static const ImVec4 BrandAccentColor = { 0.396078f, 0.803921f, 0.992156f, 1.0f };
+
 const char* Theme::ThemePreset[]  = {
     "Light", "Dark"
 };
@@ -9,7 +11,10 @@ const char* Theme::ThemePreset[]  = {
 const uint32_t Theme::ThemePresetCount = sizeof(Theme::ThemePreset) / sizeof(Theme::ThemePreset[0]);
 
 static void ThemeLight() {
-    auto& colors = ImGui::GetStyle().Colors;
+    static auto& colors = ImGui::GetStyle().Colors;
+
+    colors[ImGuiCol_DockingPreview] = BrandAccentColor;
+    colors[ImGuiCol_DragDropTarget] = BrandAccentColor;
 
     colors[ImGuiCol_WindowBg] = ImVec4{ 0.9f, 0.895f, 0.89f, 1.0f };
 
@@ -46,7 +51,10 @@ static void ThemeLight() {
 }
 
 static void ThemeDark() {
-    auto& colors = ImGui::GetStyle().Colors;
+    static auto& colors = ImGui::GetStyle().Colors;
+
+    colors[ImGuiCol_DockingPreview] = BrandAccentColor;
+    colors[ImGuiCol_DragDropTarget] = BrandAccentColor;
 
     colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
 
