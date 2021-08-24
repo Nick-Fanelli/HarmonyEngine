@@ -18,4 +18,4 @@
 	url = https://github.com/Nick-Fanelli/nativefiledialog
 [submodule "HarmonyEngine/vendor/imgui"]
 	path = HarmonyEngine/vendor/imgui
-	url = git@github.com:Nick-Fanelli/imgui.git
+	url = htpts://github.com/Nick-Fanelli/imgui.git
