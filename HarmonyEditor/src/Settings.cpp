@@ -30,7 +30,7 @@ std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings =
 Setting<int> Settings::EditorTheme = 1; // Dark
 
 Setting<int> Settings::EditorInputStyle = EditorCamera::InputStyle::InputStyleDefault;
-Setting<float> Settings::EditorMovementSensitivity = 2.0f;
+Setting<float> Settings::EditorMovementSensitivity = 3.0f;
 
 static const std::filesystem::path& GetSettingsFilepath() {
     static const std::filesystem::path path = HarmonyEditorApplication::GetApplicationSupportDirectory() / "user-settings.yaml";
