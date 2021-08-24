@@ -9,6 +9,7 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/nativefiledialog/)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/ImGuizmo)
 
 file(GLOB_RECURSE SRC_FILES
         "src/**.h"
@@ -22,3 +23,4 @@ target_include_directories(HarmonyEditor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/vend
 
 target_link_libraries(HarmonyEditor LINK_PUBLIC HarmonyEngine)
 target_link_libraries(HarmonyEditor LINK_PUBLIC nfd)
+target_link_libraries(HarmonyEditor LINK_PUBLIC ImGuizmo)

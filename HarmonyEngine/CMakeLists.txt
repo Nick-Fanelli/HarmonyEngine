@@ -12,7 +12,6 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/yaml-cpp)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/ImGuizmo)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua)
 
 file(GLOB_RECURSE SRC_FILES
@@ -36,7 +35,6 @@ target_link_libraries(HarmonyEngine glad)
 target_link_libraries(HarmonyEngine glfw)
 target_link_libraries(HarmonyEngine ImGUI)
 target_link_libraries(HarmonyEngine yaml-cpp)
-target_link_libraries(HarmonyEngine ImGuizmo)
 target_link_libraries(HarmonyEngine lua)
 
 target_precompile_headers(HarmonyEngine PUBLIC "src/harmonypch.h")
