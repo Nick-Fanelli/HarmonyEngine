@@ -16,3 +16,6 @@
 [submodule "HarmonyEngine/vendor/lua"]
 	path = HarmonyEngine/vendor/lua
 	url = https://github.com/Nick-Fanelli/lua.git
+[submodule "HarmonyEditor/vendor/nativefiledialog"]
+	path = HarmonyEditor/vendor/nativefiledialog
+	url = https://github.com/Nick-Fanelli/nativefiledialog

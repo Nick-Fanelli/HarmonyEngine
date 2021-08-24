@@ -8,11 +8,17 @@ set(GCC_COVERAGE_LINK_FLAGS    "-framework Cocoa -framework OpenGL -framework IO
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/nativefiledialog/)
+
 file(GLOB_RECURSE SRC_FILES
         "src/**.h"
         "src/**.cpp"
 )
 
-add_executable(HarmonyExecutable ${SRC_FILES})
+add_executable(HarmonyEditor ${SRC_FILES})
 
-target_link_libraries(HarmonyExecutable LINK_PUBLIC HarmonyEngine)
+target_include_directories(HarmonyEditor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
+target_include_directories(HarmonyEditor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/vendor/nativefiledialog/src/include)
+
+target_link_libraries(HarmonyEditor LINK_PUBLIC HarmonyEngine)
+target_link_libraries(HarmonyEditor LINK_PUBLIC nfd)
