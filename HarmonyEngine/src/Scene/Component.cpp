@@ -88,6 +88,12 @@ static YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& vec) {
     return out;
 }
 
+template<typename T>
+static void GetYAMLValue(YAML::Node& node, const char* key, T& value) {
+    if(node[key])
+        value = node[key].as<T>();
+}
+
 static void SerializeTexture(YAML::Emitter& out, AssetHandle<Texture>& textureHandle, const std::filesystem::path& mask) {
     if(textureHandle.IsAssigned())
         out << YAML::Key << "Texture" << YAML::Value << std::filesystem::relative(textureHandle->GetFilepath(), mask);
@@ -99,6 +105,8 @@ static void SerializeMesh(YAML::Emitter& out, AssetHandle<Mesh>& meshHandle, con
 }
 
 static void DeserializeTexture(YAML::Node& node, AssetHandle<Texture>& textureHandle, const std::filesystem::path& mask) {
+    if(!node["Texture"])
+        return;
     if(auto textureNode = node["Texture"]) {
         auto textureFilepath = mask / (textureNode.as<std::string>());
         textureHandle = AssetManager::GetTexture(textureFilepath);
@@ -106,6 +114,8 @@ static void DeserializeTexture(YAML::Node& node, AssetHandle<Texture>& textureHa
 }
 
 static void DeserializeMesh(YAML::Node& node, AssetHandle<Mesh>& meshHandle, const std::filesystem::path& mask) {
+    if(!node["Mesh"])
+        return;
     if(auto meshNode = node["Mesh"]) {
         auto meshFilepath = mask / (meshNode.as<std::string>());
         meshHandle = AssetManager::GetMesh(meshFilepath);
@@ -118,7 +128,7 @@ void TagComponent::Serialize(YAML::Emitter& out, const std::filesystem::path& ma
 }
 
 void TagComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    Name = node["Name"].as<std::string>();
+    GetYAMLValue(node, "Name", Name);
 }
 
 // Transform Component
@@ -129,9 +139,9 @@ void TransformComponent::Serialize(YAML::Emitter& out, const std::filesystem::pa
 }
 
 void TransformComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    Transform.Position = node["Position"].as<glm::vec3>();
-    Transform.Rotation = node["Rotation"].as<glm::vec3>();
-    Transform.Scale = node["Scale"].as<glm::vec3>();            
+    GetYAMLValue(node, "Position", Transform.Position);
+    GetYAMLValue(node, "Rotation", Transform.Rotation);
+    GetYAMLValue(node, "Scale", Transform.Scale);
 }
 
 // Mesh Renderer Component
@@ -142,7 +152,7 @@ void MeshRendererComponent::Serialize(YAML::Emitter& out, const std::filesystem:
 }
 
 void MeshRendererComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    Color = node["Color"].as<glm::vec4>();
+    GetYAMLValue(node, "Color", Color);
     DeserializeTexture(node, TextureHandle, mask);
     DeserializeMesh(node, MeshHandle, mask);
 }
@@ -154,7 +164,7 @@ void QuadRendererComponent::Serialize(YAML::Emitter& out, const std::filesystem:
 }
 
 void QuadRendererComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    Color = node["Color"].as<glm::vec4>();
+    GetYAMLValue(node, "Color", Color);
     DeserializeTexture(node, TextureHandle, mask);
 }
 
@@ -167,9 +177,9 @@ void SpriteRendererComponent::Serialize(YAML::Emitter& out, const std::filesyste
 }
 
 void SpriteRendererComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    Color = node["Color"].as<glm::vec4>();
-    TopLeftCoord = node["TopLeftCoord"].as<glm::vec2>();
-    BottomRightCoord = node["BottomRightCoord"].as<glm::vec2>();
+    GetYAMLValue(node, "Color", Color);
+    GetYAMLValue(node, "TopLeftCoord", TopLeftCoord);
+    GetYAMLValue(node, "BottomRightCoord", BottomRightCoord);
     DeserializeTexture(node, TextureHandle, mask);
 }
 
@@ -194,12 +204,13 @@ void LuaScriptComponent::Deserialize(YAML::Node& node, const std::filesystem::pa
 // Point Light Component
 void PointLightComponent::Serialize(YAML::Emitter& out, const std::filesystem::path& mask) {
     out << YAML::Key << "Hue" << YAML::Value << Hue;
+    out << YAML::Key << "Intensity" << YAML::Value << Intensity;
 }
 
 void PointLightComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    Hue = node["Hue"].as<glm::vec4>();
+    GetYAMLValue(node, "Hue", Hue);
+    GetYAMLValue(node, "Intensity", Intensity);
 }
-
 
 //  Camera Component
 void CameraComponent::Serialize(YAML::Emitter& out, const std::filesystem::path& mask) {
@@ -207,5 +218,5 @@ void CameraComponent::Serialize(YAML::Emitter& out, const std::filesystem::path&
 }
 
 void CameraComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    IsMainCamera = node["IsMainCamera"].as<bool>();
+    GetYAMLValue(node, "IsMainCamera", IsMainCamera);
 }

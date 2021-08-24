@@ -143,6 +143,7 @@ static void DisplayEntity(Entity& entity) {
 
     DrawComponent<PointLightComponent>("Point Light", entity, [&](PointLightComponent& component) {
         ImGuiDefaults::DrawColorControl("Hue", component.Hue);
+        ImGuiDefaults::DrawFloat("Intensity", component.Intensity, 0.01f, 0.0f);
     });
 
     // New Component Button

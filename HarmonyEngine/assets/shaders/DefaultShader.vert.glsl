@@ -22,12 +22,11 @@ out float vTextureID;
 void main() {
 
     int modelID = int(objectID);
-    mat4 transformationMatrix = uTransformations[modelID];
 
-    vec4 worldPosition = transformationMatrix * vec4(position, 1.0f);
+    vec4 worldPosition = uTransformations[modelID] * vec4(position, 1.0f);
 
     vPosition = worldPosition.xyz;
-    vNormal = mat3(transpose(inverse(transformationMatrix))) * normal;
+    vNormal = mat3(transpose(inverse(uTransformations[modelID]))) * normal;
     vColor = color;
     vTextureCoord = textureCoord;
     vTextureID = textureID;

@@ -153,9 +153,11 @@ void Renderer::Render() {
         s_ScenePtr->ForEachEntityWithTransform<PointLightComponent>([&](TransformComponent& transform, PointLightComponent& lightComponent) {
             std::string positionCapture = "uPointLights[" + std::to_string(lightCount) + "].Position";
             std::string colorCapture = "uPointLights[" + std::to_string(lightCount) + "].Color";
+            std::string intensityCapture = "uPointLights[" + std::to_string(lightCount) + "].Intensity";
 
             s_Shader.AddUniformVec3(positionCapture.c_str(), transform.Transform.Position);
             s_Shader.AddUniformVec3(colorCapture.c_str(), lightComponent.Hue);
+            s_Shader.AddUniformFloat(intensityCapture.c_str(), lightComponent.Intensity);
 
             lightCount++;
         });

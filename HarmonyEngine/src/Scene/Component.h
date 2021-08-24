@@ -115,9 +115,11 @@ namespace HarmonyEngine {
     struct PointLightComponent : public Component {
 
         glm::vec4 Hue;
+        float Intensity = 1.0f;
 
         PointLightComponent() : Hue(1.0f) {}
         PointLightComponent(const glm::vec4& hue) : Hue(hue) {}
+        PointLightComponent(const glm::vec4& hue, float intensity) : Hue(hue), Intensity(intensity) {}
 
         void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
         void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;

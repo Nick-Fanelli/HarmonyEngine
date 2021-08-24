@@ -17,6 +17,7 @@ struct PointLight {
 
     vec3 Position;
     vec3 Color;
+    float Intensity;
 
 };
 
@@ -66,17 +67,18 @@ void main() {
 
         // Normalize the Normal
         vec3 normal = normalize(vNormal);
+        vec3 adjustedColor = uPointLights[i].Color * uPointLights[i].Intensity;
 
         // if(distance > 250.0f) { // TODO: Radius
 
         // Diffuse
         vec3 lightDir = normalize(uPointLights[i].Position - vPosition);
-        vec3 diffuse = max(dot(normal, lightDir), 0.0) * vColor.rgb * uPointLights[i].Color;
+        vec3 diffuse = max(dot(normal, lightDir), 0.0) * vColor.rgb * adjustedColor;
 
         // Specular
         vec3 halfwayDir = normalize(lightDir * uViewDirection);
         float spec = pow(max(dot(normalize(normal), halfwayDir), 0.0), 16.0);
-        vec3 specular = uPointLights[i].Color * spec;
+        vec3 specular = adjustedColor * spec;
 
         // Attenuation
         // float attenuation = 1.0 / (1.0 + LINEAR * dist + QUADRATIC * dist * dist);
