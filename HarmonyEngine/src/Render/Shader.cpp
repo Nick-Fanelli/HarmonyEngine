@@ -18,7 +18,7 @@ void Shader::AttachVertextShader(const std::string& source) {
     if(infoLogLength > 0) {
         std::vector<char> errorMessage(infoLogLength + 1);
         glGetShaderInfoLog(m_VertexID, infoLogLength, NULL, &errorMessage[0]);
-        HARMONY_ASSERT_MESSAGE(true, &errorMessage[0]);
+        HARMONY_ASSERT_MESSAGE(false, &errorMessage[0]);
     }
 
     Log::Info("Attaching Vertex Shader...");
@@ -42,7 +42,7 @@ void Shader::AttachFragmentShader(const std::string& source) {
     if(infoLogLength > 0) {
         std::vector<char> errorMessage(infoLogLength + 1);
         glGetShaderInfoLog(m_FragmentID, infoLogLength, NULL, &errorMessage[0]);
-        HARMONY_ASSERT_MESSAGE(true, &errorMessage[0]);
+        HARMONY_ASSERT_MESSAGE(false, &errorMessage[0]);
     }
 
     Log::Info("Attaching Fragment Shader...");
@@ -63,7 +63,7 @@ void Shader::Link() {
     if(infoLogLength > 0) {
         std::vector<char> errorMessage(infoLogLength + 1);
         glGetProgramInfoLog(m_ProgramID, infoLogLength, NULL, &errorMessage[0]);
-        HARMONY_ASSERT_MESSAGE(true, &errorMessage[0]);
+        HARMONY_ASSERT_MESSAGE(false, &errorMessage[0]);
     }
 
     glDetachShader(m_ProgramID, m_VertexID);

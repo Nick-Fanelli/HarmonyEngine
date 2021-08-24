@@ -31,29 +31,61 @@ out vec4 out_Color;
 
 void main() {
 
-    vec3 lighting = vColor.rgb * uAmbientIntensity; // 0.1 is the hard-coded ambient value
+    // vec3 ambient = vec3(1.0, 1.0, 1.0) * uAmbientIntensity;
+    // vec3 diffuse = vec3(1.0, 1.0, 1.0);
+    // vec3 specular = vec3(1.0, 1.0, 1.0);
+
+    // for(int i = 0; i < uPointLightCount; i++) {
+    //     PointLight light = uPointLights[i];
+
+    //     // Ambient
+    //     ambient += light.Color;
+
+    //     // Diffuse
+    //     vec3 norm = normalize(vNormal);
+    //     vec3 lightDir = normalize(light.Position - vPosition);
+    //     float diff = max(dot(norm, lightDir), 0.0);
+
+    // //     vec3 diffuse = max(dot(vNormal, lightDir), 0.0) * vColor.rgb * uPointLights[i].Color;
+
+
+    //     diffuse += diff * vColor * light.Color;
+
+    //     // Specular
+    //     float specularStrength = 0.5;
+    //     vec3 viewDir = normalize(uViewDirection - vPosition);
+    //     vec3 reflectDir = reflect(-lightDir, norm);
+    //     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    //     // specular += specularStrength * spec * light.Color;
+    // }
+
+    vec3 lightingResult = vColor.rgb * uAmbientIntensity;
 
     for(int i = 0; i < uPointLightCount; i++) {
-        float dist = length(uPointLights[i].Position - vPosition);
+        // float dist = length(uPointLights[i].Position - vPosition);
+
+        // Normalize the Normal
+        vec3 normal = normalize(vNormal);
 
         // if(distance > 250.0f) { // TODO: Radius
-        vec3 lightDir = normalize(uPointLights[i].Position - vPosition);
-        vec3 diffuse = max(dot(vNormal, lightDir), 0.0) * vColor.rgb * uPointLights[i].Color;
 
+        // Diffuse
+        vec3 lightDir = normalize(uPointLights[i].Position - vPosition);
+        vec3 diffuse = max(dot(normal, lightDir), 0.0) * vColor.rgb * uPointLights[i].Color;
+
+        // Specular
         vec3 halfwayDir = normalize(lightDir * uViewDirection);
-        float spec = pow(max(dot(vNormal, halfwayDir), 0.0), 16.0);
+        float spec = pow(max(dot(normalize(normal), halfwayDir), 0.0), 16.0);
         vec3 specular = uPointLights[i].Color * spec;
 
+        // Attenuation
         // float attenuation = 1.0 / (1.0 + LINEAR * dist + QUADRATIC * dist * dist);
 
         // diffuse *= attenuation;
         // specular *= attenuation;
-        lighting += diffuse + specular;
-
-            // Attenuation
-        // }
+        lightingResult += diffuse + specular;
 
     }
 
-    out_Color = vec4(lighting, 1.0) * texture(uTextures[int(vTextureID)], vTextureCoord);
+    out_Color = vec4(lightingResult, 1.0) * texture(uTextures[int(vTextureID)], vTextureCoord);
 }

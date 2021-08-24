@@ -1,5 +1,8 @@
 #version 400 core
 
+#define ZPI = 3.14159265358979323846f;
+#define RAD2DEG = (180.f / ZPI);
+
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec4 color;
@@ -19,11 +22,12 @@ out float vTextureID;
 void main() {
 
     int modelID = int(objectID);
+    mat4 transformationMatrix = uTransformations[modelID];
 
-    vec4 worldPosition = uTransformations[modelID] * vec4(position, 1.0f);
+    vec4 worldPosition = transformationMatrix * vec4(position, 1.0f);
 
     vPosition = worldPosition.xyz;
-    vNormal = mat3(transpose(inverse(uTransformations[modelID]))) * normal;
+    vNormal = mat3(transpose(inverse(transformationMatrix))) * normal;
     vColor = color;
     vTextureCoord = textureCoord;
     vTextureID = textureID;
