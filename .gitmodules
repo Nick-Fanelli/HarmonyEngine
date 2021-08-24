@@ -10,9 +10,6 @@
 [submodule "HarmonyEngine/vendor/yaml-cpp"]
 	path = HarmonyEngine/vendor/yaml-cpp
 	url = https://github.com/Nick-Fanelli/yaml-cpp.git
-[submodule "HarmonyEngine/vendor/nativefiledialog"]
-	path = HarmonyEngine/vendor/nativefiledialog
-	url = https://github.com/Nick-Fanelli/nativefiledialog.git
 [submodule "HarmonyEngine/vendor/ImGuizmo"]
 	path = HarmonyEngine/vendor/ImGuizmo
 	url = https://github.com/Nick-Fanelli/ImGuizmo.git
