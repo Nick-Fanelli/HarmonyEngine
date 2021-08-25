@@ -79,7 +79,7 @@ static bool DeserializeComponentYAML(YAML::detail::iterator_value& entityNode, E
     return false;
 }
 
-static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const std::string& name, const std::filesystem::path& mask) {
+static void DeserializeEntityYAML(YAML::detail::iterator_value& entityNode, Entity& entity, const std::filesystem::path& mask) {
 
     if(!DeserializeComponentYAML<TransformComponent>(entityNode, entity, TransformComponentID, mask)) {
         entity.RemoveComponent<TransformComponent>();
@@ -168,9 +168,13 @@ void SceneSerializer::DeserializeYAML(const std::filesystem::path& mask) {
             else
                 continue;
 
-            Entity deserializedEntity = m_ScenePtr->CreateEntity(name);
+            Entity deserializedEntity = m_ScenePtr->CreateEntity();
+            if(!entity[TagComponentID])
+                continue;
 
-            DeserializeEntityYAML(entity, deserializedEntity, name, mask);
+            DeserializeComponentYAML<TagComponent>(entity, deserializedEntity, TagComponentID, mask);
+
+            DeserializeEntityYAML(entity, deserializedEntity, mask);
         }   
     }
 

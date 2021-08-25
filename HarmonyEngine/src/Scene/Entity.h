@@ -32,7 +32,17 @@ namespace HarmonyEngine {
 
         template<typename T>
         bool ContainsComponent() {
-            return m_ScenePtr->m_Registry.has<T>(m_EntityID);
+            return m_ScenePtr->m_Registry.try_get<T>(m_EntityID);
+        }
+
+        template<typename T>
+        static T& GetComponent(Scene* scenePtr, entt::entity entityID) {
+
+            if(!scenePtr->m_Registry.try_get<T>(entityID)) {
+                HARMONY_ASSERT_MESSAGE(true, "Entity does not contain the requested component!")
+            }
+
+            return scenePtr->m_Registry.get<T>(entityID);
         }
 
         template<typename T>

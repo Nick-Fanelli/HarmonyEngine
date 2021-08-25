@@ -2,7 +2,6 @@
 
 #include "harmonypch.h"
 
-// #include "Component.h"
 #include "LuaScript.h"
 
 #include "../Render/Transform.h"
@@ -47,6 +46,7 @@ namespace HarmonyEngine {
         virtual void OnUpdate(float deltaTime);
         virtual void OnDestroy();
 
+        Entity CreateEntity();
         Entity CreateEntity(const std::string& name);
         Entity CreateEntity(const std::string& name, const Transform& transform);
 

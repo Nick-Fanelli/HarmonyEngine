@@ -85,16 +85,6 @@ static void DrawComponent(const char* componentName, Entity& entity, UIFunction 
     ImGui::PopID();
 }
 
-// template<typename ComponentType>
-// static void DrawAddComponentMenuItem(const char* componentName, Entity& entity) {
-//     if(!entity.ContainsComponent<ComponentType>()) {
-//         if(ImGui::MenuItem(componentName)) {
-//             entity.AddComponent<ComponentType>();
-//             ImGui::CloseCurrentPopup();
-//         }
-//     }
-// }
-
 static void DisplayEntity(Entity& entity) {
 
     if(!entity.ContainsComponent<TagComponent>())
@@ -205,7 +195,7 @@ void HierarchyEditorPanel::OnImGuiRender() {
                 m_IsSceneSelected = true;
             }
 
-            m_EditorScenePtr->GetSelectedScene().ForEachEntity([&] (auto entityID) {
+            m_EditorScenePtr->GetSelectedScene().ForEachEntity([&](auto entityID) {
                 Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };
                 AddToHierarchy(entity);
             });

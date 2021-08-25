@@ -27,9 +27,13 @@ namespace HarmonyEditor {
         void AddToHierarchy(Entity& entity);
         void DisplayScenePreferences();
 
+        void SortEntities();
+
     private:
         EditorScene* m_EditorScenePtr;
         Entity m_SelectedEntity{};
+
+        std::map<uint32_t, entt::entity> m_EntityMap;
 
         bool m_IsSceneSelected = false;
 

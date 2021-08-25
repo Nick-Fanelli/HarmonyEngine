@@ -2,7 +2,16 @@
 
 #include "Entity.h"
 
+#include "Component.h"
+
 using namespace HarmonyEngine;
+
+Entity Scene::CreateEntity() {
+    Entity entity = Entity(this, m_Registry.create());
+    entity.AddComponent<TagComponent>("Untitled Entity");
+    entity.AddComponent<TransformComponent>();
+    return entity;
+}
 
 Entity Scene::CreateEntity(const std::string& name) {
     Entity entity = Entity(this, m_Registry.create());
