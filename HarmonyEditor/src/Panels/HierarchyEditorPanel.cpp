@@ -35,7 +35,7 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
         if(ImGui::Selectable("Delete")) {
             if(m_SelectedEntity == entity)
                 m_SelectedEntity = {};
-            m_EditorScenePtr->GetSelectedScene().DeleteEntity(entity);
+            SceneManager::GetActiveScenePtr()->DeleteEntity(entity);
         }
 
         ImGui::EndPopup();
@@ -146,15 +146,15 @@ void HierarchyEditorPanel::DisplayScenePreferences() {
 
     static constexpr auto flags = ImGuiTreeNodeFlags_DefaultOpen;
 
-    static Scene& selectedScene = m_EditorScenePtr->GetSelectedScene();
+    static Scene* selectedScene = SceneManager::GetActiveScenePtr();
 
-    ImGuiDefaults::DrawTextInput("Scene Name", selectedScene.GetSceneName());
+    ImGuiDefaults::DrawTextInput("Scene Name", selectedScene->GetSceneName());
     ImGui::Separator();
 
     if(ImGui::TreeNodeEx("Renderer Settings", flags)) {
         ImGui::Indent();
 
-        ImGuiDefaults::DrawFloat("Ambient Intensity", selectedScene.GetAmbientIntensity(), 0.1f, 0.0f, 1.0f);
+        ImGuiDefaults::DrawFloat("Ambient Intensity", selectedScene->GetAmbientIntensity(), 0.1f, 0.0f, 1.0f);
 
         ImGui::Unindent();
         ImGui::TreePop();
@@ -166,7 +166,7 @@ void HierarchyEditorPanel::DisplayScenePreferences() {
         ImGui::Indent();
 
         ImGuiDefaults::PushColumnWidth(100.0f);
-        ImGuiDefaults::DrawLuaScriptControl("Global Script", selectedScene.GetGlobalScript());
+        ImGuiDefaults::DrawLuaScriptControl("Global Script", selectedScene->GetGlobalScript());
         ImGuiDefaults::PopColumnWidth();
 
         ImGui::Unindent();
@@ -183,20 +183,20 @@ void HierarchyEditorPanel::OnImGuiRender() {
         ImGui::Begin("Hierarchy", &Settings::ShowHierarchyPanel.CurrentValue);
 
         if(ImGui::Button("New Entity")) {
-            m_EditorScenePtr->GetSelectedScene().CreateEntity("Untitled Entity");
+            SceneManager::GetActiveScenePtr()->CreateEntity("Untitled Entity");
         }
 
         static constexpr auto flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-        if(ImGui::TreeNodeEx(m_EditorScenePtr->GetSelectedScene().GetSceneName().c_str(), flags | (m_IsSceneSelected ? ImGuiTreeNodeFlags_Selected : 0))) {
+        if(ImGui::TreeNodeEx(SceneManager::GetActiveScenePtr()->GetSceneName().c_str(), flags | (m_IsSceneSelected ? ImGuiTreeNodeFlags_Selected : 0))) {
 
             if(ImGui::IsItemClicked()) {
                 m_SelectedEntity = {};
                 m_IsSceneSelected = true;
             }
 
-            m_EditorScenePtr->GetSelectedScene().ForEachEntity([&](auto entityID) {
-                Entity entity = { &m_EditorScenePtr->GetSelectedScene(), entityID };
+            SceneManager::GetActiveScenePtr()->ForEachEntity([&](auto entityID) {
+                Entity entity = { SceneManager::GetActiveScenePtr(), entityID };
                 AddToHierarchy(entity);
             });
 

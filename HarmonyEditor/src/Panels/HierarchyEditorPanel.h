@@ -10,13 +10,13 @@ using namespace HarmonyEngine;
 
 namespace HarmonyEditor {
 
-    class EditorScene;
+    class EditorLayer;
 
     class HierarchyEditorPanel {
 
     public:
         HierarchyEditorPanel() = default;
-        HierarchyEditorPanel(EditorScene* editorScene) : m_EditorScenePtr(editorScene) {}
+        HierarchyEditorPanel(EditorLayer* editorLayer) : m_EditorLayerPtr(editorLayer) {}
 
         void OnImGuiRender();
 
@@ -30,14 +30,14 @@ namespace HarmonyEditor {
         void SortEntities();
 
     private:
-        EditorScene* m_EditorScenePtr;
+        EditorLayer* m_EditorLayerPtr;
         Entity m_SelectedEntity{};
 
         std::map<uint32_t, entt::entity> m_EntityMap;
 
         bool m_IsSceneSelected = false;
 
-        friend class EditorScene;
+        friend class EditorLayer;
 
     };
 

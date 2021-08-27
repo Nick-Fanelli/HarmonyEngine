@@ -57,7 +57,7 @@ void MenuBar::OnImGuiRender() {
 
             if(ImGui::MenuItem("New Project")) {
                 HarmonyEditorApplication::OpenFolderDialog([&](const std::filesystem::path& path) {
-                    m_EditorScenePtr->SetActiveProject({ path });
+                    m_EditorLayerPtr->SetActiveProject({ path });
                 });
             }
 
@@ -69,32 +69,32 @@ void MenuBar::OnImGuiRender() {
                         Log::Warn("Warning not a project; Status: returning!"); // TODO: Display with ImGui or some kind-of popup
                         return;
                     }
-                    m_EditorScenePtr->SetActiveProject({ path });
+                    m_EditorLayerPtr->SetActiveProject({ path });
                 });
             }
 
             if(ImGui::MenuItem("Open Scene")) {
                 HarmonyEditorApplication::OpenFileDialog({ "Harmony Scene File", "hyscene" }, [&](const std::filesystem::path& path) {
-                    m_EditorScenePtr->OpenScene(path);
+                    m_EditorLayerPtr->OpenScene(path);
                 });
             }
 
             ImGui::Separator();
 
             if(ImGui::MenuItem("Save Scene")) {
-                m_EditorScenePtr->SaveScene();
+                m_EditorLayerPtr->SaveScene();
             }
 
             if(ImGui::MenuItem("Save Scene As")) {
                 HarmonyEditorApplication::SaveFileDialog({ "Harmony Scene File", "hyscene" }, [&](const std::filesystem::path& path) {
                     FileUtils::CreateFile(path);
 
-                    m_EditorScenePtr->GetSelectedScene().SetSceneName(path.stem());
+                    SceneManager::GetActiveScenePtr()->SetSceneName(path.stem());
 
-                    SceneSerializer serializer = SceneSerializer(&m_EditorScenePtr->GetSelectedScene(), path);
-                    serializer.SerializeYAML(m_EditorScenePtr->GetActiveProject().GetProjectDirectory());
+                    SceneSerializer serializer = SceneSerializer(SceneManager::GetActiveScenePtr(), path);
+                    serializer.SerializeYAML(m_EditorLayerPtr->GetActiveProject().GetProjectDirectory());
 
-                    m_EditorScenePtr->OpenScene(path);
+                    m_EditorLayerPtr->OpenScene(path);
                 });
             }
 
@@ -110,7 +110,7 @@ void MenuBar::OnImGuiRender() {
 
         if(ImGui::BeginMenu("View")) {
             if(ImGui::MenuItem("Reset Camera View", "0"))
-                m_EditorScenePtr->GetEditorCamera().ResetView();
+                m_EditorLayerPtr->GetEditorCamera().ResetView();
 
             ImGui::EndMenu();
         }
@@ -149,27 +149,27 @@ void MenuBar::OnImGuiRender() {
 
         ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
 
-        if(m_EditorScenePtr->IsRunning())
+        if(m_EditorLayerPtr->IsRunning())
             ImGui::PushStyleColor(ImGuiStyleVar_Alpha, { 1.0f, 1.0f, 1.0f, 0.25f });
 
-        if(ImGui::ButtonEx("\uf04b", { menuBarHeight, menuBarHeight }, m_EditorScenePtr->IsRunning() ? ImGuiItemFlags_Disabled : 0)) { // Play Button
-            m_EditorScenePtr->StartRuntime();
-            if(m_EditorScenePtr->IsRunning())
+        if(ImGui::ButtonEx("\uf04b", { menuBarHeight, menuBarHeight }, m_EditorLayerPtr->IsRunning() ? ImGuiItemFlags_Disabled : 0)) { // Play Button
+            m_EditorLayerPtr->StartRuntime();
+            if(m_EditorLayerPtr->IsRunning())
                 ImGui::PushStyleColor(ImGuiStyleVar_Alpha, { 1.0f, 1.0f, 1.0f, 0.25f });
         }
 
-        if(!m_EditorScenePtr->IsRunning())
+        if(!m_EditorLayerPtr->IsRunning())
             ImGui::PushStyleColor(ImGuiStyleVar_Alpha, { 1.0f, 1.0f, 1.0f, 0.25f });
         else
             ImGui::PopStyleColor();
 
-        if(ImGui::ButtonEx("\uf04d", { menuBarHeight, menuBarHeight }, m_EditorScenePtr->IsRunning() ? 0 : ImGuiItemFlags_Disabled)) { // Stop Button
-            m_EditorScenePtr->StopRuntime();
-            if(!m_EditorScenePtr->IsRunning())
+        if(ImGui::ButtonEx("\uf04d", { menuBarHeight, menuBarHeight }, m_EditorLayerPtr->IsRunning() ? 0 : ImGuiItemFlags_Disabled)) { // Stop Button
+            m_EditorLayerPtr->StopRuntime();
+            if(!m_EditorLayerPtr->IsRunning())
                 ImGui::PushStyleColor(ImGuiStyleVar_Alpha, { 1.0f, 1.0f, 1.0f, 0.25f });
         }
 
-        ImGui::PopStyleColor(m_EditorScenePtr->IsRunning() ? 1 : 2);
+        ImGui::PopStyleColor(m_EditorLayerPtr->IsRunning() ? 1 : 2);
 
         // if(currentOperation == ImGuizmo::OPERATION::TRANSLATE)
         //     ImGui::PopStyleColor();

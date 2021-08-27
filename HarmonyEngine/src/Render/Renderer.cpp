@@ -19,8 +19,6 @@ static uint32_t s_MaxTextureCount;
 
 static GLuint s_WhiteTexture;
 
-Scene* Renderer::s_ScenePtr = nullptr;
-
 static int* s_TextureSlots;
 
 static glm::vec3 s_LightPosition = { 0, 15, 0 };
@@ -148,9 +146,9 @@ void Renderer::Render() {
     // Bind the lights
     int lightCount = 0;
 
-    if(s_ScenePtr != nullptr) {
+    if(SceneManager::GetActiveScenePtr() != nullptr) {
 
-        s_ScenePtr->ForEachEntityWithTransform<PointLightComponent>([&](TransformComponent& transform, PointLightComponent& lightComponent) {
+        SceneManager::GetActiveScenePtr()->ForEachEntityWithTransform<PointLightComponent>([&](TransformComponent& transform, PointLightComponent& lightComponent) {
             std::string positionCapture = "uPointLights[" + std::to_string(lightCount) + "].Position";
             std::string colorCapture = "uPointLights[" + std::to_string(lightCount) + "].Color";
             std::string intensityCapture = "uPointLights[" + std::to_string(lightCount) + "].Intensity";
@@ -166,7 +164,7 @@ void Renderer::Render() {
     s_Shader.AddUnformInt("uPointLightCount", lightCount);
     s_Shader.AddUniformVec3("uViewDirection", MasterRenderer::CameraPtr->GetPosition());
 
-    s_Shader.AddUniformFloat("uAmbientIntensity", s_ScenePtr->GetAmbientIntensity());
+    s_Shader.AddUniformFloat("uAmbientIntensity", SceneManager::GetActiveScenePtr()->GetAmbientIntensity());
 
     glBindVertexArray(s_Batch.VaoID); // Bind the VAO
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Batch.IboID); // Bind the indices

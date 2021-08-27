@@ -4,7 +4,7 @@
 
 #include <time.h>
 
-#include "../EditorScene.h"
+#include "../EditorLayer.h"
 #include "../Settings.h"
 
 #include "../ImGuiDefaults.h"
@@ -15,10 +15,10 @@ using namespace HarmonyEditor;
 static AssetsEditorPanel::AssetFile s_RootFile;
 static time_t s_Timer = time(0);
 
-static EditorScene* s_EditorScenePtr = nullptr;
+static EditorLayer* s_EditorLayerPtr = nullptr;
 
-AssetsEditorPanel::AssetsEditorPanel(EditorScene* editorScenePtr) : m_EditorScenePtr(editorScenePtr) {
-    s_EditorScenePtr = editorScenePtr;
+AssetsEditorPanel::AssetsEditorPanel(EditorLayer* editorLayerPtr) : m_EditorLayerPtr(editorLayerPtr) {
+    s_EditorLayerPtr = editorLayerPtr;
 
     SyncAssets();
 }
@@ -66,7 +66,7 @@ void AssetsEditorPanel::DrawFileImGui(const std::filesystem::path& parentPath, A
             ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf466 %s", child.GetRelativePath(parentPath).c_str());
 
             if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered()) {
-                s_EditorScenePtr->OpenScene(child.Filepath);
+                s_EditorLayerPtr->OpenScene(child.Filepath);
             }
 
             if(ImGui::BeginDragDropSource()) {
@@ -155,11 +155,11 @@ void AssetsEditorPanel::DrawFileImGui(const std::filesystem::path& parentPath, A
 void AssetsEditorPanel::SyncAssets() {
     HARMONY_PROFILE_FUNCTION();
     
-    if(m_EditorScenePtr->GetActiveProject().IsAssigned()) {
+    if(m_EditorLayerPtr->GetActiveProject().IsAssigned()) {
 
         s_RootFile.Children.clear();
 
-        s_RootFile = { m_EditorScenePtr->GetActiveProject().GetProjectAssetsDirectory(), AssetTypeDirectory };
+        s_RootFile = { m_EditorLayerPtr->GetActiveProject().GetProjectAssetsDirectory(), AssetTypeDirectory };
         LoadFile(s_RootFile);
 
     }
@@ -170,7 +170,7 @@ void AssetsEditorPanel::OnImGuiRender() {
 
     if(Settings::ShowAssetsPanel) {
 
-        if(m_EditorScenePtr->GetActiveProject().IsAssigned()) {
+        if(m_EditorLayerPtr->GetActiveProject().IsAssigned()) {
             if(difftime(time(0), s_Timer) >= 1) { // TODO: Configure as setting
                 SyncAssets();
                 s_Timer = time(0);
@@ -180,18 +180,18 @@ void AssetsEditorPanel::OnImGuiRender() {
         ImGui::Begin("Assets Browser", &Settings::ShowAssetsPanel.CurrentValue);
 
         for(auto& child : s_RootFile.Children) {
-            DrawFileImGui(m_EditorScenePtr->GetActiveProject().GetProjectAssetsDirectory(), child);
+            DrawFileImGui(m_EditorLayerPtr->GetActiveProject().GetProjectAssetsDirectory(), child);
         }
 
         ImGui::BeginChild("RightClickSelectable", ImGui::GetContentRegionAvail());        ImGui::EndChild();
         if(ImGui::BeginPopupContextItem("AssetsEditorPanelRightClickArea", ImGuiPopupFlags_MouseButtonRight)) {
             if(ImGui::Selectable("New Folder")) {
-                auto path = m_EditorScenePtr->GetActiveProject().GetProjectAssetsDirectory() / "Untitled Folder";
+                auto path = m_EditorLayerPtr->GetActiveProject().GetProjectAssetsDirectory() / "Untitled Folder";
                 
                 uint32_t i = 1;
 
                 while(std::filesystem::exists(path)) {
-                    path = m_EditorScenePtr->GetActiveProject().GetProjectAssetsDirectory() / (std::string("Untitled Folder ") + std::to_string(i));
+                    path = m_EditorLayerPtr->GetActiveProject().GetProjectAssetsDirectory() / (std::string("Untitled Folder ") + std::to_string(i));
                     if(i > 2000) {
                         Log::Error("You are kidding me!!! How do you have 2,000 untitled folders!!!?!?!?!\n\tStatus: Breaking");
                         break; 

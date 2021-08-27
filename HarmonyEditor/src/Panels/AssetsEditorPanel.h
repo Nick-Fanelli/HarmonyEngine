@@ -6,13 +6,13 @@ using namespace HarmonyEngine;
 
 namespace HarmonyEditor {
 
-    class EditorScene;
+    class EditorLayer;
 
     class AssetsEditorPanel {
 
     public: 
         AssetsEditorPanel() = default;
-        AssetsEditorPanel(EditorScene* editorScenePtr);
+        AssetsEditorPanel(EditorLayer* editorLayerPtr);
 
         void OnImGuiRender();
         void SyncAssets();
@@ -51,7 +51,7 @@ namespace HarmonyEditor {
     private:
         void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& child);
 
-        EditorScene* m_EditorScenePtr;
+        EditorLayer* m_EditorLayerPtr;
 
     };
 
