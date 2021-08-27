@@ -21,7 +21,7 @@ std::string ConfirmationWindow::s_PopupMessage;
 std::function<void(bool)> ConfirmationWindow::s_FunctionPtr;
 std::function<void()> ConfirmationWindow::s_VoidFunctionPtr;
 
-void ConfirmationWindow::Confirm(const std::string& windowTitle, const std::string& message, std::function<void(bool)> functionPtr) {
+void ConfirmationWindow::Confirm(const std::string& message, std::function<void(bool)> functionPtr) {
     s_PopupMessage = message;
     s_FunctionPtr = functionPtr;
     s_UseVoidFunctionPtr = false;
@@ -29,7 +29,7 @@ void ConfirmationWindow::Confirm(const std::string& windowTitle, const std::stri
     s_ShouldOpen = true;
 }
 
-void ConfirmationWindow::Confirm(const std::string& windowTitle, const std::string& message, std::function<void()> functionPtr) {
+void ConfirmationWindow::Confirm(const std::string& message, std::function<void()> functionPtr) {
     s_PopupMessage = message;
     s_VoidFunctionPtr = functionPtr;
     s_UseVoidFunctionPtr = true;

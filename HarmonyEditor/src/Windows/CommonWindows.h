@@ -31,8 +31,8 @@ namespace HarmonyEditor {
 
         ConfirmationWindow(const ConfirmationWindow&) = delete;
 
-        static void Confirm(const std::string& windowTitle, const std::string& message, std::function<void(bool)> functionPtr);
-        static void Confirm(const std::string& windowTitle, const std::string& message, std::function<void()> functionPtr);
+        static void Confirm(const std::string& message, std::function<void(bool)> functionPtr);
+        static void Confirm(const std::string& message, std::function<void()> functionPtr);
 
     private:
         static void OnImGuiRender();

@@ -8,41 +8,11 @@
 #include "../Settings.h"
 
 #include "../ImGuiDefaults.h"
+#include "../Windows/CommonWindows.h"
 
 using namespace HarmonyEditor;
 
-enum AssetType {
-    AssetTypeUnknown,
-    AssetTypeDirectory,
-    AssetTypeTexture,
-    AssetTypeObject,
-    AssetTypeHarmonyScene,
-    AssetTypeLuaScript
-};
-
-struct AssetFile {
-
-    std::filesystem::path Filepath;
-    std::vector<AssetFile> Children;
-    AssetType AssetType;
-    bool ShouldShow = true;
-
-    AssetFile() = default;
-    AssetFile(const std::filesystem::path& path, enum AssetType assetType) : Filepath(path), AssetType(assetType) {}
-
-    const std::filesystem::path& GetRelativePath(const std::filesystem::path& parentPath) {
-        if(m_RelativePath.empty())  
-            m_RelativePath = std::filesystem::relative(Filepath, parentPath);
-
-        return m_RelativePath;
-    }
-
-private:
-    std::filesystem::path m_RelativePath;
-
-};
-
-static AssetFile s_RootFile;
+static AssetsEditorPanel::AssetFile s_RootFile;
 static time_t s_Timer = time(0);
 
 static EditorScene* s_EditorScenePtr = nullptr;
@@ -53,27 +23,27 @@ AssetsEditorPanel::AssetsEditorPanel(EditorScene* editorScenePtr) : m_EditorScen
     SyncAssets();
 }
 
-static void LoadFile(AssetFile& parent) {
+static void LoadFile(AssetsEditorPanel::AssetFile& parent) {
     HARMONY_PROFILE_FUNCTION();
 
     for(const auto& childEntry : std::filesystem::directory_iterator(parent.Filepath)) {
         if(childEntry.is_directory()) {
-            auto& childAssetFile = parent.Children.emplace_back(childEntry.path(), AssetTypeDirectory);
+            auto& childAssetFile = parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeDirectory);
             LoadFile(childAssetFile);
         } else {
 
             static const std::regex imageRegex("[^\\s]+(.*?)\\.(jpg|jpeg|png|gif|bmp|tga|psd|hdr|pic|pnm|JPG|JPEG|PNG|GIF|BMP|TGA|PSD|HDR|PIC|PNM)$");
 
             if(childEntry.path().extension() == ".hyscene") {
-                parent.Children.emplace_back(childEntry.path(), AssetTypeHarmonyScene);
+                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeHarmonyScene);
             } else if(childEntry.path().extension() == ".obj") {
-                parent.Children.emplace_back(childEntry.path(), AssetTypeObject);
+                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeObject);
             } else if(childEntry.path().extension() == ".lua") {
-                parent.Children.emplace_back(childEntry.path(), AssetTypeLuaScript);
+                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeLuaScript);
             } else if(std::regex_match(childEntry.path().c_str(), imageRegex)) {
-                parent.Children.emplace_back(childEntry.path(), AssetTypeTexture);
+                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeTexture);
             } else {
-                parent.Children.emplace_back(childEntry.path(), AssetTypeUnknown);
+                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeUnknown);
             }
         }
     }
@@ -81,13 +51,10 @@ static void LoadFile(AssetFile& parent) {
 
 static std::filesystem::path s_TempPath;
 
-static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& child) {
+void AssetsEditorPanel::DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& child) {
     HARMONY_PROFILE_FUNCTION();
 
     static constexpr auto flags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-
-    if(!child.ShouldShow)
-        return;
 
     bool isOpened = false; 
 
@@ -164,11 +131,13 @@ static void DrawFileImGui(const std::filesystem::path& parentPath, AssetFile& ch
 
     if(ImGui::BeginPopupContextItem(child.Filepath.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
         if(ImGui::Selectable("Delete")) {
-            if(!std::filesystem::remove_all(child.Filepath)) {
-                Log::Warn("Didn't Delete File");
-            }
-            
-            child.ShouldShow = false;
+            ConfirmationWindow::Confirm("Are you sure you want to delete this file? It can not be returned!", [this, child]() {
+                if(!std::filesystem::remove_all(child.Filepath)) {
+                    Log::Warn("Didn't Delete File");
+                }
+
+                SyncAssets();
+            });
         }
 
         ImGui::EndPopup();
