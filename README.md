@@ -21,16 +21,17 @@ Currently *Harmony Engine* is begin developed on MacOS however, with a few quick
 
 ## Highlight Features
 * 3D Rendering
-* 2D Rendering Support
+* 2D Rendering
 * Editor based workflow
 * Lua Scripting
 * Drag and Drop Assets Functionality
+* Serialization System
 
 ## Short-Term Goals
 * Editor Mouse Picking
 * Integration with Operating System *(eg. file recognition, etc.)*
 * Editor Undo/Redo System
-* Engine Runtime
+* Engine Runtime (halfway done)
 
 ## Long-Term Goals
 * Compile *Harmony Engine/Editor* to a Window Executable File.
