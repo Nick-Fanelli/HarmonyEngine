@@ -5,7 +5,74 @@
 using namespace HarmonyEditor;
 
 void CommonWindows::OnImGuiRender() {
+    ConfirmationWindow::OnImGuiRender();
     NewComponentWindow::OnImGuiRender();
+}
+
+// Confirmation Window
+
+const char* ConfirmationWindow::s_PopupWindowTitle = "Confirmation Window";
+
+bool ConfirmationWindow::s_ShouldOpen = false;
+bool ConfirmationWindow::s_UseVoidFunctionPtr = false;
+
+std::string ConfirmationWindow::s_PopupMessage;
+
+std::function<void(bool)> ConfirmationWindow::s_FunctionPtr;
+std::function<void()> ConfirmationWindow::s_VoidFunctionPtr;
+
+void ConfirmationWindow::Confirm(const std::string& windowTitle, const std::string& message, std::function<void(bool)> functionPtr) {
+    s_PopupMessage = message;
+    s_FunctionPtr = functionPtr;
+    s_UseVoidFunctionPtr = false;
+
+    s_ShouldOpen = true;
+}
+
+void ConfirmationWindow::Confirm(const std::string& windowTitle, const std::string& message, std::function<void()> functionPtr) {
+    s_PopupMessage = message;
+    s_VoidFunctionPtr = functionPtr;
+    s_UseVoidFunctionPtr = true;
+
+    s_ShouldOpen = true;
+}
+
+void ConfirmationWindow::OnImGuiRender() {
+
+    static constexpr auto flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings 
+                                | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+
+    if(s_ShouldOpen) {
+        ImGui::OpenPopup(s_PopupWindowTitle);
+        ImGui::SetNextWindowSize({ 300.0f, 125.0f }, ImGuiCond_Appearing);
+
+        s_ShouldOpen = false;
+    }
+
+    if(ImGui::BeginPopupModal(s_PopupWindowTitle, NULL, flags)) {
+
+        ImGui::TextWrapped("%s", s_PopupMessage.c_str());
+
+        ImGui::SetCursorPosY(ImGui::GetWindowHeight() - 35.0f); // 10px padding
+
+        if(ImGui::Button("Cancel", { 75.0f, 25.0f })) {
+            ImGui::CloseCurrentPopup();
+            if(!s_UseVoidFunctionPtr)
+                s_FunctionPtr(false);
+        }
+
+        ImGui::SameLine();
+
+        if(ImGui::Button("Confirm", { 75.0f, 25.0f })) {
+            ImGui::CloseCurrentPopup();
+            if(s_UseVoidFunctionPtr)
+                s_VoidFunctionPtr();
+            else
+                s_FunctionPtr(true);
+        }
+
+        ImGui::EndPopup();
+    }
 }
 
 // New Component Windows
