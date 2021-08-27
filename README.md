@@ -2,8 +2,8 @@
 
 **Harmony Engine** is currently a *3D and 2D game engine* in development with hopes to one day be a standalone game engine that can be used to *develop 3D or 2D games*.
 
-![Image of Harmony Engine v0.3.0 (Jul 25, 2021)](screenshots/harmony-engine-window-v0-3-0.png)
-<p align="center"><i>Image of Harmony Engine v0.3.0 (Aug 16, 2021)</i></p>
+![Image of Harmony Engine v0.3.0 (Jul 25, 2021)](screenshots/harmony-engine-window.png)
+<p align="center"><i>Image of Harmony Engine SNAPSHOT v0.6.0 (Aug 27, 2021)</i></p>
 
 <br />
 
