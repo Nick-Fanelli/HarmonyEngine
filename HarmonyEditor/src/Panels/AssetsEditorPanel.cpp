@@ -34,16 +34,19 @@ static void LoadFile(AssetsEditorPanel::AssetFile& parent) {
 
             static const std::regex imageRegex("[^\\s]+(.*?)\\.(jpg|jpeg|png|gif|bmp|tga|psd|hdr|pic|pnm|JPG|JPEG|PNG|GIF|BMP|TGA|PSD|HDR|PIC|PNM)$");
 
-            if(childEntry.path().extension() == ".hyscene") {
-                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeHarmonyScene);
-            } else if(childEntry.path().extension() == ".obj") {
-                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeObject);
-            } else if(childEntry.path().extension() == ".lua") {
-                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeLuaScript);
-            } else if(std::regex_match(childEntry.path().c_str(), imageRegex)) {
-                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeTexture);
+            auto& path = childEntry.path();
+            auto extension = path.extension();
+
+            if(extension == ".hyscene") {
+                parent.Children.emplace_back(path, AssetsEditorPanel::AssetTypeHarmonyScene);
+            } else if(extension == ".obj") {
+                parent.Children.emplace_back(path, AssetsEditorPanel::AssetTypeObject);
+            } else if(extension == ".lua") {
+                parent.Children.emplace_back(path, AssetsEditorPanel::AssetTypeLuaScript);
+            } else if(std::regex_match(path.c_str(), imageRegex)) {
+                parent.Children.emplace_back(path, AssetsEditorPanel::AssetTypeTexture);
             } else {
-                parent.Children.emplace_back(childEntry.path(), AssetsEditorPanel::AssetTypeUnknown);
+                parent.Children.emplace_back(path, AssetsEditorPanel::AssetTypeUnknown);
             }
         }
     }

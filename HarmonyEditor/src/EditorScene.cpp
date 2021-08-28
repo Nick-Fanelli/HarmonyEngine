@@ -5,6 +5,8 @@ using namespace HarmonyEditor;
 static PerspectiveCamera s_Camera;
 
 void EditorScene::OnCreate() {
+    HARMONY_PROFILE_FUNCTION();
+
     m_SceneName = "Untitled Scene";
 
     m_RenderLayer = RenderLayer(&s_Camera, this);
@@ -15,6 +17,8 @@ void EditorScene::OnCreate() {
 }
 
 void EditorScene::OnUpdate(float deltaTime) {
+    HARMONY_PROFILE_FUNCTION();
+
     m_EditorLayer.OnUpdate(deltaTime);
 
     m_RenderLayer.Begin();
@@ -23,6 +27,8 @@ void EditorScene::OnUpdate(float deltaTime) {
 }
 
 void EditorScene::OnDestroy() {
+    HARMONY_PROFILE_FUNCTION();
+
     m_RenderLayer.OnDestroy();
     m_EditorLayer.OnDestroy();
 }
