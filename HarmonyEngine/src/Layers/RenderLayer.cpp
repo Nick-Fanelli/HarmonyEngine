@@ -22,11 +22,6 @@ static void RenderComponent(Scene* scene, RenderFunction renderFunction) {
         renderFunction(component, transform.Transform);
     });
 
-    // auto rendererGroup = scene->GetRegistry().group<ComponentType>(entt::get<TransformComponent>);
-    // for(auto& entity : rendererGroup) {
-    //     auto[renderer, transform] = rendererGroup.template get<ComponentType, TransformComponent>(entity);
-    //     renderFunction(renderer, transform.Transform);
-    // }
 }
 
 void RenderLayer::Begin() {
@@ -57,6 +52,8 @@ void RenderLayer::Render() {
 }
 
 void RenderLayer::End() {
+    HARMONY_PROFILE_FUNCTION();
+
     Renderer2D::EndBatch();
     MasterRenderer::End();
 }

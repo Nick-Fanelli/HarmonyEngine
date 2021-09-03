@@ -179,12 +179,12 @@ void EditorLayer::DrawGameViewport() {
 
 #if HARMONY_DEBUG
     if(MasterRenderer::GetUseFramebuffer())
-        s_Camera.SetViewportSize(wsize.x, wsize.y);
+        MasterRenderer::CameraPtr->SetAspectRatio(wsize.x / wsize.y);
     else
-        s_Camera.SetViewportSize(Display::GetWidth(), Display::GetHeight());
+        MasterRenderer::CameraPtr->SetAspectRatio(Display::GetWidth() / Display::GetHeight());
 
 #else
-    s_Camera.SetViewportSize(wsize.x, wsize.y);
+    MasterRenderer::CameraPtr->SetAspectRatio(wsize.x / wsize.y);
 #endif
 
         ImGui::Image((void*)(intptr_t) *m_EditorScenePtr->GetRenderLayer().GetRenderTexture(), wsize, { 0.0, 1.0 }, { 1.0, 0.0 });
@@ -197,8 +197,8 @@ void EditorLayer::DrawGameViewport() {
 
             ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, (float) ImGui::GetWindowWidth(), (float) ImGui::GetWindowHeight());
 
-            const glm::mat4& cameraProjection = s_Camera.GetProjctionMatrix();
-            glm::mat4 cameraView = s_Camera.GetViewMatrix();
+            const glm::mat4& cameraProjection = s_Camera.GetProjectionMatrix();
+            const glm::mat4& cameraView = s_Camera.GetViewMatrix();
 
             auto& transformComponent = s_HierarchyEditorPanel.GetSelectedEntity().GetComponent<TransformComponent>();
 
@@ -233,12 +233,10 @@ void EditorLayer::StartRuntime() {
     if(s_SceneSerializer.IsAssigned()) {
         SaveScene();
 
-        m_EditorScenePtr->ForEachEntityWithTransform<CameraComponent>([&](TransformComponent& transform, CameraComponent& component) {
-            if(component.IsMainCamera) {
-                component.Camera.SetPosition(transform.Transform.Position);
-                MasterRenderer::CameraPtr = &component.Camera;
-                return;
-            }
+        m_EditorScenePtr->ForEachEntityWithTransform<OrthographicCameraComponent>([&](TransformComponent& transform, OrthographicCameraComponent& component) {
+            component.Camera.SetPosition(transform.Transform.Position);
+            MasterRenderer::CameraPtr = &component.Camera;
+            return;
         });
 
         m_EditorScenePtr->GetGlobalScript().OnCreate();

@@ -2,7 +2,7 @@
 
 using namespace HarmonyEditor;
 
-static PerspectiveCamera s_Camera;
+static Camera s_Camera;
 
 void EditorScene::OnCreate() {
     HARMONY_PROFILE_FUNCTION();

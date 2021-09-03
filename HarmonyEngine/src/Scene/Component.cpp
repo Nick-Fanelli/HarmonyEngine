@@ -185,11 +185,11 @@ void PointLightComponent::Deserialize(YAML::Node& node, const std::filesystem::p
     GetYAMLValue(node, "Intensity", Intensity);
 }
 
-//  Camera Component
-void CameraComponent::Serialize(YAML::Emitter& out, const std::filesystem::path& mask) {
-    out << YAML::Key << "IsMainCamera" << YAML::Value << IsMainCamera;
+// Orthographic Camera Component
+void OrthographicCameraComponent::Serialize(YAML::Emitter& out, const std::filesystem::path& mask) {
+
 }
 
-void CameraComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    GetYAMLValue(node, "IsMainCamera", IsMainCamera);
+void OrthographicCameraComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
+    
 }

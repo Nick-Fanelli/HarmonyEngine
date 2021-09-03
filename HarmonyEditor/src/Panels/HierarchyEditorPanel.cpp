@@ -99,17 +99,15 @@ static void DisplayEntity(Entity& entity) {
         ImGuiDefaults::DrawVector3("Scale", component.Transform.Scale, 1.0f);
     });
 
-    DrawComponent<CameraComponent>("Camera Component", entity, [&](CameraComponent& component) {
-        // TODO: Make sure that there is only one main camera!
-        ImGuiDefaults::DrawBool("Is Main", component.IsMainCamera);
+    DrawComponent<OrthographicCameraComponent>("Orthographic Camera", entity, [](OrthographicCameraComponent& component) {
     });
 
-    DrawComponent<QuadRendererComponent>("Quad Renderer", entity, [&](QuadRendererComponent& component) {  
+    DrawComponent<QuadRendererComponent>("Quad Renderer", entity, [](QuadRendererComponent& component) {  
         ImGuiDefaults::DrawColorControl("Color", component.Color);
         ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
     });
 
-    DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [&](SpriteRendererComponent& component) {
+    DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](SpriteRendererComponent& component) {
         ImGuiDefaults::DrawColorControl("Color", component.Color);
         ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
 
@@ -121,11 +119,11 @@ static void DisplayEntity(Entity& entity) {
         ImGuiDefaults::PopColumnWidth();
     });
 
-    DrawComponent<LuaScriptComponent>("Lua Script", entity, [&](LuaScriptComponent& component) {
+    DrawComponent<LuaScriptComponent>("Lua Script", entity, [](LuaScriptComponent& component) {
         ImGuiDefaults::DrawLuaScriptControl("Lua Script", component.Script);
     });
 
-    DrawComponent<PointLightComponent>("Point Light", entity, [&](PointLightComponent& component) {
+    DrawComponent<PointLightComponent>("Point Light", entity, [](PointLightComponent& component) {
         ImGuiDefaults::DrawColorControl("Hue", component.Hue);
         ImGuiDefaults::DrawFloat("Intensity", component.Intensity, 0.01f, 0.0f);
     });

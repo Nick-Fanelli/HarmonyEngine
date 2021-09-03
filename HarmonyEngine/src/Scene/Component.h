@@ -109,15 +109,12 @@ namespace HarmonyEngine {
         void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
     };
 
-    struct CameraComponent : public Component {
+    struct OrthographicCameraComponent : public Component {
 
-        PerspectiveCamera Camera;
-        bool IsMainCamera = false;
-
-        CameraComponent() = default;
+        OrthographicCamera Camera;
 
         void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
-        void Deserialize(YAML::Node& out, const std::filesystem::path& mask) override;
+        void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
 
     };
 

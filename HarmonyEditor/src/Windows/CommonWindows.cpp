@@ -144,7 +144,7 @@ void NewComponentWindow::OnImGuiRender() {
             filter.Draw("", ImGui::GetContentRegionAvailWidth());
 
             DrawComponent<TransformComponent>("Transform", s_CurrentEntity, filter);
-            DrawComponent<CameraComponent>("Camera", s_CurrentEntity, filter);
+            DrawComponent<OrthographicCameraComponent>("Orthographic Camera", s_CurrentEntity, filter);
             DrawComponent<QuadRendererComponent>("Quad Renderer", s_CurrentEntity, filter);
             DrawComponent<SpriteRendererComponent>("Sprite Renderer", s_CurrentEntity, filter);
             DrawComponent<LuaScriptComponent>("Lua Script", s_CurrentEntity, filter);

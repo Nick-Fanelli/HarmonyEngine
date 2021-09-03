@@ -124,7 +124,7 @@ void Renderer2D::Render() {
     HARMONY_PROFILE_FUNCTION();
 
     s_Shader.Bind();
-    s_Shader.AddUniformMat4("uViewProjectionMatrix", MasterRenderer::CameraPtr->GetProjectViewMatrix());
+    s_Shader.AddUniformMat4("uViewProjectionMatrix", MasterRenderer::CameraPtr->GetProjectionViewMatrix());
     s_Shader.AddUniformIntArray("uTextures", s_Batch.TextureIndex, s_TextureSlots);
 
     for(int i = 0; i < s_Batch.TextureIndex; i++) {
