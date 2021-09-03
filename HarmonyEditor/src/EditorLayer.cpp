@@ -13,6 +13,7 @@
 #include <Layers/RenderLayer.h>
 
 #include <Render/MasterRenderer.h>
+#include <Render/Renderer2D.h>
 
 #include "HarmonyEditor.h"
 #include "EditorCamera.h"
@@ -329,12 +330,10 @@ void EditorLayer::OnUpdate(float deltaTime) {
 
     CommonWindows::OnImGuiRender();
 
-    s_ImGuiLayer.End();
+    if(Settings::ShowRendererStats)
+        RendererStats::DrawImGUIStats(&Settings::ShowRendererStats.CurrentValue);
 
-    // // Render Layer
-    // s_RenderLayer.Begin();
-    // s_RenderLayer.Render();
-    // s_RenderLayer.End();
+    s_ImGuiLayer.End();
 }
 
 void EditorLayer::OnDestroy() {

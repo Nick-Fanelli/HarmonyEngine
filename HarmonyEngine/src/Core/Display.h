@@ -56,6 +56,15 @@ namespace HarmonyEngine {
             return { x, y };
         }
 
+        static void SetVSync(bool value) {
+            if(s_Window == nullptr) {
+                Log::Error("Can not set V-Sync before the display is created!\n\tStatus Returning!");
+                return;
+            }
+
+            glfwSwapInterval(value);
+        }
+
         static const float GetAspectWidth() { return DisplayAspect.x; }
         static const float GetAspectHeight() { return DisplayAspect.y; }
         static const glm::vec2& GetRawDisplayAspect() { return DisplayAspect; }

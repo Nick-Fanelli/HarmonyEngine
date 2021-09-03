@@ -121,7 +121,7 @@ void Display::CreateDisplay(const char* title, const glm::vec2& displaySize) {
 
     glEnable(GL_CULL_FACE);
 
-    // glfwSetInputMode(s_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSwapInterval(1); // Enable V-Sync
 
     Log::Success("Created the GLFW Display!");
 

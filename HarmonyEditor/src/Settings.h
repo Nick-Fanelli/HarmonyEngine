@@ -53,10 +53,13 @@ namespace HarmonyEditor {
         static Setting<bool> ShowHierarchyPanel;
         static Setting<bool> ShowComponentsPanel;
         static Setting<bool> ShowAssetsPanel;
+        static Setting<bool> ShowRendererStats;
 
         static std::unordered_map<std::string, Setting<bool>*> AllShowPanelSettings;
 
         // Displayed
+        static Setting<bool> VSyncEnabled;
+
         static Setting<int> EditorTheme;
 
         static Setting<int> EditorInputStyle;

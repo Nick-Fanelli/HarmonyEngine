@@ -11,10 +11,11 @@ using namespace HarmonyEditor;
 
 // Non-Displayed
 Setting<bool> Settings::ShowViewportPanel = true;
-Setting<bool> Settings::ShowSettingsPanel = true;
+Setting<bool> Settings::ShowSettingsPanel = false;
 Setting<bool> Settings::ShowHierarchyPanel = true;
 Setting<bool> Settings::ShowComponentsPanel = true;
 Setting<bool> Settings::ShowAssetsPanel = true;
+Setting<bool> Settings::ShowRendererStats = false;
 
 std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings = {
 
@@ -22,11 +23,14 @@ std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings =
     { "ShowSettingsPanel", &Settings::ShowSettingsPanel },
     { "ShowHierarchyPanel", &Settings::ShowHierarchyPanel },
     { "ShowComponentsPanel", &Settings::ShowComponentsPanel },
-    { "ShowAssetsPanel", &Settings::ShowAssetsPanel }
+    { "ShowAssetsPanel", &Settings::ShowAssetsPanel },
+    { "ShowRendererStats", &Settings::ShowRendererStats }
 
 };
 
 // Displayed
+Setting<bool> Settings::VSyncEnabled = true;
+
 Setting<int> Settings::EditorTheme = 1; // Dark
 
 Setting<int> Settings::EditorInputStyle = EditorCamera::InputStyle::InputStyleDefault;
@@ -58,6 +62,8 @@ void SettingsManager::LoadSettings() {
     for(auto& entry : Settings::AllShowPanelSettings)
         DeserializeSetting(root, *entry.second, entry.first.c_str());
 
+    DeserializeSetting(root, Settings::VSyncEnabled, "VSyncEnabled");
+
     DeserializeSetting(root, Settings::EditorTheme, "EditorTheme");
 
     DeserializeSetting(root, Settings::EditorInputStyle, "EditorInputStyle");
@@ -71,6 +77,8 @@ void SettingsManager::SaveSettings() {
 
     for(auto& entry : Settings::AllShowPanelSettings)
         SerializeSetting(out, *entry.second, entry.first.c_str());
+
+    SerializeSetting(out, Settings::VSyncEnabled, "VSyncEnabled");
 
     SerializeSetting(out, Settings::EditorTheme, "EditorTheme");
 
@@ -108,6 +116,14 @@ void SettingsManager::OnImGuiRender() {
         ImGui::Begin("Settings", &Settings::ShowSettingsPanel.CurrentValue);
 
         if(ImGui::CollapsingHeader("General")) {
+            DrawSetting(Settings::VSyncEnabled, []() {
+                if(ImGuiDefaults::DrawBool("Enable V-Sync", Settings::VSyncEnabled.CurrentValue)) {
+                    Display::SetVSync(Settings::VSyncEnabled);
+                }
+            });
+        }
+
+        if(ImGui::CollapsingHeader("Appearance")) {
             DrawSetting(Settings::EditorTheme, []() {
                 ImGuiDefaults::DrawComboSelection("Theme", Settings::EditorTheme.CurrentValue, Theme::ThemePreset, Theme::ThemePresetCount);
             });

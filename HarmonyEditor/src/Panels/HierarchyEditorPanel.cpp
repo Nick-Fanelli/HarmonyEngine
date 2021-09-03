@@ -102,7 +102,7 @@ static void DisplayEntity(Entity& entity) {
     DrawComponent<OrthographicCameraComponent>("Orthographic Camera", entity, [](OrthographicCameraComponent& component) {
         ImGuiDefaults::DrawFloat("Zoom", component.Camera.GetZoomRef(), 0.1f, static_cast<float>(NULL), static_cast<float>(NULL), "%.1f");
 
-        ImGui::Separator();
+        ImGui::Spacing();
 
         ImGuiDefaults::DrawFloat("Near Clip", component.Camera.GetNearClipRef(), 0.1f, 0.0f);
         ImGuiDefaults::DrawFloat("Far Clip", component.Camera.GetFarClipRef(), 0.1f, 0.0f);

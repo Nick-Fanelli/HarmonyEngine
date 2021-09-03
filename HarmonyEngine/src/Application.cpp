@@ -18,11 +18,18 @@ Application::~Application() {
         HARMONY_PROFILE_END_SESSION(); // Shutdown
 }
 
+void Application::CreateDisplay() {
+    Display::CreateDisplay(m_ApplicationName.c_str());
+}
+
 void Application::StartApplication(Scene& scene) {
     // ========================================================================
     // Create Display and Set Active Scene
     // ========================================================================
-    Display::CreateDisplay(m_ApplicationName.c_str());
+
+    if(Display::GetWindowPtr() == nullptr)
+        Display::CreateDisplay(m_ApplicationName.c_str());
+
     SceneManager::SetActiveScene(&scene);
 
     HARMONY_PROFILE_END_SESSION(); // End Startup

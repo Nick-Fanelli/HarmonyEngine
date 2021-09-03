@@ -137,6 +137,12 @@ void MenuBar::OnImGuiRender() {
                 ImGui::EndMenu();
             }
 
+            if(ImGui::BeginMenu("Debug Panels")) {
+                ImGui::MenuItem("Renderer Stats", NULL, &Settings::ShowRendererStats.CurrentValue);
+
+                ImGui::EndMenu();
+            }
+
             ImGui::EndMenu();
         }
 

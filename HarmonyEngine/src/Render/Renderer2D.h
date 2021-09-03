@@ -12,8 +12,6 @@
 
 namespace HarmonyEngine {
 
-    class Renderer;
-
     static const std::array<glm::vec4, 4> DefaultColor = {
         glm::vec4(1, 1, 1, 1),
         glm::vec4(1, 1, 1, 1),
@@ -92,15 +90,17 @@ namespace HarmonyEngine {
         static void DrawImGUIStats(bool* open) {
             ImGui::Begin("Renderer Stats", open);
 
-
             static const GLubyte* openglVersion = glGetString(GL_VERSION);
             static const GLubyte* graphicsVendor = glGetString(GL_VENDOR);
             static const GLubyte* graphicsRenderer = glGetString(GL_RENDERER);
 
             ImGui::Text("Rendering Type: OpenGL");
             ImGui::Text("OpenGL Version: %s", openglVersion);
+
+            ImGui::Spacing();
+
             ImGui::Text("Graphics Vendor: %s", graphicsVendor);
-            ImGui::Text("Graphics Renderer: %s", graphicsRenderer);
+            ImGui::Text("Graphics Card: %s", graphicsRenderer);
 
             ImGui::Spacing();
 
@@ -117,7 +117,6 @@ namespace HarmonyEngine {
 
     private:
 
-        friend class Renderer;
         friend class Renderer2D;
 
         static size_t BatchCount;

@@ -16,6 +16,7 @@ namespace HarmonyEngine {
         
         ~Application();
 
+        void CreateDisplay();
         void StartApplication(Scene& scene);
 
     private:
