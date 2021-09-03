@@ -1,8 +1,5 @@
 #include "Assets.h"
 
-#include "Render/Renderer.h"
-#include "Render/ObjectLoader.h"
-
 using namespace HarmonyEngine;
 
 // ==========================================================================================
@@ -34,41 +31,11 @@ AssetHandle<Texture> AssetManager::CreateTexture(const std::filesystem::path& fi
     return AssetHandle<Texture>(&texture);
 }
 
-
-AssetHandle<Mesh> AssetManager::GetMesh(const std::filesystem::path& filepath) {
-    for(auto& asset : m_AssetRegistry<Mesh>) {
-        if(asset.GetFilepath() == filepath)
-            return AssetHandle<Mesh>(&asset);
-    }
-
-    return AssetHandle<Mesh>(&m_AssetRegistry<Mesh>.emplace_back(filepath, filepath));
-}
-
-AssetHandle<Mesh> AssetManager::CreateMesh(const std::filesystem::path& filepath) {
-    for(auto& asset : m_AssetRegistry<Mesh>) {
-        if(asset.GetFilepath() == filepath) {
-            if(!asset.GetRawAsset()->IsCreated())
-                OBJLoader::LoadOBJFile(filepath, asset.GetRawAsset());
-            return AssetHandle<Mesh>(&asset);
-        }
-    }
-
-    auto& mesh = m_AssetRegistry<Mesh>.emplace_back(filepath, filepath);
-    OBJLoader::LoadOBJFile(filepath, mesh.GetRawAsset());
-    return AssetHandle<Mesh>(&mesh);
-}
-
 void AssetManager::CreateAll() {
     // Textures
     for(auto& texture : m_AssetRegistry<Texture>) {
         if(!texture.GetRawAsset()->IsCreated())
             texture.GetRawAsset()->Create();
-    }
-
-    // Meshes
-    for(auto& mesh : m_AssetRegistry<Mesh>) {
-        if(!mesh.GetRawAsset()->IsCreated())
-            OBJLoader::LoadOBJFile(mesh.GetFilepath(), mesh.GetRawAsset());
     }
 }
 
@@ -79,5 +46,4 @@ void AssetManager::DestroyAll() {
     }
 
     m_AssetRegistry<Texture>.clear(); // Clear all textures
-    m_AssetRegistry<Mesh>.clear(); // Clear and Destroy Mesh Data
 }

@@ -1,7 +1,6 @@
 #include "RenderLayer.h"
 
 #include "../Render/MasterRenderer.h"
-#include "../Render/Renderer.h"
 #include "../Render/Renderer2D.h"
 
 #include "../Scene/Component.h"
@@ -35,7 +34,6 @@ void RenderLayer::Begin() {
 
     MasterRenderer::Begin();
     Renderer2D::StartBatch();
-    Renderer::StartBatch();
 }
 
 void RenderLayer::Render() {
@@ -56,21 +54,10 @@ void RenderLayer::Render() {
         else
             Renderer2D::DrawQuad(transform, renderer.Color);
     });
-
-    // Mesh Renderer
-    RenderComponent<MeshRendererComponent>(m_ScenePtr, [&](MeshRendererComponent& renderer, Transform& transform) {
-        if(!renderer.MeshHandle.IsAssigned())
-            return;
-        if(renderer.TextureHandle.IsAssigned())
-            Renderer::DrawMesh(transform, renderer.MeshHandle, renderer.TextureHandle, renderer.Color);
-        else
-            Renderer::DrawMesh(transform, renderer.MeshHandle, renderer.Color);
-    });
 }
 
 void RenderLayer::End() {
     Renderer2D::EndBatch();
-    Renderer::EndBatch();
     MasterRenderer::End();
 }
 

@@ -39,8 +39,6 @@ static void LoadFile(AssetsEditorPanel::AssetFile& parent) {
 
             if(extension == ".hyscene") {
                 parent.Children.emplace_back(path, AssetsEditorPanel::AssetTypeHarmonyScene);
-            } else if(extension == ".obj") {
-                parent.Children.emplace_back(path, AssetsEditorPanel::AssetTypeObject);
             } else if(extension == ".lua") {
                 parent.Children.emplace_back(path, AssetsEditorPanel::AssetTypeLuaScript);
             } else if(std::regex_match(path.c_str(), imageRegex)) {
@@ -92,20 +90,6 @@ void AssetsEditorPanel::DrawFileImGui(const std::filesystem::path& parentPath, A
                 ImGui::SetDragDropPayload(ImGuiDefaults::TexturePathDragDropID, &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
 
                 ImGui::Text("%s %s", "\uf1c5", child.Filepath.filename().c_str());
-
-                ImGui::EndDragDropSource();
-            }
-
-            break;
-        case AssetTypeObject:   
-            ImGui::TreeNodeEx(child.Filepath.c_str(), flags, "\uf1b2 %s", child.GetRelativePath(parentPath).c_str());
-
-            if(ImGui::BeginDragDropSource()) {
-                s_TempPath = child.Filepath;
-
-                ImGui::SetDragDropPayload(ImGuiDefaults::ObjectPathDragDropID, &s_TempPath, sizeof(s_TempPath), ImGuiCond_Once);
-
-                ImGui::Text("%s %s", "\uf1b2", child.Filepath.filename().c_str());
 
                 ImGui::EndDragDropSource();
             }

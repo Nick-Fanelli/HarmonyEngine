@@ -99,26 +99,12 @@ static void SerializeTexture(YAML::Emitter& out, AssetHandle<Texture>& textureHa
         out << YAML::Key << "Texture" << YAML::Value << std::filesystem::relative(textureHandle->GetFilepath(), mask);
 }
 
-static void SerializeMesh(YAML::Emitter& out, AssetHandle<Mesh>& meshHandle, const std::filesystem::path& mask) {
-    if(meshHandle.IsAssigned())
-        out << YAML::Key << "Mesh" << YAML::Value << std::filesystem::relative(meshHandle->Filepath, mask);
-}
-
 static void DeserializeTexture(YAML::Node& node, AssetHandle<Texture>& textureHandle, const std::filesystem::path& mask) {
     if(!node["Texture"])
         return;
     if(auto textureNode = node["Texture"]) {
         auto textureFilepath = mask / (textureNode.as<std::string>());
         textureHandle = AssetManager::GetTexture(textureFilepath);
-    }
-}
-
-static void DeserializeMesh(YAML::Node& node, AssetHandle<Mesh>& meshHandle, const std::filesystem::path& mask) {
-    if(!node["Mesh"])
-        return;
-    if(auto meshNode = node["Mesh"]) {
-        auto meshFilepath = mask / (meshNode.as<std::string>());
-        meshHandle = AssetManager::GetMesh(meshFilepath);
     }
 }
 
@@ -142,19 +128,6 @@ void TransformComponent::Deserialize(YAML::Node& node, const std::filesystem::pa
     GetYAMLValue(node, "Position", Transform.Position);
     GetYAMLValue(node, "Rotation", Transform.Rotation);
     GetYAMLValue(node, "Scale", Transform.Scale);
-}
-
-// Mesh Renderer Component
-void MeshRendererComponent::Serialize(YAML::Emitter& out, const std::filesystem::path& mask) {
-    out << YAML::Key << "Color" << YAML::Value << Color;
-    SerializeTexture(out, TextureHandle, mask);
-    SerializeMesh(out, MeshHandle, mask);
-}
-
-void MeshRendererComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    GetYAMLValue(node, "Color", Color);
-    DeserializeTexture(node, TextureHandle, mask);
-    DeserializeMesh(node, MeshHandle, mask);
 }
 
 // Quad Renderer Component

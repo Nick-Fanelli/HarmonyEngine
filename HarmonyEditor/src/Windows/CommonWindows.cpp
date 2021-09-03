@@ -146,7 +146,6 @@ void NewComponentWindow::OnImGuiRender() {
             DrawComponent<TransformComponent>("Transform", s_CurrentEntity, filter);
             DrawComponent<CameraComponent>("Camera", s_CurrentEntity, filter);
             DrawComponent<QuadRendererComponent>("Quad Renderer", s_CurrentEntity, filter);
-            DrawComponent<MeshRendererComponent>("Mesh Renderer", s_CurrentEntity, filter);
             DrawComponent<SpriteRendererComponent>("Sprite Renderer", s_CurrentEntity, filter);
             DrawComponent<LuaScriptComponent>("Lua Script", s_CurrentEntity, filter);
             DrawComponent<PointLightComponent>("Point Light", s_CurrentEntity, filter);

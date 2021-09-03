@@ -6,9 +6,11 @@
 
 #include "LuaScript.h"
 
+#include "../Core/Assets.h"
+
 #include "../Render/Transform.h"
-#include "../Render/Renderer.h"
 #include "../Render/Camera.h"
+#include "../Render/Texture.h"
 
 namespace HarmonyEngine {
 
@@ -45,24 +47,6 @@ namespace HarmonyEngine {
 
         void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
         void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
-    };
-
-    struct MeshRendererComponent : public Component {
-
-        AssetHandle<Mesh> MeshHandle;
-        AssetHandle<Texture> TextureHandle;
-        glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-        MeshRendererComponent() = default;
-        MeshRendererComponent(const MeshRendererComponent&) = default;
-
-        MeshRendererComponent(const AssetHandle<Mesh>& mesh) : MeshHandle(mesh) {}
-        MeshRendererComponent(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture) : MeshHandle(mesh), TextureHandle(texture) {}
-        MeshRendererComponent(const AssetHandle<Mesh>& mesh, const AssetHandle<Texture>& texture, const glm::vec4& color) : MeshHandle(mesh), TextureHandle(texture), Color(color) {}
-
-        void Serialize(YAML::Emitter& out, const std::filesystem::path& mask) override;
-        void Deserialize(YAML::Node& node, const std::filesystem::path& mask) override;
-
     };
 
     struct QuadRendererComponent : public Component {

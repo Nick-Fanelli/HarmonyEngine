@@ -4,7 +4,6 @@
 
 #include <list>
 
-#include "Render/Mesh.h"
 #include "Render/Texture.h"
 
 namespace HarmonyEngine {
@@ -79,9 +78,6 @@ namespace HarmonyEngine {
 
         static AssetHandle<Texture> GetTexture(const std::filesystem::path& filepath);
         static AssetHandle<Texture> CreateTexture(const std::filesystem::path& filepath);
-
-        static AssetHandle<Mesh> GetMesh(const std::filesystem::path& filepath);
-        static AssetHandle<Mesh> CreateMesh(const std::filesystem::path& filepath);
 
         static void CreateAll();
         static void DestroyAll();

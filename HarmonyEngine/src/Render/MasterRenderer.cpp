@@ -1,6 +1,5 @@
 #include "MasterRenderer.h"
 
-#include "Renderer.h"
 #include "Renderer2D.h"
 
 using namespace HarmonyEngine;
@@ -22,12 +21,10 @@ void MasterRenderer::OnCreate(Camera* cameraPtr) {
 
     CameraPtr = cameraPtr;
 
-    Renderer::OnCreate();
     Renderer2D::OnCreate();
 }
 
 void MasterRenderer::OnDestroy() {
-    Renderer::OnDestroy();
     Renderer2D::OnDestroy();
 }
 

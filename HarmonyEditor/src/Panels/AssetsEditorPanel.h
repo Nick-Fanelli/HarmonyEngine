@@ -22,7 +22,6 @@ namespace HarmonyEditor {
             AssetTypeUnknown,
             AssetTypeDirectory,
             AssetTypeTexture,
-            AssetTypeObject,
             AssetTypeHarmonyScene,
             AssetTypeLuaScript
         };

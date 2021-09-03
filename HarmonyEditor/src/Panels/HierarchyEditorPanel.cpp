@@ -109,12 +109,6 @@ static void DisplayEntity(Entity& entity) {
         ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
     });
 
-    DrawComponent<MeshRendererComponent>("Mesh Renderer", entity, [&](MeshRendererComponent& component) {
-        ImGuiDefaults::DrawColorControl("Color", component.Color);
-        ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
-        ImGuiDefaults::DrawMeshControl("Mesh", component.MeshHandle);
-    });
-
     DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [&](SpriteRendererComponent& component) {
         ImGuiDefaults::DrawColorControl("Color", component.Color);
         ImGuiDefaults::DrawTextureControl("Texture", component.TextureHandle);
