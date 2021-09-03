@@ -14,6 +14,7 @@ namespace HarmonyEditor {
         EditorCamera() {
             UpdateView();
             UpdateProjection();
+            m_FarClip = 2000.0f;
         }
 
         inline bool IsInOperation() const { return m_IsInOperation; }
@@ -48,9 +49,9 @@ namespace HarmonyEditor {
         float GetPitch() const { return m_Pitch; }
         float GetYaw() const { return m_Yaw; }
 
-    protected:
         void UpdateProjection() override;
         void UpdateView() override;
+    protected:
 
         void MousePan(const glm::vec2& delta);
         void MouseRotate(const glm::vec2& delta);

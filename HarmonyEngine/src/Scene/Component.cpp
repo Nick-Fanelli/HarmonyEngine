@@ -187,9 +187,9 @@ void PointLightComponent::Deserialize(YAML::Node& node, const std::filesystem::p
 
 // Orthographic Camera Component
 void OrthographicCameraComponent::Serialize(YAML::Emitter& out, const std::filesystem::path& mask) {
-
+    out << YAML::Key << "Zoom" << YAML::Value << Camera.GetZoom();
 }
 
 void OrthographicCameraComponent::Deserialize(YAML::Node& node, const std::filesystem::path& mask) {
-    
+    GetYAMLValue(node, "Zoom", Camera.GetZoomRef());
 }

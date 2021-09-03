@@ -29,10 +29,9 @@ namespace HarmonyEngine {
         inline float GetNearClip() const { return m_NearClip; }
         inline float GetFarClip() const { return m_FarClip; }
 
-        float& GetNearClip() { return m_NearClip; }
-        float& GetFarClip() { return m_FarClip; }
+        float& GetNearClipRef() { return m_NearClip; }
+        float& GetFarClipRef() { return m_FarClip; }
 
-    protected:
         virtual void UpdateProjection() {}
         virtual void UpdateView() {}
 
@@ -50,9 +49,15 @@ namespace HarmonyEngine {
     public:
         OrthographicCamera();
 
-    protected:
+        void SetZoom(float zoom) { m_Zoom = zoom; UpdateProjection(); }
+
+        inline float GetZoom() const { return m_Zoom; }
+        float& GetZoomRef() { return m_Zoom; }
+
         void UpdateProjection() override;
         void UpdateView() override;
 
+    private:
+        float m_Zoom = 0.0f;
     };
 }

@@ -8,7 +8,7 @@
 using namespace HarmonyEngine;
 
 namespace HarmonyEditor::ImGuiDefaults {
-    
+
     extern const char* TexturePathDragDropID;
     extern const char* ObjectPathDragDropID;
     extern const char* HarmonyScenePathDragDropID;
@@ -22,11 +22,11 @@ namespace HarmonyEditor::ImGuiDefaults {
     void PushColumnWidth(float width);
     void PopColumnWidth();
 
-    void DrawFloat(const std::string& label, float& value, float speed = 1.0f, float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max(), const char* format = "%.3f");
+    void DrawFloat(const std::string& label, float& value, float speed = 1.0f, float min = static_cast<float>(NULL), float max = static_cast<float>(NULL), const char* format = "%.3f");
     void DrawBool(const std::string& label, bool& value);
 
     void DrawTextInput(const std::string& label, std::string& value);
-    void DrawVector2(const std::string& label, glm::vec2& values, float resetValue = 0.0f, float min = std::numeric_limits<float>::min(), float max = std::numeric_limits<float>::max());
+    void DrawVector2(const std::string& label, glm::vec2& values, float resetValue = 0.0f, float min = static_cast<float>(NULL), float max = static_cast<float>(NULL));
     void DrawVector3(const std::string& label, glm::vec3& values, float resetValue = 0.0f);
 
     void DrawColorControl(const std::string& label, glm::vec4& values);

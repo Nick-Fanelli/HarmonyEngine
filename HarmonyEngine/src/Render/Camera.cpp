@@ -9,7 +9,7 @@ OrthographicCamera::OrthographicCamera() {
 }
 
 void OrthographicCamera::UpdateProjection() {
-    m_ProjectionMatrix = glm::ortho(-m_AspectRatio, m_AspectRatio, -1.0f, 1.0f, m_NearClip, m_FarClip);
+    m_ProjectionMatrix = glm::ortho(-m_AspectRatio + m_Zoom, m_AspectRatio - m_Zoom, -1.0f + m_Zoom, 1.0f - m_Zoom, m_NearClip, m_FarClip);
 }
 
 void OrthographicCamera::UpdateView() {

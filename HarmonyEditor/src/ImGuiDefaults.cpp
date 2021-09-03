@@ -34,7 +34,8 @@ void ImGuiDefaults::DrawFloat(const std::string& label, float& value, float spee
     ImGui::SetColumnWidth(0, ColumnWidth * 3.0f);
     ImGui::Text("%s", label.c_str());
     ImGui::NextColumn();
-    ImGui::DragFloat("", &value, speed, min, max, format);
+    ImGui::DragFloat("##", &value, speed, min, max, format);
+
     ImGui::Columns(1);
 
     ImGui::PopID();
