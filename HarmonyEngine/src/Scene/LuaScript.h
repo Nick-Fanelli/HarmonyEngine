@@ -24,6 +24,8 @@ namespace HarmonyEngine {
         void OnUpdate(float deltaTime);
         void OnDestroy();
 
+        void Reload();
+
         bool IsAssigned() const { return m_IsAssigned; }
         const std::filesystem::path& GetFilepath() const { return m_Filepath; }
 

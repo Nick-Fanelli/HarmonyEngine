@@ -65,6 +65,11 @@ int NativeGetMousePosition(lua_State* L) {
     return 1;
 } 
 
+void LuaScript::Reload() {
+    if(m_Filepath != "" && std::filesystem::exists(m_Filepath))
+        LoadGlobalScript(m_Filepath);
+}
+
 void LuaScript::LoadGlobalScript(const std::filesystem::path& scriptPath) {
 
     HARMONY_PROFILE_FUNCTION();

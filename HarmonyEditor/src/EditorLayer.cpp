@@ -240,6 +240,7 @@ void EditorLayer::StartRuntime() {
             return;
         });
 
+        m_EditorScenePtr->GetGlobalScript().Reload();
         m_EditorScenePtr->GetGlobalScript().OnCreate();
         m_IsRunning = true;
     }

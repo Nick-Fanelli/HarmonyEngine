@@ -177,11 +177,11 @@ function Vector2.__tostring(a)
     return "[" .. a.x .. ", " .. a.y .. "]"
 end
 
-function Vector2:clone()
+function Vector2.clone()
     return Vector2.new(self.x, self.y)
 end
 
-function Vector2:unpack()
+function Vector2.unpack()
     return self.x, self.y
 end
 
