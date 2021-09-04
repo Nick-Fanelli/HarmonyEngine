@@ -1,6 +1,6 @@
 # HarmonyEngine
 
-**Harmony Engine** is currently a *3D and 2D game engine* in development with hopes to one day be a standalone game engine that can be used to *develop 3D or 2D games*.
+**Harmony Engine** is currently a *3D Game Engine* with primarily 2D support in development with hopes to one day be a standalone game engine that can be used to *develop 3D or 2D games*. **The current focus** is to develop a complete 2D game engine then extend it to also work in 3D.
 
 ![Image of Harmony Engine v0.3.0 (Jul 25, 2021)](screenshots/harmony-engine-window.png)
 <p align="center"><i>Image of Harmony Engine SNAPSHOT v0.6.0 (Aug 27, 2021)</i></p>
@@ -20,7 +20,6 @@ Currently *Harmony Engine* is begin developed on MacOS however, with a few quick
 ---
 
 ## Highlight Features
-* 3D Rendering
 * 2D Rendering
 * Editor based workflow
 * Lua Scripting
@@ -31,13 +30,13 @@ Currently *Harmony Engine* is begin developed on MacOS however, with a few quick
 * Editor Mouse Picking
 * Integration with Operating System *(eg. file recognition, etc.)*
 * Editor Undo/Redo System
-* Engine Runtime (halfway done)
 
 ## Long-Term Goals
-* Compile *Harmony Engine/Editor* to a Window Executable File.
 * Audio Support
-* Ability to work with external applications. *(eg. Blender, Maya, Photoshop, etc.)*
+* Compile *Harmony Engine/Editor* to a Window Executable File.
 * Ability to compile a Harmony Project into a native executable. *(meaning you will be able to run your project outside of Harmony Engine)* 
+* Full 3D Rendering Support
+* Ability to work with external applications. *(eg. Blender, Maya, Photoshop, etc.)*
 * Mobile platform support
 
 ---
