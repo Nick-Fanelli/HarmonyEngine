@@ -34,31 +34,6 @@ namespace HarmonyEngine {
 
     };
 
-    struct Quad {
-
-        Vertex2D V0;
-        Vertex2D V1;
-        Vertex2D V2;
-        Vertex2D V3;
-
-        Quad() = default;
-
-        Quad(const glm::vec3& position, const glm::vec2& scale = { 1, 1 }, const std::array<glm::vec4, 4>& colorArray = DefaultColor, int textureID = 0) : 
-        V0(position, colorArray[0], {0, 0}, textureID),
-        V1(glm::vec3(position.x, position.y + scale.y, position.z), colorArray[1], {0, 1}, textureID),
-        V2(glm::vec3(position.x + scale.x, position.y + scale.y, position.z), colorArray[2], {1, 1}, textureID),
-        V3(glm::vec3(position.x + scale.x, position.y, position.z), colorArray[3], {1, 0}, textureID)
-        {} 
-
-        Quad(const glm::vec3& position, const glm::vec2& scale = { 1, 1 }, const glm::vec4& color = { 1, 1, 1, 1}, int textureID = 0) :
-        V0(position, color, {0, 0}, textureID),
-        V1(glm::vec3(position.x, position.y + scale.y, position.z), color, {0, 1}, textureID),
-        V2(glm::vec3(position.x + scale.x, position.y + scale.y, position.z), color, {1, 1}, textureID),
-        V3(glm::vec3(position.x + scale.x, position.y, position.z), color, {1, 0}, textureID)
-        {}
-
-    };
-
     struct RenderBatch2D {
         GLuint VaoID = 0;
         GLuint VboID = 0;

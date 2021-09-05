@@ -120,6 +120,15 @@ void Renderer2D::OnCreate() {
 #endif
 }
 
+void Renderer2D::UpdateBatchVertexData() {
+    HARMONY_PROFILE_FUNCTION();
+
+    GLsizeiptr size = (uint8_t*) s_Batch.VertexPtr - (uint8_t*) s_Batch.Vertices;
+
+    glBindBuffer(GL_ARRAY_BUFFER, s_Batch.VboID);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Batch.Vertices);
+}
+
 void Renderer2D::Render() {
     HARMONY_PROFILE_FUNCTION();
 
@@ -157,15 +166,6 @@ void Renderer2D::Render() {
 
     s_Shader.Unbind(); // Unbind the Shader
 #endif
-}
-
-void Renderer2D::UpdateBatchVertexData() {
-    HARMONY_PROFILE_FUNCTION();
-
-    GLsizeiptr size = (uint8_t*) s_Batch.VertexPtr - (uint8_t*) s_Batch.Vertices;
-
-    glBindBuffer(GL_ARRAY_BUFFER, s_Batch.VboID);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Batch.Vertices);
 }
 
 void Renderer2D::AllocateVertices(int amount) {

@@ -114,12 +114,12 @@ void Display::CreateDisplay(const char* title, const glm::vec2& displaySize) {
     glViewport(0, 0, screenWidth, screenHeight);
 
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_MULTISAMPLE);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glEnable(GL_CULL_FACE);
 
     glfwSwapInterval(1); // Enable V-Sync
 

@@ -36,10 +36,7 @@ void RenderLayer::Render() {
 
     // Quad Renderer
     RenderComponent<QuadRendererComponent>(m_ScenePtr, [&](QuadRendererComponent& renderer, Transform& transform) {
-        if(renderer.TextureHandle.IsAssigned())
-            Renderer2D::DrawQuad(transform, renderer.Color, renderer.TextureHandle);
-        else
-            Renderer2D::DrawQuad(transform, renderer.Color);
+        m_QuadRenderData.push_back({transform, renderer.Color, renderer.TextureHandle});
     });
 
     // Sprite Renderer
@@ -49,6 +46,17 @@ void RenderLayer::Render() {
         else
             Renderer2D::DrawQuad(transform, renderer.Color);
     });
+
+    std::sort(m_QuadRenderData.begin(), m_QuadRenderData.end(), CompareQuadRenderData);
+
+    for(auto& renderData : m_QuadRenderData) {
+        if(renderData.TextureHandle->IsAssigned())
+            Renderer2D::DrawQuad(*renderData.Transform, *renderData.Color, *renderData.TextureHandle);
+        else
+            Renderer2D::DrawQuad(*renderData.Transform, *renderData.Color);
+    }
+
+    m_QuadRenderData.clear();
 }
 
 void RenderLayer::End() {
