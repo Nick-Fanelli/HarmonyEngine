@@ -3,7 +3,10 @@
 #include <harmonypch.h>
 
 #include "../Core/Assets.h"
+
 #include "../Render/Camera.h"
+#include "../Render/MasterRenderer.h"
+
 #include "../Scene/Scene.h"
 
 namespace HarmonyEngine {
@@ -36,7 +39,7 @@ namespace HarmonyEngine {
         };
 
         static bool CompareQuadRenderData(const QuadRenderData& lhs, const QuadRenderData& rhs) {
-            return lhs.Transform->Position.z < rhs.Transform->Position.z;
+            return glm::length(MasterRenderer::CameraPtr->GetPosition().z - lhs.Transform->Position.z) > glm::length(MasterRenderer::CameraPtr->GetPosition().z - rhs.Transform->Position.z);
         }
     
     private:

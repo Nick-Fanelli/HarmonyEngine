@@ -47,7 +47,11 @@ void RenderLayer::Render() {
             Renderer2D::DrawQuad(transform, renderer.Color);
     });
 
-    std::sort(m_QuadRenderData.begin(), m_QuadRenderData.end(), CompareQuadRenderData);
+    
+    {
+        HARMONY_PROFILE_SCOPE("RenderLayer::QuadSortingAlgorithm");
+        std::sort(m_QuadRenderData.begin(), m_QuadRenderData.end(), CompareQuadRenderData);
+    }
 
     for(auto& renderData : m_QuadRenderData) {
         if(renderData.TextureHandle->IsAssigned())

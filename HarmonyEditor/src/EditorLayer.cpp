@@ -176,20 +176,20 @@ void EditorLayer::DrawGameViewport() {
 
     ImGui::BeginChild("Render"); {
 
-    ImVec2 wsize = ImGui::GetWindowSize();
+        ImVec2 wsize = ImGui::GetWindowSize();
 
 #if HARMONY_DEBUG
-    if(MasterRenderer::GetUseFramebuffer())
-        MasterRenderer::CameraPtr->SetAspectRatio(wsize.x / wsize.y);
-    else
-        MasterRenderer::CameraPtr->SetAspectRatio(Display::GetWidth() / Display::GetHeight());
+        if(MasterRenderer::GetUseFramebuffer())
+            MasterRenderer::CameraPtr->SetAspectRatio(wsize.x / wsize.y);
+        else
+            MasterRenderer::CameraPtr->SetAspectRatio(Display::GetWidth() / Display::GetHeight());
 
 #else
-    MasterRenderer::CameraPtr->SetAspectRatio(wsize.x / wsize.y);
+        MasterRenderer::CameraPtr->SetAspectRatio(wsize.x / wsize.y);
 #endif
 
         ImGui::Image((void*)(intptr_t) *m_EditorScenePtr->GetRenderLayer().GetRenderTexture(), wsize, { 0.0, 1.0 }, { 1.0, 0.0 });
-
+        
         // ImGuizmo
         if(s_HierarchyEditorPanel.GetSelectedEntity() && s_HierarchyEditorPanel.GetSelectedEntity().ContainsComponent<TransformComponent>() && !m_IsRunning) {
 

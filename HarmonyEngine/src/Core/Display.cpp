@@ -106,6 +106,8 @@ void Display::CreateDisplay(const char* title, const glm::vec2& displaySize) {
     glfwSetCursorPosCallback(s_Window, Input::MousePositionCallback);
     glfwSetScrollCallback(s_Window, Input::MouseScrollCallback);
 
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
     if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         Log::Error("Failed to initialize GLAD");
         return;

@@ -29,6 +29,8 @@ namespace HarmonyEngine {
         inline float GetNearClip() const { return m_NearClip; }
         inline float GetFarClip() const { return m_FarClip; }
 
+        inline const glm::vec3& GetPosition() const { return m_Position; }
+
         float& GetNearClipRef() { return m_NearClip; }
         float& GetFarClipRef() { return m_FarClip; }
 
