@@ -24,6 +24,7 @@
 
 #include "Panels/HierarchyEditorPanel.h"
 #include "Panels/AssetsEditorPanel.h"
+#include "Panels/ComponentsEditorPanel.h"
 
 #include "Windows/CommonWindows.h"
 
@@ -33,6 +34,8 @@ static ImGuiLayer s_ImGuiLayer;
 
 static HierarchyEditorPanel s_HierarchyEditorPanel;
 static AssetsEditorPanel s_AssetsEditorPanel;
+static ComponentsEditorPanel s_ComponentsEditorPanel;
+
 static MenuBar s_MenuBar;
 
 static EditorCamera s_Camera;
@@ -69,9 +72,11 @@ void EditorLayer::OnCreate() {
 
     s_This = this;
 
-    s_MenuBar = this;
-    s_HierarchyEditorPanel = this;
-    s_AssetsEditorPanel = this;
+    s_MenuBar = { this };
+    s_HierarchyEditorPanel = { this };
+    s_AssetsEditorPanel = { this };
+
+    s_ComponentsEditorPanel = { &s_HierarchyEditorPanel };
 
     std::string iniSaveLocation = std::filesystem::path(HarmonyEditorApplication::GetApplicationSupportDirectory()) / "window-layout.ini";
 
@@ -326,6 +331,7 @@ void EditorLayer::OnUpdate(float deltaTime) {
 
     s_HierarchyEditorPanel.OnImGuiRender();
     s_AssetsEditorPanel.OnImGuiRender();
+    s_ComponentsEditorPanel.OnImGuiRender();
 
     SettingsManager::OnImGuiRender();
 
