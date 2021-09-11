@@ -5,6 +5,8 @@
 
 using namespace HarmonyEngine;
 
+size_t Texture::s_TextureAllocations = 0;
+
 static GLuint s_NullTextureID = -1;
 static bool s_Setup = false;
 
@@ -64,10 +66,12 @@ void Texture::Create() {
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
+    s_TextureAllocations++;
 }
 
 void Texture::Delete() {
     if(m_TextureID == s_NullTextureID)
         return;
     glDeleteTextures(1, &m_TextureID);
+    s_TextureAllocations--;
 }

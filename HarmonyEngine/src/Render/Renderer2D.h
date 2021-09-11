@@ -54,12 +54,14 @@ namespace HarmonyEngine {
             CurrentBatchCount = 0;
             CurrentVertexCount = 0;
             CurrentIndexCount = 0;
+            CurrentTextureCount = 0;
         }
 
         static void End() {
             BatchCount = CurrentBatchCount;
             VertexCount = CurrentVertexCount;
             IndexCount = CurrentIndexCount;
+            TextureCount = CurrentTextureCount;
         }
 
         static void DrawImGUIStats(bool* open) {
@@ -72,20 +74,25 @@ namespace HarmonyEngine {
             ImGui::Text("Rendering Type: OpenGL");
             ImGui::Text("OpenGL Version: %s", openglVersion);
 
-            ImGui::Spacing();
+            ImGui::Separator();
 
             ImGui::Text("Graphics Vendor: %s", graphicsVendor);
             ImGui::Text("Graphics Card: %s", graphicsRenderer);
 
-            ImGui::Spacing();
+            ImGui::Separator();
 
             ImGui::Text("Current FPS: %d", Display::GetFps());
 
-            ImGui::Spacing();
+            ImGui::Separator();
+
+            ImGui::Text("Texture Allocations: %zu", Texture::GetNumTextureAllocations());
+
+            ImGui::Separator();
 
             ImGui::Text("Batch Count: %zu", BatchCount);
             ImGui::Text("Vertex Count: %zu", VertexCount);
             ImGui::Text("Index Count: %zu", IndexCount);
+            ImGui::Text("Texture Count: %zu", TextureCount);
 
             ImGui::End();
         }
@@ -102,6 +109,9 @@ namespace HarmonyEngine {
 
         static size_t IndexCount;
         static size_t CurrentIndexCount;
+
+        static size_t TextureCount;
+        static size_t CurrentTextureCount;
     };
 
     class Renderer2D {

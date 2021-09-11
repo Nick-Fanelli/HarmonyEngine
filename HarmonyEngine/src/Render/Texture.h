@@ -8,6 +8,8 @@ namespace HarmonyEngine {
 
     class Texture {
 
+        static size_t s_TextureAllocations;
+
         GLuint m_TextureID = 0;
 
     protected:
@@ -20,6 +22,8 @@ namespace HarmonyEngine {
 
         Texture() = default;
         Texture(const std::filesystem::path& filepath) : m_Filepath(filepath) {}
+
+        ~Texture() { Delete(); }
 
         void Create();
         void Delete();
@@ -47,5 +51,8 @@ namespace HarmonyEngine {
 
         const int GetWidth() const { return m_Width; }
         const int GetHeight() const { return m_Height; }
+
+    public:
+        static const size_t& GetNumTextureAllocations() { return s_TextureAllocations; }
     };
 }

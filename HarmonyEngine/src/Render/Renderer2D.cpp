@@ -27,6 +27,9 @@ size_t RendererStats::CurrentVertexCount = 0;
 size_t RendererStats::IndexCount = 0;
 size_t RendererStats::CurrentIndexCount = 0;
 
+size_t RendererStats::TextureCount = 0;
+size_t RendererStats::CurrentTextureCount = 0;
+
 static int* s_TextureSlots;
 
 void Renderer2D::OnCreate() {
@@ -184,6 +187,8 @@ void Renderer2D::AllocateTexture() {
         Renderer2D::EndBatch();
         Renderer2D::StartBatch();
     }
+
+    RendererStats::CurrentTextureCount++;
 }
 
 void Renderer2D::StartBatch() {
