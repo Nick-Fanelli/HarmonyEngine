@@ -47,6 +47,12 @@ void Scene::DeleteEntity(Entity& entity) {
     entity.m_ScenePtr = nullptr;
 }
 
+bool Scene::IsValid(const Entity& entity) {
+    if(entity.m_ScenePtr != this)
+        return false;
+    return m_Registry.valid(entity.GetEntityID());    
+} 
+
 void Scene::ClearRegistry() {
     m_Registry.clear<>();
 }

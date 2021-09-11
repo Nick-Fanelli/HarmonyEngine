@@ -68,6 +68,7 @@ namespace HarmonyEngine {
             });
         }
 
+        bool IsValid(const Entity& entity); 
         void ClearRegistry();
 
     };
