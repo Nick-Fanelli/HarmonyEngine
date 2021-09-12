@@ -6,8 +6,6 @@
 using namespace HarmonyEngine;
 
 // Scene Runtime
-// static SceneRuntime::RunMode SceneRuntime::s_RunMode = SceneRuntime::RunModePause;
-
 void SceneRuntime::StartRuntime() {
     if(s_RunMode == RunMode::RunModeRunning)
         StopRuntime();

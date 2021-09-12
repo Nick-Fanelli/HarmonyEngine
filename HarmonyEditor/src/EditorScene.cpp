@@ -14,6 +14,8 @@ void EditorScene::OnCreate() {
 
     m_EditorLayer = EditorLayer(this);
     m_EditorLayer.OnCreate();
+
+    SceneRuntime::SetRunMode(SceneRuntime::RunModePause);
 }
 
 void EditorScene::OnUpdate(float deltaTime) {

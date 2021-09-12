@@ -24,9 +24,10 @@ namespace HarmonyEngine {
         static inline RunMode GetRunMode() { return s_RunMode; }
         static inline bool IsRunning() { return s_RunMode == RunModeRunning; }
 
-    private:
-        static inline RunMode s_RunMode = RunModePause;
+        static inline void SetRunMode(RunMode runMode) { s_RunMode = runMode; }
 
+    private:
+        static inline RunMode s_RunMode = RunModeRunning;
 
     };
 
