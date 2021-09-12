@@ -197,7 +197,7 @@ void EditorLayer::DrawGameViewport() {
         ImGui::Image((void*)(intptr_t) *m_EditorScenePtr->GetRenderLayer().GetRenderTexture(), wsize, { 0.0, 1.0 }, { 1.0, 0.0 });
         
         // ImGuizmo
-        if(s_HierarchyEditorPanel.GetSelectedEntity() && s_HierarchyEditorPanel.GetSelectedEntity().ContainsComponent<TransformComponent>() && !m_IsRunning) {
+        if(s_HierarchyEditorPanel.GetSelectedEntity() && s_HierarchyEditorPanel.GetSelectedEntity().ContainsComponent<TransformComponent>() && !SceneRuntime::IsRunning()) {
 
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
@@ -240,24 +240,14 @@ void EditorLayer::StartRuntime() {
     if(s_SceneSerializer.IsAssigned()) {
         SaveScene();
 
-        m_EditorScenePtr->ForEachEntityWithTransform<OrthographicCameraComponent>([&](TransformComponent& transform, OrthographicCameraComponent& component) {
-            component.Camera.SetPosition(transform.Transform.Position);
-            MasterRenderer::CameraPtr = &component.Camera;
-            return;
-        });
-
-        m_EditorScenePtr->GetGlobalScript().Reload();
-        m_EditorScenePtr->GetGlobalScript().OnCreate();
-        m_IsRunning = true;
+        SceneRuntime::StartRuntime();
     }
 }
 
 void EditorLayer::StopRuntime() {
-    m_IsRunning = false;
-    
     if(s_SceneSerializer.IsAssigned()) {
+        SceneRuntime::StopRuntime();
         MasterRenderer::CameraPtr = &s_Camera;
-        m_EditorScenePtr->GetGlobalScript().OnCreate();
     }
 }
 
@@ -266,7 +256,7 @@ void EditorLayer::OnUpdate(float deltaTime) {
     HARMONY_PROFILE_FUNCTION();
 
     // Camera Update
-    if((s_IsViewportSelected || s_Camera.IsInOperation()) && !m_IsRunning)
+    if((s_IsViewportSelected || s_Camera.IsInOperation()) && !SceneRuntime::IsRunning())
         s_Camera.OnUpdate(deltaTime);
 
     if(Input::IsKeyDown(HARMONY_KEY_TAB)) {
@@ -309,11 +299,6 @@ void EditorLayer::OnUpdate(float deltaTime) {
     }
 
     ImGuiDefaults::ResetIsInputFocused();
-
-    // Runtime Updates
-    if(m_IsRunning) {
-        m_EditorScenePtr->GetGlobalScript().OnUpdate(deltaTime);
-    }
 
     // ImGui Layer
     s_ImGuiLayer.Begin();

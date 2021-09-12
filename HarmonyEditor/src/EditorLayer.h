@@ -41,15 +41,11 @@ namespace HarmonyEditor {
 
         void SetActiveProject(const Project& project);
 
-        bool IsRunning() const { return m_IsRunning; }
-
         EditorCamera& GetEditorCamera();
 
     private:
         Project m_ActiveProject = {};
         EditorScene* m_EditorScenePtr = nullptr;
-
-        bool m_IsRunning = false;
 
     };
 

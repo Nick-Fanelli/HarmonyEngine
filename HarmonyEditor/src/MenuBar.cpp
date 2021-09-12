@@ -14,12 +14,12 @@ using namespace HarmonyEditor;
 
 static std::string GetCommandString(const std::string& identifiers) {
 #ifdef HARMONY_PLATFORM_MACOS
-    static const std::string metaIdentifer = "Command+";
+    static const std::string metaIdentifier = "Command+";
 #else
-    static const std::string metaIdentifer = "Ctrl+";
+    static const std::string metaIdentifier = "Ctrl+";
 #endif
 
-    return std::string(metaIdentifer) + identifiers;
+    return std::string(metaIdentifier) + identifiers;
 }
 
 static void HandleKeyboardShortcuts() {
@@ -155,27 +155,27 @@ void MenuBar::OnImGuiRender() {
 
         ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 0.0f, 0.0f, 0.0f });
 
-        if(m_EditorLayerPtr->IsRunning())
+        if(SceneRuntime::IsRunning())
             ImGui::PushStyleColor(ImGuiStyleVar_Alpha, { 1.0f, 1.0f, 1.0f, 0.25f });
 
-        if(ImGui::ButtonEx("\uf04b", { menuBarHeight, menuBarHeight }, m_EditorLayerPtr->IsRunning() ? ImGuiItemFlags_Disabled : 0)) { // Play Button
+        if(ImGui::ButtonEx("\uf04b", { menuBarHeight, menuBarHeight }, SceneRuntime::IsRunning() ? ImGuiItemFlags_Disabled : 0)) { // Play Button
             m_EditorLayerPtr->StartRuntime();
-            if(m_EditorLayerPtr->IsRunning())
+            if(SceneRuntime::IsRunning())
                 ImGui::PushStyleColor(ImGuiStyleVar_Alpha, { 1.0f, 1.0f, 1.0f, 0.25f });
         }
 
-        if(!m_EditorLayerPtr->IsRunning())
+        if(!SceneRuntime::IsRunning())
             ImGui::PushStyleColor(ImGuiStyleVar_Alpha, { 1.0f, 1.0f, 1.0f, 0.25f });
         else
             ImGui::PopStyleColor();
 
-        if(ImGui::ButtonEx("\uf04d", { menuBarHeight, menuBarHeight }, m_EditorLayerPtr->IsRunning() ? 0 : ImGuiItemFlags_Disabled)) { // Stop Button
+        if(ImGui::ButtonEx("\uf04d", { menuBarHeight, menuBarHeight }, SceneRuntime::IsRunning() ? 0 : ImGuiItemFlags_Disabled)) { // Stop Button
             m_EditorLayerPtr->StopRuntime();
-            if(!m_EditorLayerPtr->IsRunning())
+            if(!SceneRuntime::IsRunning())
                 ImGui::PushStyleColor(ImGuiStyleVar_Alpha, { 1.0f, 1.0f, 1.0f, 0.25f });
         }
 
-        ImGui::PopStyleColor(m_EditorLayerPtr->IsRunning() ? 1 : 2);
+        ImGui::PopStyleColor(SceneRuntime::IsRunning() ? 1 : 2);
 
         // if(currentOperation == ImGuizmo::OPERATION::TRANSLATE)
         //     ImGui::PopStyleColor();
