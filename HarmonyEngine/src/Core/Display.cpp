@@ -10,6 +10,8 @@ int Display::s_DisplayWidth = 1600;
 int Display::s_DisplayHeight = 900;
 int Display::s_CurrentFps = -1;
 
+bool Display::s_VSyncEnabled = true;
+
 void Display::StartGameLoop() {
 
     Log::Info("Starting Game Loop...");

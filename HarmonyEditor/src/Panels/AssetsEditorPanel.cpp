@@ -158,7 +158,7 @@ void AssetsEditorPanel::OnImGuiRender() {
     if(Settings::ShowAssetsPanel) {
 
         if(m_EditorLayerPtr->GetActiveProject().IsAssigned()) {
-            if(difftime(time(0), s_Timer) >= 1) { // TODO: Configure as setting
+            if(difftime(time(0), s_Timer) >= Settings::AssetsEditorPanelUpdateIntervalSeconds) {
                 SyncAssets();
                 s_Timer = time(0);
             }

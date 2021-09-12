@@ -41,6 +41,20 @@ void ImGuiDefaults::DrawFloat(const std::string& label, float& value, float spee
     ImGui::PopID();
 }
 
+void ImGuiDefaults::DrawInteger(const std::string& label, int& value, int speed, int min, int max) {
+    ImGui::PushID(label.c_str());
+
+    ImGui::Columns(2, nullptr, false);
+    ImGui::SetColumnWidth(0, ColumnWidth * 3.0f);
+    ImGui::Text("%s", label.c_str());
+    ImGui::NextColumn();
+    ImGui::DragInt("##", &value, speed, min, max);
+
+    ImGui::Columns(1);
+
+    ImGui::PopID();
+}
+
 bool ImGuiDefaults::DrawBool(const std::string& label, bool& value) {
 
     bool returnValue = false;

@@ -81,6 +81,7 @@ namespace HarmonyEngine {
 
             ImGui::Separator();
 
+            ImGui::Text("V-Sync Enabled: %s", Display::IsVSyncEnabled() ? "true" : "false");
             ImGui::Text("Current FPS: %d", Display::GetFps());
 
             ImGui::Separator();

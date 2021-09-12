@@ -5,8 +5,6 @@ using namespace HarmonyEngine;
 // ==========================================================================================
 // Asset Manager
 // ==========================================================================================
-template<typename T>
-std::list<Asset<T>> AssetManager::m_AssetRegistry;
 
 AssetHandle<Texture> AssetManager::GetTexture(const std::filesystem::path& filepath) {
     for(auto& asset : m_AssetRegistry<Texture>) {

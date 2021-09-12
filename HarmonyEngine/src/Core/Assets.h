@@ -72,15 +72,17 @@ namespace HarmonyEngine {
     class AssetManager {
 
         template<typename T>
-        static std::list<Asset<T>> m_AssetRegistry;
+        static inline std::list<Asset<T>> m_AssetRegistry{};
 
     public:
-
         static AssetHandle<Texture> GetTexture(const std::filesystem::path& filepath);
         static AssetHandle<Texture> CreateTexture(const std::filesystem::path& filepath);
 
         static void CreateAll();
         static void DestroyAll();
+
+        template<typename AssetType>
+        static const std::list<Asset<AssetType>>& GetAssetRegistry() { return m_AssetRegistry<AssetType>; }
     };
 
 }

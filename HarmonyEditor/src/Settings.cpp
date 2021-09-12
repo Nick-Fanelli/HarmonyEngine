@@ -9,14 +9,6 @@
 
 using namespace HarmonyEditor;
 
-// Non-Displayed
-Setting<bool> Settings::ShowViewportPanel = true;
-Setting<bool> Settings::ShowSettingsPanel = false;
-Setting<bool> Settings::ShowHierarchyPanel = true;
-Setting<bool> Settings::ShowComponentsPanel = true;
-Setting<bool> Settings::ShowAssetsPanel = true;
-Setting<bool> Settings::ShowRendererStats = false;
-
 std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings = {
 
     { "ShowViewportPanel", &Settings::ShowViewportPanel },
@@ -27,14 +19,6 @@ std::unordered_map<std::string, Setting<bool>*> Settings::AllShowPanelSettings =
     { "ShowRendererStats", &Settings::ShowRendererStats }
 
 };
-
-// Displayed
-Setting<bool> Settings::VSyncEnabled = true;
-
-Setting<int> Settings::EditorTheme = 1; // Dark
-
-Setting<int> Settings::EditorInputStyle = EditorCamera::InputStyle::InputStyleDefault;
-Setting<float> Settings::EditorMovementSensitivity = 3.0f;
 
 static const std::filesystem::path& GetSettingsFilepath() {
     static const std::filesystem::path path = HarmonyEditorApplication::GetApplicationSupportDirectory() / "user-settings.yaml";
@@ -64,10 +48,12 @@ void SettingsManager::LoadSettings() {
 
     DeserializeSetting(root, Settings::VSyncEnabled, "VSyncEnabled");
 
-    DeserializeSetting(root, Settings::EditorTheme, "EditorTheme");
-
     DeserializeSetting(root, Settings::EditorInputStyle, "EditorInputStyle");
     DeserializeSetting(root, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");
+    
+    DeserializeSetting(root, Settings::AssetsEditorPanelUpdateIntervalSeconds, "AssetsEditorPanelUpdateIntervalSeconds");
+
+    DeserializeSetting(root, Settings::EditorTheme, "EditorTheme");
 }
 
 void SettingsManager::SaveSettings() {
@@ -80,10 +66,12 @@ void SettingsManager::SaveSettings() {
 
     SerializeSetting(out, Settings::VSyncEnabled, "VSyncEnabled");
 
-    SerializeSetting(out, Settings::EditorTheme, "EditorTheme");
-
     SerializeSetting(out, Settings::EditorInputStyle, "EditorInputStyle");
     SerializeSetting(out, Settings::EditorMovementSensitivity, "EditorMovementSensitivity");
+
+    SerializeSetting(out, Settings::AssetsEditorPanelUpdateIntervalSeconds, "AssetsEditorPanelUpdateIntervalSeconds");
+
+    SerializeSetting(out, Settings::EditorTheme, "EditorTheme");
 
     out << YAML::EndMap; // Root
 
@@ -121,12 +109,6 @@ void SettingsManager::OnImGuiRender() {
                     Display::SetVSync(Settings::VSyncEnabled);
                 }
             });
-        }
-
-        if(ImGui::CollapsingHeader("Appearance")) {
-            DrawSetting(Settings::EditorTheme, []() {
-                ImGuiDefaults::DrawComboSelection("Theme", Settings::EditorTheme.CurrentValue, Theme::ThemePreset, Theme::ThemePresetCount);
-            });
 
             if(ImGui::TreeNodeEx("Viewport Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
 
@@ -140,6 +122,21 @@ void SettingsManager::OnImGuiRender() {
 
                 ImGui::TreePop();
             }
+
+            if(ImGui::TreeNodeEx("Assets Panel Settings", ImGuiTreeNodeFlags_DefaultOpen)) {
+
+                DrawSetting(Settings::AssetsEditorPanelUpdateIntervalSeconds, []() {
+                    ImGuiDefaults::DrawFloat("Update Interval Seconds", Settings::AssetsEditorPanelUpdateIntervalSeconds.CurrentValue, 0.01f, 0.25f, std::numeric_limits<float>::min(), "%.1f");
+                });
+
+                ImGui::TreePop();
+            }
+        }
+
+        if(ImGui::CollapsingHeader("Appearance")) {
+            DrawSetting(Settings::EditorTheme, []() {
+                ImGuiDefaults::DrawComboSelection("Theme", Settings::EditorTheme.CurrentValue, Theme::ThemePreset, Theme::ThemePresetCount);
+            });
         }
 
         ImGui::End();

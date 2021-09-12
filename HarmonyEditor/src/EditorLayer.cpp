@@ -25,6 +25,7 @@
 #include "Panels/HierarchyEditorPanel.h"
 #include "Panels/AssetsEditorPanel.h"
 #include "Panels/ComponentsEditorPanel.h"
+#include "Panels/DebugPanels.h"
 
 #include "Windows/CommonWindows.h"
 
@@ -334,6 +335,7 @@ void EditorLayer::OnUpdate(float deltaTime) {
     s_ComponentsEditorPanel.OnImGuiRender();
 
     SettingsManager::OnImGuiRender();
+    DebugPanels::OnImGuiRender();
 
     CommonWindows::OnImGuiRender();
 

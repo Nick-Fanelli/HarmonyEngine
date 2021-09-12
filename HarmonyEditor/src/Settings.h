@@ -48,22 +48,27 @@ namespace HarmonyEditor {
 
     public:
         // Not Displayed
-        static Setting<bool> ShowViewportPanel;
-        static Setting<bool> ShowSettingsPanel;
-        static Setting<bool> ShowHierarchyPanel;
-        static Setting<bool> ShowComponentsPanel;
-        static Setting<bool> ShowAssetsPanel;
-        static Setting<bool> ShowRendererStats;
+        static inline Setting<bool> ShowViewportPanel = true;
+        static inline Setting<bool> ShowSettingsPanel = true;
+        static inline Setting<bool> ShowHierarchyPanel = true;
+        static inline Setting<bool> ShowComponentsPanel = true;
+        static inline Setting<bool> ShowAssetsPanel = true;
+        static inline Setting<bool> ShowRendererStats = false;
 
         static std::unordered_map<std::string, Setting<bool>*> AllShowPanelSettings;
 
-        // Displayed
-        static Setting<bool> VSyncEnabled;
+        // General
+        static inline Setting<bool> VSyncEnabled = true;
 
-        static Setting<int> EditorTheme;
+        // General -> Viewport Settings
+        static inline Setting<int> EditorInputStyle = EditorCamera::InputStyle::InputStyleDefault;
+        static inline Setting<float> EditorMovementSensitivity = 3.0f;
 
-        static Setting<int> EditorInputStyle;
-        static Setting<float> EditorMovementSensitivity;
+        // General -> Assets Panel Settings
+        static inline Setting<float> AssetsEditorPanelUpdateIntervalSeconds = 1.0f;
+
+        // Appearance
+        static inline Setting<int> EditorTheme = 1; // Dark
     };
 
 }

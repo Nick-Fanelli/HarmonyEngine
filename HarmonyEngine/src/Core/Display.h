@@ -22,6 +22,8 @@ namespace HarmonyEngine {
 
         static int s_CurrentFps;
 
+        static bool s_VSyncEnabled;
+
     public:
 
         static void CreateDisplay(const char* title, const glm::vec2& displaySize = { 1600, 900 });
@@ -63,6 +65,11 @@ namespace HarmonyEngine {
             }
 
             glfwSwapInterval(value);
+            s_VSyncEnabled = value;
+        }
+
+        static bool IsVSyncEnabled() {
+            return s_VSyncEnabled;
         }
 
         static const float GetAspectWidth() { return DisplayAspect.x; }
