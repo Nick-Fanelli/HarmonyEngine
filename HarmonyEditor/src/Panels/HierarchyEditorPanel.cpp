@@ -22,10 +22,11 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
     auto& entityName = entity.GetComponent<TagComponent>().Name;
 
     ImGui::PushID((void*)(uint64_t)(uint32_t) entity);
-    ImGui::Selectable(entityName.c_str(), m_SelectedEntity == entity);
+    bool shouldPop = ImGui::TreeNodeEx(entityName.c_str(), ImGuiTreeNodeFlags_Leaf | (m_SelectedEntity == entity ? ImGuiTreeNodeFlags_Selected : 0));
     ImGui::PopID();
 
     if(ImGui::BeginPopupContextItem(std::to_string((uint32_t) entity.GetEntityID()).c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+
         if(ImGui::Selectable("Delete")) {
             if(m_SelectedEntity == entity)
                 m_SelectedEntity = {};
@@ -39,6 +40,10 @@ void HierarchyEditorPanel::AddToHierarchy(Entity& entity) {
         m_SelectedEntity = entity; 
         m_IsSceneSelected = false;
     }
+
+    // TODO: Recursively add children
+    if(shouldPop)
+        ImGui::TreePop();
 }
 
 void HierarchyEditorPanel::OnImGuiRender() {
@@ -75,17 +80,17 @@ void HierarchyEditorPanel::OnImGuiRender() {
 
                 AddToHierarchy(s_Entities[i]);
 
-                if(ImGui::IsItemActive() && !ImGui::IsItemHovered()) {
-                    // Log::Warn("Active");
-                    size_t next = i + (ImGui::GetMouseDragDelta(ImGuiMouseButton_Left).y < 0.0f ? -1 : 1);
+                // if(ImGui::IsItemActive() && !ImGui::IsItemHovered()) {
+                //     // Log::Warn("Active");
+                //     size_t next = i + (ImGui::GetMouseDragDelta(ImGuiMouseButton_Left).y < 0.0f ? -1 : 1);
 
-                    if(next >= 0 && next < s_Entities.size()) {
-                        std::swap(s_Entities[i], s_Entities[next]);
+                //     if(next >= 0 && next < s_Entities.size()) {
+                //         std::swap(s_Entities[i], s_Entities[next]);
 
-                        ImGui::ResetMouseDragDelta();
-                    }
+                //         ImGui::ResetMouseDragDelta();
+                //     }
 
-                }
+                // }
             }
 
             ImGui::TreePop();
