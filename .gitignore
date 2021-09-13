@@ -3,6 +3,7 @@
 
 # Cpp
 build/
+build-int/
 
 # NPM/Auto Changelog
 node_modules/
