@@ -1,9 +1,10 @@
 # Mac OS
 .DS_Store
 
-# Cpp
+# Build Information
 build/
 build-int/
+*/Makefile
 
 # NPM/Auto Changelog
 node_modules/
