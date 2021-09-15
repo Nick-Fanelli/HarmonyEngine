@@ -255,19 +255,22 @@ void Renderer2D::DrawQuad(Transform& transform, const glm::vec4& color, AssetHan
     constexpr uint32_t quadVertexCount = 4; // Four Vertices Per Quad
     constexpr glm::vec2 textureCoords[] = { {0, 0}, {1, 0}, {1, 1}, {0, 1} };
 
-    AllocateTexture();
     AllocateVertices(quadVertexCount);
 
     float textureIndex = 0.0f;
+    bool shouldAllocateTexture = true;
 
     for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
         if(s_Batch.Textures[i] == texture->GetTextureID()) {
             textureIndex = (float) i;
+            shouldAllocateTexture = false;
             break;
         }
     }
 
-    if(textureIndex == 0.0f) {
+    if(shouldAllocateTexture) {
+        AllocateTexture();
+
         textureIndex = (float) s_Batch.TextureIndex;
         s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
         s_Batch.TextureIndex++;
@@ -292,19 +295,22 @@ void Renderer2D::DrawQuad(Transform& transform, const glm::vec4& color, AssetHan
     // glm::vec2 textureCoords[] = { topLeftCoord, { bottomRightCoord.x, topLeftCoord.y}, bottomRightCoord, { topLeftCoord.x, bottomRightCoord.y } };
     glm::vec2 textureCoords[] = { topLeftCoord, { bottomRightCoord.x, topLeftCoord.y }, bottomRightCoord, { topLeftCoord.x, bottomRightCoord.y }};
 
-    AllocateTexture();
     AllocateVertices(quadVertexCount);
 
     float textureIndex = 0.0f;
+    bool shouldAllocateTexture = true;
 
     for(uint32_t i = 1; i < s_Batch.TextureIndex; i++) {
         if(s_Batch.Textures[i] == texture->GetTextureID()) {
             textureIndex = (float) i;
+            shouldAllocateTexture = false;
             break;
         }
     }
 
-    if(textureIndex == 0.0f) {
+    if(shouldAllocateTexture) {
+        AllocateTexture();
+
         textureIndex = (float) s_Batch.TextureIndex;
         s_Batch.Textures[s_Batch.TextureIndex] = texture->GetTextureID();
         s_Batch.TextureIndex++;
