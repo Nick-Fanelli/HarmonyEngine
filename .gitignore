@@ -4,7 +4,9 @@
 # Build Information
 build/
 build-int/
-*/Makefile
+Makefile
+HarmonyEngine/vendor/glad/Makefile
+
 
 # NPM/Auto Changelog
 node_modules/
