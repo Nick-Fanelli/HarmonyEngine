@@ -1,10 +1,6 @@
 #pragma once
 
 #include "harmonypch.h"
-#include "imguipch.h"
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include "../Scene/SceneManager.h"
 #include "../Scene/Scene.h"

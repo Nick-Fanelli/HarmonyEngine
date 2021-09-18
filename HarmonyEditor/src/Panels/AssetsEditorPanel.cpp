@@ -1,7 +1,5 @@
 #include "AssetsEditorPanel.h"
 
-#include <imguipch.h>
-
 #include <time.h>
 
 #include "../EditorLayer.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "harmonypch.h"
+#include "Log.h"
 
 #if HARMONY_DEBUG
 

@@ -1,6 +1,5 @@
 #include "Settings.h"
 
-#include <imguipch.h>
 #include <yaml-cpp/yaml.h>
 
 #include "HarmonyEditor.h"

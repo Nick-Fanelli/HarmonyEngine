@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <imguipch.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
 using namespace HarmonyEditor;

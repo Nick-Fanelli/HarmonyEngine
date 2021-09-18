@@ -1,7 +1,5 @@
 #include "HierarchyEditorPanel.h"
 
-#include <imguipch.h>
-
 #include <Scene/Entity.h>
 
 #include "../Settings.h"
