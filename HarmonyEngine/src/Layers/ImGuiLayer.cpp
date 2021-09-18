@@ -29,14 +29,14 @@ void ImGuiLayer::OnCreate(const std::string& saveFilelocation) {
     config.OversampleV = 3;
 
     // Default Font
-    io.FontDefault = io.Fonts->AddFontFromFileTTF("engineAssets/fonts/segoe-ui.ttf", 18.0f, &config);
+    io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/segoe-ui.ttf", 18.0f, &config);
 
     // Font Awesome
     ImFontConfig faConfig;
     faConfig.MergeMode = true;
     faConfig.GlyphMinAdvanceX = 13.0f;
     static constexpr ImWchar iconRanges[] = { 0xe005, 0xf8ff, 0 };
-    io.Fonts->AddFontFromFileTTF("engineAssets/fonts/font-awesome/Font-Awesome-Solid-900.otf", 16.0f, &faConfig, iconRanges);
+    io.Fonts->AddFontFromFileTTF("assets/fonts/font-awesome/Font-Awesome-Solid-900.otf", 16.0f, &faConfig, iconRanges);
 
     ImGuiStyle& style = ImGui::GetStyle();
     if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {

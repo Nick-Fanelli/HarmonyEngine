@@ -10,3 +10,6 @@ HarmonyEngine/vendor/glad/Makefile
 
 # NPM/Auto Changelog
 node_modules/
+
+# Profiling Information
+HarmonyProfile-*.json

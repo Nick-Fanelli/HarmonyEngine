@@ -27,6 +27,8 @@ int main() {
     NFD_Init();
 
     application.StartApplication(scene);
+
+    return 0;
 }
 
 const std::filesystem::path& HarmonyEditorApplication::GetApplicationSupportDirectory() {

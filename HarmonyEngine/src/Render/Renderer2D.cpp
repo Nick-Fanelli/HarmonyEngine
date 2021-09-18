@@ -46,7 +46,7 @@ void Renderer2D::OnCreate() {
     std::unordered_map<std::string, std::string> replacements;
     replacements["MAX_TEXTURE_COUNT"] = std::to_string(s_MaxTextureCount);
 
-    s_Shader = Shader("engineAssets/shaders/DefaultShader2D.vert.glsl", "engineAssets/shaders/DefaultShader2D.frag.glsl", replacements);
+    s_Shader = Shader("assets/shaders/DefaultShader2D.vert.glsl", "assets/shaders/DefaultShader2D.frag.glsl", replacements);
     s_Shader.Create();
 
     s_Batch = RenderBatch2D();

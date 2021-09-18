@@ -175,7 +175,7 @@ const std::string& LuaScript::GetHarmonyLibrary() {
 
         std::string line;
 
-        std::ifstream file("engineAssets/lua/HarmonyLibrary.lua");
+        std::ifstream file("assets/lua/HarmonyLibrary.lua");
         if(file.is_open()) {
             while(std::getline(file, line)) {
                 libraryCode += line + "\n";
