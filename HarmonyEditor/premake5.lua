@@ -60,5 +60,13 @@ project "HarmonyEditor"
             "_WINDOWS"
         }
 
+    filter "configurations:Debug"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		runtime "Release"
+        optimize "on"
+
 include "vendor/ImGuizmo/premake5.lua"
 include "vendor/nativefiledialog/premake5.lua"

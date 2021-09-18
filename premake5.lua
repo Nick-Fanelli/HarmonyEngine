@@ -8,8 +8,7 @@ workspace "HarmonyEngine"
 
     configurations {
         "Debug",
-        "Release",
-        "Dist"
+        "Release"
     }
     
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
