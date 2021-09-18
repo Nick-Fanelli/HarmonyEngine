@@ -57,15 +57,19 @@ project "HarmonyEngine"
 
     filter "configurations:Debug"
 		runtime "Debug"
-		symbols "on"
+		symbols "On"
 
         defines {
-            "HARMONY_IS_DEBUG"
+            "DEBUG"
         }
 
 	filter "configurations:Release"
 		runtime "Release"
-        optimize "on"
+        optimize "On"
+
+        defines {
+            "NDEBUG"
+        }
 
 include "vendor/glfw/premake5.lua"
 include "vendor/glad/premake5.lua"

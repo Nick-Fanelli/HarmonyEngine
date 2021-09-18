@@ -1,7 +1,7 @@
 #pragma once
 
 // Enable or Disable Debug
-#ifndef HARMONY_IS_DEBUG
+#ifndef NDEBUG
     #define HARMONY_DEBUG 1
 #else
     #define HARMONY_DEBUG 0

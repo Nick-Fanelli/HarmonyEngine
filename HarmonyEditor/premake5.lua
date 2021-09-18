@@ -62,11 +62,19 @@ project "HarmonyEditor"
 
     filter "configurations:Debug"
 		runtime "Debug"
-		symbols "on"
+		symbols "On"
+
+        defines {
+            "DEBUG"
+        }
 
 	filter "configurations:Release"
 		runtime "Release"
-        optimize "on"
+        optimize "On"
+
+        defines {
+            "NDEBUG"
+        }
 
 include "vendor/ImGuizmo/premake5.lua"
 include "vendor/nativefiledialog/premake5.lua"
