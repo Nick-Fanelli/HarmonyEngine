@@ -6,7 +6,7 @@ build/
 build-int/
 Makefile
 HarmonyEngine/vendor/glad/Makefile
-.make
+**.make
 
 # NPM/Auto Changelog
 node_modules/
