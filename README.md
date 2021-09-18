@@ -57,7 +57,7 @@ Currently *Harmony Engine* is begin developed on MacOS however, with a few quick
 
 **1. Clone the Repository** - *Make sure you have git command line tools installed! (on MacOS simply running `git` in terminal will prompt its installation)*
 ```shell
-git clone git@github.com:Nick-Fanelli/HarmonyEngine.git --recursive
+git clone https://github.com/Nick-Fanelli/HarmonyEngine.git --recursive
 ```
 ***Note: Use flag --recursive to get access to the submodules***
 
