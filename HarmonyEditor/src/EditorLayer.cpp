@@ -48,6 +48,7 @@ static ImGuizmo::OPERATION s_CurrentImGuizmoOperation = ImGuizmo::OPERATION::TRA
 static bool s_IsViewportSelected = false;
 static bool s_IsTabToggled = false;
 
+// TODO: Remove and replace with something that's not garbage
 static EditorLayer* s_This;
 
 static std::vector<Setting<bool>*> s_TabPointers;
