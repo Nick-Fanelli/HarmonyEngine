@@ -6,7 +6,7 @@ int main() {
 
     Log::Initialize();
 
-    Log::Info("Hello World");
+    Log::Info("Hello World {}", "Test");
     Log::Warn("Hello World");
     Log::Error("Hello World");
     Log::Trace("Hello World");
