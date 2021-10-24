@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.h"
+// #include "Core/Core.h"
 
 #include <iostream>
 #include <fstream>
@@ -23,10 +23,10 @@
 
 #include <filesystem>
 
-#include "Core/Log.h"
-#include "Core/Assert.h"
-#include "Debug/Profile.h"
-#include "Core/Utils.h"
+// #include "Core/Log.h"
+// #include "Core/Assert.h"
+// #include "Debug/Profile.h"
+// #include "Core/Utils.h"
 
 #define GLFW_INCLUDE_NONE
 #include <glad/glad.h>

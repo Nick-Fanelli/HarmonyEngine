@@ -21,7 +21,8 @@ project "HarmonyEngine"
         "vendor/imgui/backends",
         "vendor/yaml-cpp/include",
 
-        "src"
+        "src",
+        "src/include"
     }
 
     links {
