@@ -17,7 +17,7 @@ project "HarmonyEditor"
         "vendor/ImGuizmo",
         "vendor/nativefiledialog/src/include",
 
-        "%{wks.location}/HarmonyEngine/src/include",
+        "%{wks.location}/HarmonyEngine/src",
         "%{wks.location}/HarmonyEngine/vendor",
         "%{wks.location}/HarmonyEngine/vendor/glfw/include",
         "%{wks.location}/HarmonyEngine/vendor/lua",

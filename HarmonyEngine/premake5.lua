@@ -3,7 +3,7 @@ project "HarmonyEngine"
     language "C++"
     cppdialect "C++17"
 
-    pchheader "src/harmonypch.h"
+    pchheader "harmonypch.h"
 
     targetdir ( "%{wks.location}/build/" .. outputdir .. "/%{prj.name}")
     objdir ( "%{wks.location}/build-int/" .. outputdir .. "/%{prj.name}")
@@ -14,15 +14,15 @@ project "HarmonyEngine"
     }
 
     includedirs {
+        "src/",
+        "src/HarmonyEngine",
+
         "vendor",
         "vendor/glfw/include",
         "vendor/lua",
         "vendor/imgui",
         "vendor/imgui/backends",
         "vendor/yaml-cpp/include",
-
-        "src",
-        "src/include"
     }
 
     links {

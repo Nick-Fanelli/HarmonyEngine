@@ -23,7 +23,7 @@
 
 #include <filesystem>
 
-// #include "Core/Log.h"
+#include "HarmonyEngine/Core/Log.h"
 // #include "Core/Assert.h"
 // #include "Debug/Profile.h"
 // #include "Core/Utils.h"
