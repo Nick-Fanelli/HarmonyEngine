@@ -1,3 +1,4 @@
 #include "harmonypch.h"
 
-#include "HarmonyEngine/Core/Log.h"
+// Core
+#include "HarmonyEngine/Core/Application.h"

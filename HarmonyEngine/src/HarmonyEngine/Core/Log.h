@@ -8,8 +8,9 @@ namespace HarmonyEngine {
 
     class Log {
 
+        friend class Application;
+
     public:
-        static void Initialize();
 
         template<typename T>
         static inline void Info(const T& message) { s_Logger->info(message); }
@@ -34,6 +35,9 @@ namespace HarmonyEngine {
         
         template<typename... Args>
         static inline void Trace(Args&&... args) { s_Logger->trace(std::forward<Args>(args)...); }
+
+    private:
+        static void Initialize();
 
     private:
         static inline std::shared_ptr<spdlog::logger> s_Logger;
