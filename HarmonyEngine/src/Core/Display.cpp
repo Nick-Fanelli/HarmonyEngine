@@ -9,9 +9,9 @@ Display::Display(const std::string& title, const glm::vec2& displaySize)
 
 }
 
-void Display::CreateDisplay() {
+void Display::CreateDisplay() { 
 
-    HARMONY_PROFILE_SCOPE("Display Scope");
+    HARMONY_PROFILE_FUNCTION();
 
     Log::Trace("Initializing GLFW...");
     if(!glfwInit()) {

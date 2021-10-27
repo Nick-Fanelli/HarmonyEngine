@@ -2,13 +2,13 @@ workspace "HarmonyEngine"
     architecture "x86_64"
     startproject "HarmonyEditor"
 
-    flags {
-        "MultiProcessorCompile"
-    }
-
     configurations {
         "Debug",
         "Release"
+    }
+
+    flags {
+        -- "MultiProcessorCompile"
     }
     
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"

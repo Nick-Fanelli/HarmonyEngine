@@ -2,8 +2,6 @@
 
 #include "harmonypch.h"
 
-#include <spdlog/spdlog.h>
-
 namespace HarmonyEngine {
 
     class Log {

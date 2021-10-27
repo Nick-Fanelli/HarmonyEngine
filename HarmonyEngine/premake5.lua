@@ -2,6 +2,7 @@ project "HarmonyEngine"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
+    staticruntime "off"
 
     pchheader "src/harmonypch.h"
 
@@ -14,15 +15,14 @@ project "HarmonyEngine"
     }
 
     includedirs {
-        "src/",
-        "src/HarmonyEngine",
-
         "vendor",
         "vendor/glfw/include",
         "vendor/lua",
         "vendor/imgui",
         "vendor/imgui/backends",
         "vendor/yaml-cpp/include",
+
+        "src"
     }
 
     links {
