@@ -2,22 +2,28 @@
 
 #include "harmonypch.h"
 
+#include "Display.h"
+
 namespace HarmonyEngine {
 
     class Application {
 
+        friend class Display;
+
     public:
-        static Application CreateApplication(const std::string& message);
+        Application() = default;
+        Application(const std::string& applicationName);
 
     public:
         void StartApplication();
 
     private:
-        Application() = default;
-        Application(const std::string& applicationName) : m_ApplicationName(applicationName) {}
+        void OnUpdate(float deltaTime);
+        void CleanUp();
 
     private:
         std::string m_ApplicationName = "Harmony Application";
+        std::shared_ptr<Display> m_Display;
     };
 
 }

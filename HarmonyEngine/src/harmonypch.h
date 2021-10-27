@@ -1,6 +1,6 @@
 #pragma once
 
-// #include "Core/Core.h"
+#include "HarmonyEngine/Core/Core.h"
 
 #include <iostream>
 #include <fstream>
@@ -31,6 +31,9 @@
 #define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>

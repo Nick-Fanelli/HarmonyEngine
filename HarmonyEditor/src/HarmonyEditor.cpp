@@ -4,7 +4,8 @@ using namespace HarmonyEngine;
 
 int main() {
 
-    Application application = Application::CreateApplication("test");
+    Application application = { "Harmony Application" };
+    application.StartApplication();
 
     return 0;
 }

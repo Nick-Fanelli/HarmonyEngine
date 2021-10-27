@@ -3,7 +3,7 @@ project "HarmonyEngine"
     language "C++"
     cppdialect "C++17"
 
-    pchheader "harmonypch.h"
+    pchheader "src/harmonypch.h"
 
     targetdir ( "%{wks.location}/build/" .. outputdir .. "/%{prj.name}")
     objdir ( "%{wks.location}/build-int/" .. outputdir .. "/%{prj.name}")
@@ -62,6 +62,11 @@ project "HarmonyEngine"
 
         defines {
             "DEBUG"
+        }
+
+        files {
+            "debug/**.h",
+            "debug/**.cpp"
         }
 
 	filter "configurations:Release"
