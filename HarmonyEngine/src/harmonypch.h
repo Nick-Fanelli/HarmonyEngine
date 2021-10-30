@@ -35,8 +35,6 @@
 #include <imgui_impl_opengl3.h> 
 #include <imgui_internal.h>
 
-#include <spdlog/spdlog.h>
-
 #include "Core/Log.h"
 #include "Debug/Profile.h"
 // #include "Core/Assert.h"

@@ -20,7 +20,7 @@ namespace HarmonyEngine {
             auto elapsedTime = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch()
                 - std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch();
 
-            Log::Warn("{} {}", m_ScopeName, elapsedTime.count());
+            // Log::FormatWarn("", m_ScopeName, elapsedTime.count());
         }
 
     private:

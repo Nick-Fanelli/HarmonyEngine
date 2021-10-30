@@ -2,14 +2,7 @@
 
 using namespace HarmonyEngine;
 
-static bool s_LogInitialized = false;
-
 Application::Application(const std::string& applicationName) : m_ApplicationName(applicationName) {
-    if(!s_LogInitialized) {
-        Log::Initialize();
-        s_LogInitialized = true;
-    }
-
     m_Display = std::make_shared<Display>(applicationName);
 
 }
@@ -21,9 +14,9 @@ void Application::OnUpdate(float deltaTime) {
 void Application::StartApplication() {
 
 #ifdef DEBUG
-    Log::Info("Running Application \"{}\" In [Debug] Mode!", m_ApplicationName);
+    Log::FormatInfo("Running Application \"%s\" In [Debug] Mode!", m_ApplicationName.c_str());
 #else
-    Log::Info("Running Application \"{}\" In [Release] Mode!", m_ApplicationName);
+    Log::FormatInfo("Running Application \"%s\" In [Release] Mode!", m_ApplicationName.c_str());
 #endif
 
     m_Display->CreateDisplay();

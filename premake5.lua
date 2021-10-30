@@ -8,7 +8,7 @@ workspace "HarmonyEngine"
     }
 
     flags {
-        -- "MultiProcessorCompile"
+        "MultiProcessorCompile"
     }
     
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"

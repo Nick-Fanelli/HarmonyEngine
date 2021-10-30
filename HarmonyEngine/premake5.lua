@@ -11,7 +11,7 @@ project "HarmonyEngine"
 
     files {
         "src/**.h",
-        "src/**.cpp"
+        "src/**.cpp",
     }
 
     includedirs {
